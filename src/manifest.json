@@ -6,9 +6,16 @@
   "permissions": ["declarativeContent", "activeTab", "storage"],
   "options_page": "options.html",
   "background": {
-    "scripts": ["background.js"],
+    "scripts": ["background.js", "hot-reload.js"],
     "persistent": false
   },
+  "content_scripts": [
+    {
+      "matches": ["*://*.github.com/*", "*://github.com/*"],
+      "css": [],
+      "js": ["content-script.js"]
+    }
+  ],
   "page_action": {
     "default_popup": "popup.html"
   }

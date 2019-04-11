@@ -8,8 +8,7 @@
         "lib": ["es6", "dom"],
         "esModuleInterop": true,
         "stripInternal": true,
-        "declaration": true,
-        "declarationDir": "./types",
+        "declaration": false,
         "moduleResolution": "node",
         "strict": true
     },
