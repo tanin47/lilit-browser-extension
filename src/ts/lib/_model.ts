@@ -4,11 +4,35 @@ export interface Position {
 }
 
 export interface Location {
-  file: string;
+  path: string;
   start: Position;
   end: Position;
 }
 
+export interface Jar {
+  id: number;
+}
+
+export interface UsageCount {
+  module: string;
+  jar: Jar;
+  path: string;
+  count: number;
+}
+
+export type Token = Usage | Definition;
+
+export interface Definition {
+  type: string;
+  nodeId: String;
+  module: string;
+  jarId?: number;
+  location?: Location;
+  counts: UsageCount[];
+}
+
 export interface Usage {
+  type: string;
   location: Location;
+  definition: Definition;
 }
