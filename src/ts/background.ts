@@ -44,8 +44,9 @@ chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
 chrome.runtime.onMessage.addListener(
   (request, sender, sendResponse) => {
     axios
-      .get(
-        `${__HOST__}/github/${request.repoName}/${request.revision}/json/${request.file}`,
+      .post(
+        `${__HOST__}/github/${request.repoName}/fileRequests`,
+        request.files,
         {
           headers: { 'Accept': 'application/json' }
         }

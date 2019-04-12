@@ -1,63 +1,27 @@
-import {Definition, Usage, Token} from "./lib/_model";
-import {Highlighter} from "./lib/_highlighter";
+import {processFile} from "./lib/_process_file";
+import {processPullRequest} from "./lib/_process_pull_request";
 
-declare let __HOST__: string;
 
 chrome.runtime.onMessage.addListener(
   (request, sender, sendResponse) => {
-    install();
+    process();
     sendResponse(null);
     return true;
   }
 );
 
-function install(): void {
+function process(): void {
   console.log('[Codelab] Detect github.');
+  let tokens = window.location.href.split('/');
 
-  let permalink = document.querySelector('.js-permalink-shortcut')!;
-  let urlTokens = permalink.getAttribute('href')!.split('/');
-
-  let repoName = `${urlTokens[1]}/${urlTokens[2]}`;
-  let revision = urlTokens[4];
-  let file = urlTokens.slice(5).join('/');
-
-  console.log(`[Codelab] repo: ${repoName}, revision: ${revision}, file: ${file}`);
-
-  let baseUrl = window.location.href.split('/').slice(3, 7).join('/');
-
-  let selectedNodeId = new URLSearchParams(window.location.search).get('p');
-
-  if (!file.endsWith('.java')) {
-    console.log('[Codelab] Do nothing. This is not a java file.');
-    return;
+  if (tokens[5] == 'blob') {
+    processFile();
+  } else if (tokens[5] == 'pull') {
+    processPullRequest();
+  } else {
+    console.log('[Codelab] The page is neither a file nor a pull request.');
   }
-
-  console.log(`[Codelab] Fetch data from ${__HOST__}`);
-  chrome.runtime.sendMessage(
-    {repoName: repoName, revision: revision, file: file},
-    (resp) => {
-      if (resp.data.success) {
-        console.log('[Codelab] Fetched data successfully ', resp);
-        let usages = resp.data.usages as Usage[];
-        let defs = resp.data.definitions as Definition[];
-        let tokens: Token[] = [];
-
-        usages.forEach((u) => tokens.push(u));
-        defs.forEach((d) => tokens.push(d));
-
-        new Highlighter({
-          repoName: repoName,
-          revision: revision,
-          baseUrl: baseUrl,
-          selectedNodeId: selectedNodeId,
-          unsortedTokens: tokens
-        }).run();
-      } else {
-        console.log('[Codelab] Failed to fetch data.', resp);
-      }
-    }
-  );
 }
 
-
-install();
+// Invoke process when the page is first loaded.
+process();
