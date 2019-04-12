@@ -1,9 +1,9 @@
 {
-  "name": "Codelab",
+  "name": "Codelab [Alpha]",
   "version": "1.0",
-  "description": "Code intelligence",
+  "description": "",
   "manifest_version": 2,
-  "permissions": ["declarativeContent", "activeTab", "storage"],
+  "permissions": ["declarativeContent", "activeTab", "storage", "webNavigation"],
   "options_page": "options.html",
   "background": {
     "scripts": ["background.js", "hot-reload.js"],
@@ -12,8 +12,8 @@
   "content_scripts": [
     {
       "matches": ["*://*.github.com/*", "*://github.com/*"],
-      "css": [],
-      "js": ["content-script.js"]
+      "css": ["content.css"],
+      "js": ["content.js"]
     }
   ],
   "page_action": {

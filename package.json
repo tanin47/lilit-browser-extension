@@ -10,10 +10,10 @@
     "test": "./node_modules/.bin/webpack --config webpack.dev.js && ./node_modules/.bin/node-sass src/scss/popup.scss dist/popup.css && jest",
     "start": "./node_modules/.bin/npm-run-all --parallel start:**",
     "start:js": "./node_modules/.bin/webpack --watch --config webpack.dev.js",
-    "start:css": "./node_modules/.bin/node-sass src/scss/popup.scss --output dist/development && ./node_modules/.bin/node-sass -w src/scss/popup.scss dist/popup.css",
+    "start:css": "./node_modules/.bin/node-sass src/scss --output dist/dev && ./node_modules/.bin/node-sass -w src/scss --output dist/dev",
     "build": "./node_modules/.bin/npm-run-all build:**",
     "build:js": "./node_modules/.bin/webpack --config webpack.prod.js",
-    "build:css": "./node_modules/.bin/node-sass src/scss --output dist/production"
+    "build:css": "./node_modules/.bin/node-sass src/scss --output dist/prod"
   },
   "files": [
     "src/*.js",

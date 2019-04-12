@@ -1,18 +1,14 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
-const glob = require('glob');
-const path = require('path');
-
 
 module.exports = {
-    entry: glob.sync('./src/js/*.js').concat(glob.sync('./src/ts/*.ts')).reduce(
-      (map, filePath) => {
-         map[path.basename(filePath, path.extname(filePath))] = filePath;
-         return map;
-      },
-      {}
-    ),
+    entry: {
+      background: './src/ts/background.ts',
+      content: './src/ts/content.ts',
+      options: './src/ts/options.ts',
+      popup: './src/ts/popup.ts',
+    },
     module: {
         rules: [
             {

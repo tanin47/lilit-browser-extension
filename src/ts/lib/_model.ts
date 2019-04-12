@@ -24,7 +24,7 @@ export type Token = Usage | Definition;
 
 export interface Definition {
   type: string;
-  nodeId: String;
+  nodeId: string;
   module: string;
   jarId?: number;
   location?: Location;
