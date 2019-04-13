@@ -1,14 +1,13 @@
-let changeColor = document.getElementById('changeColor')!;
+let reloadButton = document.getElementById('reloadButton')!;
 
 chrome.storage.sync.get('color', (data) => {
-  changeColor.style.backgroundColor = data.color;
-  changeColor.setAttribute('value', data.color);
-  changeColor.onclick = (element) => {
-    let color = (<HTMLInputElement>element.target!).value;
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      chrome.tabs.executeScript(
-        tabs[0].id!,
-        {code: 'document.body.style.backgroundColor = "' + color + '";'});
-    });
+  reloadButton.onclick = (element) => {
+    chrome.tabs.query(
+      { active: true, currentWindow: true },
+      (tabs) => { // NB: see https://github.com/xpl/crx-hotreload/issues/5
+        if (tabs[0]) { chrome.tabs.reload(tabs[0].id!) }
+        chrome.runtime.reload();
+      }
+    );
   };
 });

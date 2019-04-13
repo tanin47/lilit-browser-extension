@@ -5,10 +5,11 @@ declare let __HOST__: string;
 
 export function processFile(): void {
   console.log(`[Codelab] Process the page as a file: ${window.location.href}`);
+  let urlPath = window.location.href.split('/').slice(7).join('/');
 
   let permalink = document.querySelector('.js-permalink-shortcut');
   if (!permalink) {
-    console.error("Unable to detect a commit sha. This shouldn't have happened.");
+    console.error("Unable to detect .js-permalink-shortcut. The page hasn't finished loading yet. Do nothing.");
     return;
   }
 
@@ -17,6 +18,11 @@ export function processFile(): void {
   let repoName = `${urlTokens[1]}/${urlTokens[2]}`;
   let revision = urlTokens[4];
   let path = urlTokens.slice(5).join('/');
+
+  if (path != urlPath) {
+    console.log("[Codelab] the paths from .js-permalink-shortcut and window.location.href do not match. The new page hasn't finished loading yet. Do nothing.");
+    return;
+  }
 
   console.log(`[Codelab] repo: ${repoName}, revision: ${revision}, file: ${path}`);
 

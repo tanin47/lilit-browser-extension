@@ -6,7 +6,7 @@
   "permissions": ["declarativeContent", "activeTab", "storage", "webNavigation"],
   "options_page": "options.html",
   "background": {
-    "scripts": ["background.js", "hot-reload.js"],
+    "scripts": ["background.js"],
     "persistent": false
   },
   "content_scripts": [
