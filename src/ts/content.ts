@@ -14,7 +14,7 @@ function process(): void {
   console.log('[Codelab] Detect github.');
   let tokens = window.location.href.split('/');
 
-  if (tokens[5] == 'blob') {
+  if (tokens[5] == 'blob' || tokens[5] == 'tree') {
     processFile();
   } else if (tokens[5] == 'pull') {
     processPullRequest();

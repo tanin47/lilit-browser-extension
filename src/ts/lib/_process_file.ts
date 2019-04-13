@@ -1,6 +1,7 @@
-import {__HOST__} from "./_global";
-import {Definition, Token, Usage} from "./_model";
-import {Highlighter} from "./_highlighter";
+import {FileHighlighter} from "./_file_highlighter";
+import {LineTokens} from "./_line_tokenizer";
+
+declare let __HOST__: string;
 
 export function processFile(): void {
   console.log(`[Codelab] Process the page as a file: ${window.location.href}`);
@@ -19,7 +20,7 @@ export function processFile(): void {
 
   console.log(`[Codelab] repo: ${repoName}, revision: ${revision}, file: ${path}`);
 
-  let baseUrl = window.location.href.split('/').slice(3, 7).join('/');
+  let branch = window.location.href.split('/')[6];
 
   let selectedNodeId = new URLSearchParams(window.location.search).get('p');
 
@@ -37,19 +38,12 @@ export function processFile(): void {
     (resp) => {
       if (resp.data && resp.data.success) {
         console.log('[Codelab] Fetched data successfully ', resp);
-        let usages = resp.data.files[0].usages as Usage[];
-        let defs = resp.data.files[0].definitions as Definition[];
-        let tokens: Token[] = [];
-
-        usages.forEach((u) => tokens.push(u));
-        defs.forEach((d) => tokens.push(d));
-
-        new Highlighter({
+        new FileHighlighter({
           repoName: repoName,
           revision: revision,
-          baseUrl: baseUrl,
+          branch: branch,
           selectedNodeId: selectedNodeId,
-          unsortedTokens: tokens
+          lineTokens: LineTokens.build(resp.data.files[0])
         }).run();
       } else {
         console.log('[Codelab] Failed to fetch data.', resp);

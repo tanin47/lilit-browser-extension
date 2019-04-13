@@ -46,7 +46,7 @@ chrome.runtime.onMessage.addListener(
     axios
       .post(
         `${__HOST__}/github/${request.repoName}/fileRequests`,
-        request.files,
+        { files: request.files },
         {
           headers: { 'Accept': 'application/json' }
         }

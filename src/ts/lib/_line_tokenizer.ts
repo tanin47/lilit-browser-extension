@@ -1,46 +1,68 @@
-import {Definition, Token, Usage} from "./_model";
+import {Definition, FileResponse, Token, Usage} from "./_model";
+import {combineUsagesAndDefinitions, sortAndFilterTokens} from "./_helpers";
 
-export class Highlighter {
-  repoName: string;
-  revision: string;
-  baseUrl: string;
-  tokens: Token[];
-  line: number;
-  selectedNodeId: string | null;
-
-  tokenIndex: number = 0;
-  col: number = 1;
-  highlightedLines: Set<number> = new Set();
-
+export class LineTokens {
   constructor(
-    options: {
-      repoName: string;
-      revision: string;
-      baseUrl: string;
-      selectedNodeId: string | null;
-      unsortedTokens: Token[];
+    public line: number,
+    public tokens: Token[]
+  ) {}
+
+
+  static build(fileResponse: FileResponse): LineTokens[] {
+    let tokens = sortAndFilterTokens(combineUsagesAndDefinitions(fileResponse.usages, fileResponse.definitions));
+    let lines = [];
+
+    let currentLine: number | null = null;
+    let currentTokens: Token[] = [];
+
+    for (let token of tokens) {
+      if (!token.location) { continue; }
+      if (currentLine === null) { currentLine = token.location.start.line; }
+
+      if (currentLine === token.location.start.line) {
+        currentTokens.push(token);
+      } else {
+        lines.push(new LineTokens(currentLine, currentTokens));
+        currentTokens = [token];
+        currentLine = token.location.start.line;
+      }
     }
-  ) {
+
+    if (currentTokens.length > 0 && currentLine) {
+      lines.push(new LineTokens(currentLine, currentTokens));
+    }
+
+    return lines;
+  }
+}
+
+export class LineTokenizer {
+  readonly repoName: string;
+  readonly revision: string;
+  readonly branch: string | null;
+  readonly selectedNodeId: string | null;
+  readonly tokens: Token[];
+  readonly line: number;
+
+  index: number = 0;
+  col: number = 1;
+
+  shouldBeHighlighted: boolean = false;
+
+  constructor(options: {
+    repoName: string;
+    revision: string;
+    branch: string | null;
+    selectedNodeId: string | null;
+    line: number;
+    sortedTokens: Token[]
+  }) {
     this.repoName = options.repoName;
     this.revision = options.revision;
-    this.baseUrl = options.baseUrl;
+    this.branch = options.branch;
     this.selectedNodeId = options.selectedNodeId;
-    this.tokens = options.unsortedTokens
-      .filter((a) => !!a.location)
-      .sort((a, b) => {
-        if (!a.location) { return -1; }
-        if (!b.location) { return 1; }
-
-        if (a.location.start.line < b.location.start.line) { return -2; }
-        else if (a.location.start.line > b.location.start.line) { return 2; }
-        else {
-          if (a.location.start.col < b.location.start.col) { return -1; }
-          else if (a.location.start.col > b.location.start.col) { return 1; }
-          else { return 0; }
-        }
-      });
-
-    this.line = this.tokens[this.tokenIndex].location!.start.line;
+    this.tokens = options.sortedTokens;
+    this.line = options.line;
   }
 
   makeUrl(token: Token): string {
@@ -56,7 +78,7 @@ export class Highlighter {
         } else if (usage.definition.module == 'Jar') {
           return `http://localhost:9000/github/${this.repoName}/${this.revision}/jar/${usage.definition.jarId}/${usage.definition.location.path}?p=${usage.definition.nodeId}`;
         } else if (usage.definition.module == 'User') {
-          return `/${this.baseUrl}/${usage.definition.location.path}?p=${usage.definition.nodeId}#L${usage.definition.location.start.line}`;
+          return `/${this.repoName}/blob/${this.branch || this.revision}/${usage.definition.location.path}?p=${usage.definition.nodeId}#L${usage.definition.location.start.line}`;
         } else {
           throw `Unrecognized module ${usage.definition.module}`;
         }
@@ -95,13 +117,13 @@ export class Highlighter {
     let relevantTokens = [];
 
     while (
-      this.tokenIndex < this.tokens.length &&
-      this.tokens[this.tokenIndex].location!.start.line == this.line &&
-      this.tokens[this.tokenIndex].location!.start.col >= elemStart &&
-      this.tokens[this.tokenIndex].location!.start.col <= elemEnd
+      this.index < this.tokens.length &&
+      this.tokens[this.index].location!.start.line == this.line &&
+      this.tokens[this.index].location!.start.col >= elemStart &&
+      this.tokens[this.index].location!.start.col <= elemEnd
       ) {
-      relevantTokens.push(this.tokens[this.tokenIndex]);
-      this.tokenIndex++;
+      relevantTokens.push(this.tokens[this.index]);
+      this.index++;
     }
 
     if (!relevantTokens) { return null; }
@@ -122,9 +144,9 @@ export class Highlighter {
       let anchor = document.createElement('a');
       anchor.href = this.makeUrl(token);
       anchor.classList.add('codelab-link');
-      if (this.selectedNodeId && this.selectedNodeId == Highlighter.getRelevantNodeId(token)) {
+      if (this.selectedNodeId && this.selectedNodeId == LineTokenizer.getRelevantNodeId(token)) {
         anchor.classList.add('codelab-highlighted');
-        this.highlightedLines.add(this.line);
+        this.shouldBeHighlighted = true;
       }
       anchor.text = s.substring(tStart, tEnd + 1);
       nodes.push(anchor);
@@ -139,20 +161,14 @@ export class Highlighter {
     return nodes;
   }
 
-  private runUsageIndex(): void {
-    while (
-      this.tokenIndex < this.tokens.length &&
-      (
-        this.tokens[this.tokenIndex].location!.start.line < this.line ||
-        (this.tokens[this.tokenIndex].location!.start.line == this.line && this.tokens[this.tokenIndex].location!.start.col < this.col)
-      )
-    ) {
-      this.tokenIndex++;
+  private runIndex(): void {
+    while (this.index < this.tokens.length && this.tokens[this.index].location!.start.col < this.col) {
+      this.index++;
     }
   }
 
   private walk(elem: Node): Node[] | null {
-    this.runUsageIndex();
+    this.runIndex();
 
     if (elem.nodeType == Node.TEXT_NODE) {
       let size = elem.nodeValue!.length;
@@ -175,23 +191,9 @@ export class Highlighter {
     }
   }
 
-
-  run(): void {
-    if (this.tokens.length == 0) { return; }
-
-    while (this.line <= this.tokens[this.tokens.length - 1].location!.start.line) {
-      this.col = 1;
-      this.runUsageIndex();
-      let lineElem = document.querySelector(`#LC${this.tokens[this.tokenIndex].location!.start.line}`)!;
-      this.walk(lineElem);
-      this.line++;
-    }
-
-    this.highlightedLines.forEach((line) => {
-      let lineElem = document.querySelector(`#LC${line}`)!;
-      lineElem.classList.add('highlighted');
-    });
+  process(elem: Node): boolean {
+    this.col = 1;
+    this.walk(elem);
+    return this.shouldBeHighlighted;
   }
 }
-
-

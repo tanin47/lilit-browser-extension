@@ -1,3 +1,5 @@
+import {combineUsagesAndDefinitions, sortAndFilterTokens} from "./_helpers";
+
 export interface Position {
   line: number;
   col: number;
@@ -36,3 +38,11 @@ export interface Usage {
   location: Location;
   definition: Definition;
 }
+
+export interface FileResponse {
+  revision: string;
+  path: string;
+  usages: Usage[];
+  definitions: Definition[];
+}
+
