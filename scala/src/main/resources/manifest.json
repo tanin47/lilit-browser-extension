@@ -1,0 +1,21 @@
+{
+  "name": "Codelab [Alpha]",
+  "version": "1.0",
+  "description": "",
+  "manifest_version": 2,
+  "permissions": ["declarativeContent", "activeTab", "storage", "webNavigation"],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.github.com/*", "*://github.com/*"],
+      "css": ["content.css"],
+      "js": ["content.js"]
+    }
+  ],
+  "page_action": {
+    "default_popup": "popup.html"
+  }
+}
