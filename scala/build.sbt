@@ -7,8 +7,18 @@ scalaJSUseMainModuleInitializer in ThisBuild := true
 
 val generatedPath = new File("./target/generated")
 
+lazy val common = (project in file("common"))
+  .enablePlugins(ScalaJSPlugin)
+  .settings(
+    libraryDependencies ++= Seq(
+      "net.lullabyte" %%% "scala-js-chrome" % "0.5.0"
+    )
+  )
+
 lazy val background = (project in file("background"))
   .enablePlugins(ScalaJSPlugin)
+  .aggregate(common)
+  .dependsOn(common)
   .settings(
     artifactPath in (Compile, fastOptJS) := generatedPath / "background.js",
     scalaJSUseMainModuleInitializer := true,
@@ -56,8 +66,8 @@ def execute(cmd: String): Unit = {
 }
 
 val buildDev = taskKey[Unit]("build the development version")
-val runWebpack = TaskKey[Unit]("run webpack")
-val runSass = TaskKey[Unit]("run node-sass")
+val runWebpack = taskKey[Unit]("run webpack")
+val runSass = taskKey[Unit]("run node-sass")
 
 runSass := {
   execute("./node_modules/.bin/node-sass ./src/main/scss --output ./target/dev")
