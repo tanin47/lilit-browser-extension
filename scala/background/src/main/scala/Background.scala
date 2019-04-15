@@ -1,12 +1,10 @@
 import chrome.declarativeContent.DeclarativeContent.PageStateMatcher.PageUrl
 import chrome.declarativeContent.DeclarativeContent.{PageStateMatcher, ShowPageAction}
 import chrome.events.Rule
-import models.FileRequestRequest
+import models.bindings.FileRequestRequest
 import org.scalajs.dom.ext.Ajax
 
-import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration.Duration
 import scala.scalajs.js
 import scala.scalajs.js.JSON
 
@@ -39,29 +37,28 @@ object Background {
       message.value
         .map(_.asInstanceOf[FileRequestRequest])
         .foreach { request =>
-          Ajax
-            .post(
-              url = s"http://localhost:9000/github/${request.repoName}/fileRequests",
-              data = JSON.stringify(js.Dynamic.literal(files = request.files)),
-              headers = Map(
-                "Content-Type" -> "application/json",
-                "Accept" -> "application/json"
-              )
-            )
-            .map { xhr =>
-              if (xhr.status == 200) {
-                val data = JSON.parse(xhr.responseText)
-
-                if (data.success.asInstanceOf[Boolean]) {
-                  message.response(data.files)
-                } else {
-
-                }
-              } else {
+          message
+            .response(
+              asyncResponse = Ajax
+                .post(
+                  url = s"http://localhost:9000/github/${request.repoName}/fileRequests",
+                  data = JSON.stringify(js.Dynamic.literal(files = request.files)),
+                  headers = Map(
+                    "Content-Type" -> "application/json",
+                    "Accept" -> "application/json"
+                  )
+                )
+                .map { xhr =>
+                  if (xhr.status == 200) {
+                    JSON.parse(xhr.responseText)
+                  } else {
+                    ()
+                  }
+                },
+              failure = {
 
               }
-            }
-          message.response(js.Dynamic.literal(background = "hi"))
+            )
         }
     }
   }

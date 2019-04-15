@@ -1,6 +1,8 @@
-package file
+package content.file
 
-import models.{FileRequest, FileRequestRequest}
+import content.tokenizer.LineTokens
+import models.bindings
+import models.bindings.{FileRequest, FileRequestRequest}
 import org.scalajs.dom
 import org.scalajs.dom.raw.HTMLElement
 
@@ -25,10 +27,8 @@ object File {
     val revision = permalinkTokens(4)
     val path = permalinkTokens.drop(5).mkString("/")
 
-    val pathFromLocationHref = dom.window.location.href.split("/").drop(7).mkString("/")
+    val pathFromLocationHref = dom.window.location.pathname.split("/").drop(5).mkString("/")
 
-    println(path)
-    println(pathFromLocationHref)
     if (path != pathFromLocationHref) {
       println("[Codelab] The paths from .js-permalink-shortcut and window.location.href do not match. The new page hasn't finished loading yet. Do nothing.")
       return
@@ -47,8 +47,20 @@ object File {
 
     chrome.runtime.Runtime.sendMessage(
       message = new FileRequestRequest(repoName, Seq(new FileRequest(path = path, revision = revision)).toJSArray),
-      responseCallback = js.Any.fromFunction1[Object, Unit] { resp =>
-        println(s"Content receives resp $resp")
+      responseCallback = js.defined { data =>
+        println("[Codelab] Fetched data successfully")
+
+        data.asInstanceOf[bindings.FileRequestResponse].files.foreach { file =>
+          val view = new View(
+            repoName = repoName,
+            revision = revision,
+            branchOpt = Some(branch),
+            selectedNodeIdOpt = None,
+            lineTokensList = LineTokens.build(file)
+          )
+
+          view.run()
+        }
       }
     )
 

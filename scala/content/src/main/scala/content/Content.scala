@@ -1,10 +1,8 @@
-import chrome.webNavigation.bindings.OnCommittedDetails
-import file.File
-import models.FileRequestRequest
-import org.scalajs.dom
+package content
 
-import scala.scalajs.js
-import scala.scalajs.js.JSConverters._
+import chrome.webNavigation.bindings.OnCommittedDetails
+import content.file.File
+import org.scalajs.dom
 
 object Content {
   def main(args: Array[String]): Unit = {

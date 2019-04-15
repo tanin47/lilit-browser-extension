@@ -1,4 +1,4 @@
-package models
+package models.bindings
 
 import scala.scalajs.js
 

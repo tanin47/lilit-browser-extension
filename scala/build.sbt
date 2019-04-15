@@ -11,7 +11,8 @@ lazy val common = (project in file("common"))
   .enablePlugins(ScalaJSPlugin)
   .settings(
     libraryDependencies ++= Seq(
-      "net.lullabyte" %%% "scala-js-chrome" % "0.5.0"
+      "net.lullabyte" %%% "scala-js-chrome" % "0.5.0",
+      "com.lihaoyi" %%% "upickle" % "0.7.1"
     ),
     scalacOptions ++= Seq(
       "-P:scalajs:sjsDefinedByDefault"
@@ -27,7 +28,8 @@ lazy val background = (project in file("background"))
     scalaJSUseMainModuleInitializer := true,
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % "0.9.2",
-      "net.lullabyte" %%% "scala-js-chrome" % "0.5.0"
+      "net.lullabyte" %%% "scala-js-chrome" % "0.5.0",
+      "com.lihaoyi" %%% "upickle" % "0.7.1"
     )
   )
 lazy val content = (project in file("content"))
@@ -39,7 +41,8 @@ lazy val content = (project in file("content"))
     scalaJSUseMainModuleInitializer := true,
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % "0.9.2",
-      "net.lullabyte" %%% "scala-js-chrome" % "0.5.0"
+      "net.lullabyte" %%% "scala-js-chrome" % "0.5.0",
+      "com.lihaoyi" %%% "upickle" % "0.7.1"
     )
   )
 lazy val popup = (project in file("popup"))

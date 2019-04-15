@@ -13,7 +13,7 @@ object DeclarativeContent {
       val promise = Promise[Unit]()
       bindings.DeclarativeContent.onPageChanged.removeRules(
         rules = ruleIdentifiersOpt.map(_.toJSArray).orUndefined,
-        callback = js.Any.fromFunction0 { () =>
+        callback = js.defined { () =>
           promise.complete(Success(()))
         }
       )
@@ -25,7 +25,7 @@ object DeclarativeContent {
       println("add rule")
       bindings.DeclarativeContent.onPageChanged.addRules(
         rules = rules.map(_.toJs).toJSArray,
-        callback = js.Any.fromFunction0 { () =>
+        callback = js.defined { () =>
           println("Add rule fulfilled")
           promise.complete(Success(()))
         }
