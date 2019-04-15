@@ -12,6 +12,9 @@ lazy val common = (project in file("common"))
   .settings(
     libraryDependencies ++= Seq(
       "net.lullabyte" %%% "scala-js-chrome" % "0.5.0"
+    ),
+    scalacOptions ++= Seq(
+      "-P:scalajs:sjsDefinedByDefault"
     )
   )
 
@@ -29,6 +32,8 @@ lazy val background = (project in file("background"))
   )
 lazy val content = (project in file("content"))
   .enablePlugins(ScalaJSPlugin)
+  .aggregate(common)
+  .dependsOn(common)
   .settings(
     artifactPath in (Compile, fastOptJS) := generatedPath / "content.js",
     scalaJSUseMainModuleInitializer := true,

@@ -1,6 +1,5 @@
 package chrome.declarativeContent
 
-import chrome.declarativeContent.bindings.DeclarativeContent
 import chrome.events.Rule
 
 import scala.concurrent.{Future, Promise}
