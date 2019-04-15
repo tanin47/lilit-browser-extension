@@ -32,6 +32,10 @@ lazy val content = (project in file("content"))
   .settings(
     artifactPath in (Compile, fastOptJS) := generatedPath / "content.js",
     scalaJSUseMainModuleInitializer := true,
+    libraryDependencies ++= Seq(
+      "org.scala-js" %%% "scalajs-dom" % "0.9.2",
+      "net.lullabyte" %%% "scala-js-chrome" % "0.5.0"
+    )
   )
 lazy val popup = (project in file("popup"))
   .enablePlugins(ScalaJSPlugin)

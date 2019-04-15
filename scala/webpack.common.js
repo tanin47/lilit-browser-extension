@@ -17,7 +17,8 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       filename: 'popup.html',
-      template: 'src/main/html/popup.html'
+      template: 'src/main/html/popup.html',
+      inject: false
     }),
     new CopyPlugin([
       { from: 'src/main/resources/manifest.json', to: 'manifest.json' }
