@@ -12,3 +12,17 @@ a.codelab-link {
 .codelab-highlighted {
   font-weight: bold;
 }
+
+.tippy-tooltip {
+  white-space: nowrap;
+  a {
+    color: #fff;
+    border-bottom: 1px dotted #fff;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: none;
+      border-bottom: 1px solid #fff;
+    }
+  }
+}

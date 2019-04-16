@@ -1,9 +1,12 @@
 package content
 
 import chrome.webNavigation.bindings.OnCommittedDetails
+import content.bindings.Tippy
 import content.file.File
 import content.pull_request.PullRequest
 import org.scalajs.dom
+
+import scala.scalajs.js
 
 object Content {
   def main(args: Array[String]): Unit = {

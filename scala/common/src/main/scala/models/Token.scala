@@ -40,16 +40,36 @@ object Usage {
   def from(raw: bindings.Usage): Usage = {
     Usage(
       location = Location.from(raw.location),
-      definition = Definition.from(raw.definition),
+      definition = UsageDefinition.from(raw.definition),
     )
   }
 }
 
 case class Usage(
   location: Location,
-  definition: Definition
+  definition: UsageDefinition
 ) extends Token {
   lazy val locationOpt = Some(location)
+}
+
+object UsageDefinition {
+  def from(raw: bindings.UsageDefinition): UsageDefinition = {
+    UsageDefinition(
+      nodeId = raw.nodeId,
+      module = raw.module,
+      jarOpt = raw.jarOpt.filter(_ != null).map(Jar.from).toOption,
+      locationOpt = raw.locationOpt.filter(_ != null).map(Location.from).toOption,
+    )
+  }
+}
+
+case class UsageDefinition(
+  nodeId: String,
+  module: String,
+  jarOpt: Option[Jar],
+  locationOpt: Option[Location]
+) {
+  lazy val location = locationOpt.get
 }
 
 object Definition {
@@ -57,9 +77,9 @@ object Definition {
     Definition(
       nodeId = raw.nodeId,
       module = raw.module,
-      jarIdOpt = raw.jarIdOpt.filter(_ != null).toOption,
+      jarIdOpt = raw.jarIdOpt.toOption,
       locationOpt = raw.locationOpt.filter(_ != null).map(Location.from).toOption,
-//      counts = raw.counts.map(UsageCount.from).toSeq,
+      counts = raw.counts.map(UsageCount.from).toSeq,
     )
   }
 }
@@ -69,7 +89,7 @@ case class Definition(
   module: String,
   jarIdOpt: Option[Int],
   locationOpt: Option[Location],
-//  counts: Seq[UsageCount],
+  counts: Seq[UsageCount],
 ) extends Token {
   lazy val location = locationOpt.get
 }
@@ -77,27 +97,39 @@ case class Definition(
 object UsageCount {
   def from(raw: bindings.UsageCount): UsageCount = {
     UsageCount(
+      nodeId = raw.nodeId,
       module = raw.module,
       jarOpt = raw.jarOpt.filter(_ != null).map(Jar.from).toOption,
       path = raw.path,
+      firstLine = raw.firstLine,
       count = raw.count
     )
   }
 }
 
 case class UsageCount(
+  nodeId: String,
   module: String,
   jarOpt: Option[Jar],
   path: String,
+  firstLine: Int,
   count: Int
 )
 
 object Jar {
   def from(raw: bindings.Jar): Jar = {
     Jar(
-      id = raw.id
+      id = raw.id,
+      group = raw.group,
+      artifact = raw.artifact,
+      version = raw.version
     )
   }
 }
 
-case class Jar(id: Int)
+case class Jar(
+  id: Int,
+  group: String,
+  artifact: String,
+  version: String
+)

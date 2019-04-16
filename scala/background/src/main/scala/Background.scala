@@ -1,6 +1,7 @@
 import chrome.declarativeContent.DeclarativeContent.PageStateMatcher.PageUrl
 import chrome.declarativeContent.DeclarativeContent.{PageStateMatcher, ShowPageAction}
 import chrome.events.Rule
+import helpers.Config
 import models.bindings.FileRequestRequest
 import org.scalajs.dom
 import org.scalajs.dom.ext.Ajax
@@ -42,7 +43,7 @@ object Background {
         .foreach { request =>
           message
             .response(
-              asyncResponse = getHost()
+              asyncResponse = Config.getHost()
                 .flatMap { host =>
                   Ajax
                     .post(
@@ -67,17 +68,5 @@ object Background {
             )
         }
     }
-  }
-
-  def getHost(): Future[String] = {
-    val promise = Promise[String]()
-
-    Ajax
-      .get(chrome.runtime.Runtime.getURL("config.json"))
-      .foreach { xhr =>
-        promise.complete(Success(JSON.parse(xhr.responseText).host.asInstanceOf[String]))
-      }
-
-    promise.future
   }
 }

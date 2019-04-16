@@ -1,7 +1,10 @@
 package content.pull_request
 
+import helpers.Config
 import org.scalajs.dom
 import org.scalajs.dom.raw.HTMLInputElement
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 object PullRequest {
   def apply(): Unit = {
@@ -27,11 +30,15 @@ object PullRequest {
 
     val view = dom.document.querySelector("#files")
 
-    new View(
-      repoName = repoName,
-      startRevision = startRevision,
-      endRevision = endRevision,
-      elem = view
-    )
+    Config.getHost()
+      .foreach { host =>
+        new View(
+          repoName = repoName,
+          host = host,
+          startRevision = startRevision,
+          endRevision = endRevision,
+          elem = view
+        )
+      }
   }
 }

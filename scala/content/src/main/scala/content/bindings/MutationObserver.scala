@@ -1,6 +1,6 @@
-package content
+package content.bindings
 
-import content.MutationObserver.Options
+import content.bindings.MutationObserver.Options
 import org.scalajs.dom.Element
 
 import scala.scalajs.js

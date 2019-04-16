@@ -17,5 +17,8 @@
     "webpack-dev-server": ">=3.1.11",
     "webpack-merge": "^4.2.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "popper.js": "^1.15.0",
+    "tippy.js": "^4.2.1"
+  }
 }

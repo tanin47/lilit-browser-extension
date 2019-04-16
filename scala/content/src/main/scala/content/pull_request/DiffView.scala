@@ -1,12 +1,11 @@
 package content.pull_request
 
-import content.MutationObserver
-import content.MutationObserver.Options
+import content.bindings.MutationObserver
+import content.bindings.MutationObserver.Options
 import content.tokenizer.{LineTokenizer, LineTokens}
-import org.scalajs.dom
-import org.scalajs.dom.{Element, NodeListOf}
-import org.scalajs.dom.raw.HTMLElement
+import org.scalajs.dom.Element
 import org.scalajs.dom.ext._
+import org.scalajs.dom.raw.HTMLElement
 
 object DiffView {
   case class Data(
@@ -22,6 +21,8 @@ object DiffView {
 
 class DiffView(
   repoName: String,
+  path: String,
+  host: String,
   elem: HTMLElement,
   startRevisionData: DiffView.Data,
   endRevisionData: DiffView.Data,
@@ -64,6 +65,8 @@ class DiffView(
         val tokenizer = new LineTokenizer(
           repoName = repoName,
           revision = data.revision,
+          path = path,
+          host = host,
           branchOpt = None,
           selectedNodeIdOpt = None,
           lineTokens = lineTokens

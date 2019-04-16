@@ -40,6 +40,7 @@ lazy val content = (project in file("content"))
     artifactPath in (Compile, fastOptJS) := generatedDevPath / "content.js",
     artifactPath in (Compile, fullOptJS) := generatedProdPath / "content.js",
     scalaJSUseMainModuleInitializer := true,
+    scalaJSModuleKind := ModuleKind.ESModule,
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % "0.9.2",
       "net.lullabyte" %%% "scala-js-chrome" % "0.5.0",
@@ -50,6 +51,8 @@ lazy val content = (project in file("content"))
   )
 lazy val popup = (project in file("popup"))
   .enablePlugins(ScalaJSPlugin)
+  .aggregate(common)
+  .dependsOn(common)
   .settings(
     artifactPath in (Compile, fastOptJS) := generatedDevPath / "popup.js",
     artifactPath in (Compile, fullOptJS) := generatedProdPath / "popup.js",
@@ -121,4 +124,20 @@ buildWebpackProd := {
 buildProd := {
   buildWebpackProd.value
   buildSassProd.value
+
+  val zipFile = target.value / "sorceress-chrome-extension.zip"
+  val zipFolder = target.value / "prod"
+
+  println(s"Building ${zipFile.getCanonicalPath}")
+  val entries = IO.listFiles(zipFolder).map { file => file -> file.relativeTo(zipFolder).get.toString }
+
+  entries.foreach { case (file, entry) =>
+    println(s"  $entry -> ${file.getCanonicalPath}")
+  }
+
+  IO.zip(
+    sources = entries,
+    outputZip = zipFile
+  )
 }
+

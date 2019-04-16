@@ -1,15 +1,15 @@
 package content.pull_request
 
-import content.MutationObserver
-import content.MutationObserver.Options
+import content.bindings.MutationObserver
+import content.bindings.MutationObserver.Options
 import content.tokenizer.LineTokens
 import models.bindings.{FileRequest, FileRequestRequest, FileRequestResponse}
+import org.scalajs.dom.Element
+import org.scalajs.dom.ext._
 import org.scalajs.dom.raw.HTMLElement
-import org.scalajs.dom.{Attr, Element}
 
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-import org.scalajs.dom.ext._
 
 object View {
   val PROCESSED_ATTR_NAME = "data-codelab-processed"
@@ -25,6 +25,7 @@ object View {
 
 class View(
   repoName: String,
+  host: String,
   startRevision: String,
   endRevision: String,
   elem: Element
@@ -114,6 +115,8 @@ class View(
         diffElems.foreach { diffElem =>
           new DiffView(
             repoName = repoName,
+            path = diffElem.path,
+            host = host,
             elem = diffElem.node,
             startRevisionData = DiffView.Data(
               revision = startRevision,

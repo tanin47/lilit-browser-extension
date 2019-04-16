@@ -1,6 +1,8 @@
 package content.file
 
+import content.bindings.URLSearchParams
 import content.tokenizer.LineTokens
+import helpers.Config
 import models.bindings
 import models.bindings.{FileRequest, FileRequestRequest}
 import org.scalajs.dom
@@ -8,6 +10,8 @@ import org.scalajs.dom.raw.HTMLElement
 
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 object File {
   def apply(): Unit = {
@@ -42,25 +46,32 @@ object File {
     println(s"[Codelab] repo: $repoName, revision: $revision, file: $path")
 
     val branch = dom.window.location.href.split("/")(6)
+    val selectedNodeIdOpt = new URLSearchParams(dom.window.location.search).get("p").toOption
 
     println("[Codelab] Fetch data")
 
-    chrome.runtime.Runtime.sendMessage(
-      message = new FileRequestRequest(repoName, Seq(new FileRequest(path = path, revision = revision)).toJSArray),
-      responseCallback = js.defined { data =>
-        println("[Codelab] Fetched data successfully")
+    Config.getHost()
+      .foreach { host =>
+        chrome.runtime.Runtime.sendMessage(
+          message = new FileRequestRequest(repoName, Seq(new FileRequest(path = path, revision = revision)).toJSArray),
+          responseCallback = js.defined { data =>
+            println("[Codelab] Fetched data successfully")
 
-        data.asInstanceOf[bindings.FileRequestResponse].files.foreach { file =>
-          new View(
-            repoName = repoName,
-            revision = revision,
-            branchOpt = Some(branch),
-            selectedNodeIdOpt = None,
-            lineTokensList = LineTokens.build(file)
-          )
-        }
+            data.asInstanceOf[bindings.FileRequestResponse].files.foreach { file =>
+              new View(
+                repoName = repoName,
+                revision = revision,
+                path = file.path,
+                host = host,
+                branchOpt = Some(branch),
+                selectedNodeIdOpt = selectedNodeIdOpt,
+                lineTokensList = LineTokens.build(file)
+              )
+            }
+          }
+        )
       }
-    )
+
 
   }
 }
