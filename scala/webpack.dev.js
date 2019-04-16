@@ -2,8 +2,14 @@ const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
 const path = require('path')
 const webpack = require('webpack');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = merge(common, {
+  entry: {
+    background: './target/generated-dev/background.js',
+    content: './target/generated-dev/content.js',
+    popup: './target/generated-dev/popup.js'
+  },
   mode: 'development',
   devtool: 'inline-source-map',
   devServer: {
@@ -15,6 +21,9 @@ module.exports = merge(common, {
   plugins: [
     new webpack.DefinePlugin({
       __HOST__: JSON.stringify('http://localhost:9000')
-    })
+    }),
+    new CopyPlugin([
+      { from: 'src/main/resources/config_dev.json', to: 'config.json' }
+    ])
   ]
 });

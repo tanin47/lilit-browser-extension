@@ -1,13 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const WriteFilePlugin = require('write-file-webpack-plugin');
 
 module.exports = {
-  entry: {
-    background: './target/generated/background.js',
-    content: './target/generated/content.js',
-    popup: './target/generated/popup.js'
-  },
   output: {
     filename: '[name].js'
   },
@@ -22,7 +16,6 @@ module.exports = {
     }),
     new CopyPlugin([
       { from: 'src/main/resources/manifest.json', to: 'manifest.json' }
-    ]),
-    new WriteFilePlugin()
+    ])
   ]
 };

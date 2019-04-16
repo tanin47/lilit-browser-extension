@@ -5,7 +5,8 @@ import scala.sys.process.Process
 scalaVersion in ThisBuild := "2.12.8"
 scalaJSUseMainModuleInitializer in ThisBuild := true
 
-val generatedPath = new File("./target/generated")
+val generatedDevPath = new File("./target/generated-dev")
+val generatedProdPath = new File("./target/generated-prod")
 
 lazy val common = (project in file("common"))
   .enablePlugins(ScalaJSPlugin)
@@ -23,7 +24,8 @@ lazy val background = (project in file("background"))
   .aggregate(common)
   .dependsOn(common)
   .settings(
-    artifactPath in (Compile, fastOptJS) := generatedPath / "background.js",
+    artifactPath in (Compile, fastOptJS) := generatedDevPath / "background.js",
+    artifactPath in (Compile, fullOptJS) := generatedProdPath / "background.js",
     scalaJSUseMainModuleInitializer := true,
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % "0.9.2",
@@ -35,7 +37,8 @@ lazy val content = (project in file("content"))
   .aggregate(common)
   .dependsOn(common)
   .settings(
-    artifactPath in (Compile, fastOptJS) := generatedPath / "content.js",
+    artifactPath in (Compile, fastOptJS) := generatedDevPath / "content.js",
+    artifactPath in (Compile, fullOptJS) := generatedProdPath / "content.js",
     scalaJSUseMainModuleInitializer := true,
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % "0.9.2",
@@ -48,7 +51,8 @@ lazy val content = (project in file("content"))
 lazy val popup = (project in file("popup"))
   .enablePlugins(ScalaJSPlugin)
   .settings(
-    artifactPath in (Compile, fastOptJS) := generatedPath / "popup.js",
+    artifactPath in (Compile, fastOptJS) := generatedDevPath / "popup.js",
+    artifactPath in (Compile, fullOptJS) := generatedProdPath / "popup.js",
     scalaJSUseMainModuleInitializer := true,
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % "0.9.2",
@@ -78,14 +82,14 @@ def execute(cmd: String): Unit = {
 }
 
 val buildDev = taskKey[Unit]("build the development version")
-val runWebpack = taskKey[Unit]("run webpack")
-val runSass = taskKey[Unit]("run node-sass")
+val buildWebpackDev = taskKey[Unit]("run webpack (dev)")
+val buildSassDev = taskKey[Unit]("run node-sass (dev)")
 
-runSass := {
+buildSassDev := {
   execute("./node_modules/.bin/node-sass ./src/main/scss --output ./target/dev")
 }
 
-runWebpack := {
+buildWebpackDev := {
   (background / Compile / fastOptJS).value
   (content / Compile / fastOptJS).value
   (popup / Compile / fastOptJS).value
@@ -94,7 +98,27 @@ runWebpack := {
 }
 
 buildDev := {
-  runSass.value
-  runWebpack.value
+  buildSassDev.value
+  buildWebpackDev.value
 }
 
+val buildProd = taskKey[Unit]("build the prod version")
+val buildWebpackProd = taskKey[Unit]("run webpack (prod)")
+val buildSassProd = taskKey[Unit]("run node-sass (prod)")
+
+buildSassProd := {
+  execute("./node_modules/.bin/node-sass ./src/main/scss --output ./target/prod")
+}
+
+buildWebpackProd := {
+  (background / Compile / fullOptJS).value
+  (content / Compile / fullOptJS).value
+  (popup / Compile / fullOptJS).value
+
+  execute("./node_modules/.bin/webpack --config webpack.prod.js")
+}
+
+buildProd := {
+  buildWebpackProd.value
+  buildSassProd.value
+}
