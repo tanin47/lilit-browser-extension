@@ -51,15 +51,13 @@ object File {
         println("[Codelab] Fetched data successfully")
 
         data.asInstanceOf[bindings.FileRequestResponse].files.foreach { file =>
-          val view = new View(
+          new View(
             repoName = repoName,
             revision = revision,
             branchOpt = Some(branch),
             selectedNodeIdOpt = None,
             lineTokensList = LineTokens.build(file)
           )
-
-          view.run()
         }
       }
     )

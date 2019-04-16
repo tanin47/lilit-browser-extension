@@ -15,6 +15,8 @@ class View(
 
   val highlightedLines = mutable.ListBuffer.empty[Int]
 
+  run()
+
   def run(): Unit = {
     lineTokensList.foreach { lineTokens =>
       val tokenizer = new LineTokenizer(

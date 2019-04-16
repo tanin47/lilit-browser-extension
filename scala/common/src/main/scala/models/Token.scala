@@ -1,7 +1,5 @@
 package models
 
-import scala.scalajs.js
-
 
 object Position {
   def from(raw: bindings.Position): Position = {
@@ -59,8 +57,8 @@ object Definition {
     Definition(
       nodeId = raw.nodeId,
       module = raw.module,
-      jarIdOpt = raw.jarIdOpt.toOption,
-      locationOpt = raw.locationOpt.map(Location.from).toOption,
+      jarIdOpt = raw.jarIdOpt.filter(_ != null).toOption,
+      locationOpt = raw.locationOpt.filter(_ != null).map(Location.from).toOption,
 //      counts = raw.counts.map(UsageCount.from).toSeq,
     )
   }
@@ -80,7 +78,7 @@ object UsageCount {
   def from(raw: bindings.UsageCount): UsageCount = {
     UsageCount(
       module = raw.module,
-      jarOpt = raw.jarOpt.map(Jar.from).toOption,
+      jarOpt = raw.jarOpt.filter(_ != null).map(Jar.from).toOption,
       path = raw.path,
       count = raw.count
     )

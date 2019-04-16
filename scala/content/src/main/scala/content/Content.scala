@@ -2,6 +2,7 @@ package content
 
 import chrome.webNavigation.bindings.OnCommittedDetails
 import content.file.File
+import content.pull_request.PullRequest
 import org.scalajs.dom
 
 object Content {
@@ -21,7 +22,7 @@ object Content {
     if (tokens.length >= 4 && (tokens(5) == "blob" || tokens(5) == "tree")) {
       File.apply()
     } else if (tokens.length >= 4 && tokens(5) == "pull") {
-
+      PullRequest.apply()
     } else {
       println("[Codelab] The page is neither a file nor a pull request.")
     }
