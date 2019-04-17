@@ -23,9 +23,9 @@ class LineTokenizer(
   var shouldLineBeHighlighted: Boolean = false
 
   def getUsageUrl(count: UsageCount): String = count.module match {
-    case "Jdk" => s"$host/github/$repoName/$revision/jdk/${count.path}?p=${count.nodeId}"
-    case "Jar" => s"$host/github/$repoName/$revision/${count.jarOpt.map(_.id).get}/${count.path}?p=${count.nodeId}"
-    case "User" => s"/$repoName/blob/${branchOpt.getOrElse(revision)}/${count.path}?p=${count.nodeId}#L${count.firstLine}"
+    case "Jdk" => s"$host/github/$repoName/$revision/jdk/${count.firstPath}?p=${count.nodeId}"
+    case "Jar" => s"$host/github/$repoName/$revision/${count.firstJarOpt.map(_.id).get}/${count.firstPath}?p=${count.nodeId}"
+    case "User" => s"/$repoName/blob/${branchOpt.getOrElse(revision)}/${count.firstPath}?p=${count.nodeId}"
   }
 
   def makeUrlOpt(token: Token): Option[String] = token match {
@@ -35,7 +35,7 @@ class LineTokenizer(
           usage.definition.module match {
             case "Jdk" => s"$host/github/$repoName/$revision/jdk/${location.path}?p=${usage.definition.nodeId}"
             case "Jar" => s"$host/github/$repoName/$revision/jar/${usage.definition.jarOpt.get.id}/${location.path}?p=${usage.definition.nodeId}"
-            case "User" => s"/$repoName/blob/${branchOpt.getOrElse(revision)}/${location.path}?p=${usage.definition.nodeId}#L${location.start.line}"
+            case "User" => s"/$repoName/blob/${branchOpt.getOrElse(revision)}/${location.path}?p=${usage.definition.nodeId}"
           }
         }
     case definition: Definition =>
@@ -95,13 +95,13 @@ class LineTokenizer(
       } else if (d.counts.size == 1) {
         val first = d.counts.head
 
-        if (first.module == "User" && first.path == path) {
+        if (first.module == "User" && first.firstPath == path) {
           s"Found ${first.count} ${renderOccurrenceWord(first.count)} only in this file"
         } else {
-          s"Found ${first.count} ${renderOccurrenceWord(first.count)} only in ${first.path} inside ${getModuleName(first)}"
+          s"Found ${first.count} ${renderOccurrenceWord(first.count)} only in ${first.firstPath} inside ${getModuleName(first)}"
         }
       } else {
-        val (thisFileCountOpt, otherFileCounts) = d.counts.partition { d => (d.module, d.path) == ("User", path) }
+        val (thisFileCountOpt, otherFileCounts) = d.counts.partition { d => (d.module, d.firstPath) == ("User", path) }
 
         val thisFileLabel = thisFileCountOpt
           .map { count =>
@@ -109,12 +109,15 @@ class LineTokenizer(
           }
 
         val otherFileLabels = otherFileCounts
-          .groupBy { c => c.module }
-          .mapValues { u => (u, u.size, u.map(_.count).sum) }
-          .toList
-          .sortBy(_._1)
-          .map { case (_, (count, fileCount, occurrenceCount)) =>
-            s"Found $occurrenceCount ${renderOccurrenceWord(occurrenceCount)} inside ${getModuleName(count.head)} ($fileCount ${renderFileWord(d.counts.size)})"
+          .sortBy { c =>
+            c.module match {
+              case "Jdk" => 3
+              case "Jar" => 2
+              case "User" => 1
+            }
+          }
+          .map { count =>
+            s"Found ${count.count} ${renderOccurrenceWord(count.count)} inside ${getModuleName(count)} (${count.fileCount} ${renderFileWord(count.fileCount)})"
           }
 
         (thisFileLabel ++ otherFileLabels).mkString("<br/>")

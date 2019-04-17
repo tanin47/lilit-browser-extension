@@ -7,9 +7,13 @@ import models.bindings.{FileRequest, FileRequestRequest, FileRequestResponse}
 import org.scalajs.dom.Element
 import org.scalajs.dom.ext._
 import org.scalajs.dom.raw.HTMLElement
+import storage.Storage
+import storage.Storage.Status
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
+import scala.scalajs.js.JavaScriptException
 
 object View {
   val PROCESSED_ATTR_NAME = "data-codelab-processed"
@@ -99,34 +103,55 @@ class View(
       )
     }
 
-    println(s"[Codelab] Fetch data for ${fileRequests.map(_.path).distinct.mkString(", ")}")
+    val pathLogLine = fileRequests.map(_.path).distinct.mkString(", ")
+    println(s"[Codelab] Fetch data for $pathLogLine")
 
     chrome.runtime.Runtime.sendMessage(
       message = new FileRequestRequest(repoName, fileRequests.toJSArray),
       responseCallback = js.defined { data =>
-        println("[Codelab] Fetched data successfully.")
+        val resp = data.asInstanceOf[FileRequestResponse]
 
-        val files = data.asInstanceOf[FileRequestResponse].files
+        if (resp.success) {
+          println(s"[Codelab] Fetched data successfully: $pathLogLine.")
 
-        val fileByRevisionAndPath = files
-          .groupBy { f => (f.revision, f.path) }
-          .mapValues(_.head)
+          val files = data.asInstanceOf[FileRequestResponse].files
 
-        diffElems.foreach { diffElem =>
-          new DiffView(
-            repoName = repoName,
-            path = diffElem.path,
-            host = host,
-            elem = diffElem.node,
-            startRevisionData = DiffView.Data(
-              revision = startRevision,
-              lineTokens = LineTokens.build(fileByRevisionAndPath((startRevision, diffElem.path)))
-            ),
-            endRevisionData = DiffView.Data(
-              revision = startRevision,
-              lineTokens = LineTokens.build(fileByRevisionAndPath((endRevision, diffElem.path)))
-            )
-          )
+          Storage.setMissingRevisions(files.filterNot(_.isSupported).map(_.revision).distinct)
+            .foreach { _ =>
+              try {
+                val fileByRevisionAndPath = files
+                  .groupBy { f => (f.revision, f.path) }
+                  .mapValues(_.head)
+
+
+                diffElems.foreach { diffElem =>
+                  new DiffView(
+                    repoName = repoName,
+                    path = diffElem.path,
+                    host = host,
+                    elem = diffElem.node,
+                    startRevisionData = DiffView.Data(
+                      revision = startRevision,
+                      lineTokens = LineTokens.build(fileByRevisionAndPath((startRevision, diffElem.path)))
+                    ),
+                    endRevisionData = DiffView.Data(
+                      revision = endRevision,
+                      lineTokens = LineTokens.build(fileByRevisionAndPath((endRevision, diffElem.path)))
+                    )
+                  )
+                }
+                Storage.setStatus(Status.Completed)
+                println(s"[Codelab] Rendered successfully: $pathLogLine.")
+              } catch {
+                case e: JavaScriptException =>
+                  Storage.setStatus(Status.Failed)
+                  js.Dynamic.global.console.error(s"[Codelab] Failed to render: $pathLogLine.")
+                  js.Dynamic.global.console.error(e.exception.asInstanceOf[js.Any])
+              }
+            }
+        } else {
+          println(s"[Codelab] Failed to fetch data: $pathLogLine")
+          Storage.setStatus(Status.Failed)
         }
       }
     )

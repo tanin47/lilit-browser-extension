@@ -99,10 +99,10 @@ object UsageCount {
     UsageCount(
       nodeId = raw.nodeId,
       module = raw.module,
-      jarOpt = raw.jarOpt.filter(_ != null).map(Jar.from).toOption,
-      path = raw.path,
-      firstLine = raw.firstLine,
-      count = raw.count
+      count = raw.count,
+      fileCount = raw.fileCount,
+      firstJarOpt = raw.firstJarOpt.filter(_ != null).map(Jar.from).toOption,
+      firstPath = raw.firstPath,
     )
   }
 }
@@ -110,10 +110,10 @@ object UsageCount {
 case class UsageCount(
   nodeId: String,
   module: String,
-  jarOpt: Option[Jar],
-  path: String,
-  firstLine: Int,
-  count: Int
+  count: Int,
+  fileCount: Int,
+  firstJarOpt: Option[Jar],
+  firstPath: String,
 )
 
 object Jar {

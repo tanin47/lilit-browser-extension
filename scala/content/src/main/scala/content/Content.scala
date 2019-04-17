@@ -26,7 +26,7 @@ object Content {
     Tippy.setDefaults(new Tippy.SetDefaultsOptions {
       val animation = "fade"
       val interactive = true
-      val maxWidth = 600
+      val maxWidth = 800
       val arrow = true
       val distance = 11
       val onShow = js.defined { instance =>

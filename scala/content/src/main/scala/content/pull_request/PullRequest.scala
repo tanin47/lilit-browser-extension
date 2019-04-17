@@ -3,6 +3,9 @@ package content.pull_request
 import helpers.Config
 import org.scalajs.dom
 import org.scalajs.dom.raw.HTMLInputElement
+import storage.Storage
+import storage.Storage.Page.PullRequestPage
+import storage.Storage.Status
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -31,11 +34,12 @@ object PullRequest {
     val view = dom.document.querySelector("#files")
 
     for {
-      _ <- chrome.storage2.Storage.local.set(Map(
-        "type" -> "pull",
-        "repoName" -> repoName,
-        "startRevision" -> startRevision,
-        "endRevision" -> endRevision
+      _ <- Storage.setPage(PullRequestPage(
+        repoName = repoName,
+        startRevision = startRevision,
+        endRevision = endRevision,
+        missingRevisions = Seq.empty,
+        status = Status.Loading
       ))
       host <- Config.getHost()
     } yield {

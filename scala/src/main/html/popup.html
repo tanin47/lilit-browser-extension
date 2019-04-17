@@ -8,14 +8,15 @@
         font-size: 13px;
         line-height: 24px;
         font-family: BlinkMacSystemFont,-apple-system,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
-        padding: 5px;
+        padding: 0px;
+        margin: 0px;
         color: #333;
-        white-space: nowrap;
       }
 
       .info {
         display: block;
-        padding: 0px 0px 8px;
+        padding: 5px 5px 0px;
+        white-space: nowrap;
       }
 
       #file {
@@ -28,14 +29,29 @@
 
       #requestPanel {
         display: block;
-        padding: 0px 0px 8px;
+        padding: 5px 5px 8px;
         white-space: normal;
+        background-color: hsl(48,  100%, 67%);
+      }
+
+      #requestButton {
+        white-space: nowrap;
+      }
+
+      #status {
+        display: block;
+        padding: 0px 5px 8px;
+        white-space: nowrap;
       }
 
       #remark {
         display: block;
-        padding: 0px 0px 8px;
-        color: #666;
+        padding: 0px 5px 0px;
+        white-space: nowrap;
+      }
+
+      #requestPanelSuccessMessage {
+        color: hsl(141, 71%, 48%);
       }
     </style>
   </head>
@@ -50,13 +66,22 @@
       <strong>Base commit:</strong> <span id="pullRequestStartRevision">base-commit</span><br/>
       <strong>Current commit:</strong> <span id="pullRequestEndRevision">current-commit</span>
     </div>
-    <div id="requestPanel">
-      The commits in this page aren't supported by Codelab. You can request Codelab to support this page by clicking on the button below:
-      <br/>
-      <button id="requestButton">Request the commits to be supported</button>
-    </div>
     <div id="remark">
-      <strong>Status:</strong> Connected to <span id="host"></span>
+      <strong>Host:</strong> <span id="host"></span>
+    </div>
+    <div id="status">
+      <strong>Status:</strong> <span id="statusText"></span>
+    </div>
+    <div id="requestPanel">
+      The commit(s), <span id="commitText"></span>, aren't indexed by Codelab.
+      <br/>
+      <button id="requestButton">
+        Click here to index the commit(s)
+      </button>
+      <span id="requestPanelSuccessMessage" style="display: none;">
+        We've received your request. Indexing a commit can take up to 10 minutes.
+        Please later reload the page to see if the commits have been supported.
+      </span>
     </div>
     <script src="popup.js"></script>
   </body>

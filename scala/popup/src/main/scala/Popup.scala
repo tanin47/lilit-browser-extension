@@ -1,18 +1,19 @@
-import chrome.storage2
-import chrome.storage2.Storage
 import chrome.tabs.bindings.{ReloadProperties, TabQuery}
 import helpers.Config
 import org.scalajs.dom
 import org.scalajs.dom.ext.Ajax
 import org.scalajs.dom.ext.Ajax.InputData
 import org.scalajs.dom.raw.{Event, HTMLButtonElement, HTMLElement}
-
-import scala.scalajs.js.JSConverters._
+import storage.Storage
+import storage.Storage.Page
+import storage.Storage.Page.{FilePage, PullRequestPage}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.scalajs.js
 import scala.scalajs.js.JSON
+
+import scala.scalajs.js.JSConverters._
 
 object Popup {
   def main(args: Array[String]): Unit = {
@@ -47,31 +48,25 @@ object Popup {
         registerRequestButton(host)
       }
 
+    chrome.storage.Storage.onChanged.listen { _ =>
+      render()
+    }
+
     render()
   }
 
   def registerRequestButton(host: String): Unit = {
-    val requestButton = dom.document.querySelector("#requestButton")
+    val requestButton = dom.document.querySelector("#requestButton").asInstanceOf[HTMLElement]
 
     requestButton.addEventListener("click", { _: Event =>
       for {
-        data <- storage2.Storage.local
-          .get(Map(
-            "repoName" -> "",
-            "revision" -> "",
-            "startRevision" -> "",
-            "endRevision" -> "",
-          ))
+        page <- Storage.getPage().map(_.get)
         _ <- Ajax
           .post(
             url = s"$host/secret-admin/add",
             data = InputData.str2ajax(JSON.stringify(js.Dynamic.literal(
-              repo = data("repoName").asInstanceOf[String],
-              revision = Seq(
-                data("revision").asInstanceOf[String],
-                data("startRevision").asInstanceOf[String],
-                data("endRevision").asInstanceOf[String]
-              ).filter(_.nonEmpty).toJSArray,
+              repo = page.repoName,
+              revisions = page.missingRevisions.toJSArray,
               rebuildJdk = false
             ))),
             headers = Map(
@@ -80,47 +75,63 @@ object Popup {
             )
           )
       } yield {
-        ()
+        dom.document.querySelector("#requestPanelSuccessMessage").asInstanceOf[HTMLElement].style.display = "block"
+        requestButton.style.display = "none"
       }
     })
-
   }
 
   def render(): Unit = {
-    Storage.local.get(Map("type" -> "")).foreach { result =>
-      result.get("type") match {
-        case Some(tpe) if tpe.asInstanceOf[String] == "file" => renderFile()
-        case Some(tpe) if tpe.asInstanceOf[String] == "pull" => renderPullRequest()
-        case None => renderEmpty()
-      }
+    Storage.getPage().foreach {
+      case Some(file: FilePage) => renderFile(file)
+      case Some(pull: PullRequestPage) => renderPullRequest(pull)
+      case None => renderEmpty()
     }
   }
 
   def renderEmpty(): Unit = {
     dom.document.querySelector("#file").asInstanceOf[HTMLElement].style.display = "none"
     dom.document.querySelector("#pullRequest").asInstanceOf[HTMLElement].style.display = "none"
+    dom.document.querySelector("#requestPanel").asInstanceOf[HTMLElement].style.display = "none"
+    dom.document.querySelector("#statusText").innerHTML = "The page is inapplicable"
   }
 
-  def renderFile(): Unit = {
+  def renderFile(file: FilePage): Unit = {
     dom.document.querySelector("#file").asInstanceOf[HTMLElement].style.display = "block"
     dom.document.querySelector("#pullRequest").asInstanceOf[HTMLElement].style.display = "none"
 
-    storage2.Storage.local.get(Map("repoName" -> "-", "path" -> "-", "revision" -> "-")).foreach { result =>
-      dom.document.querySelector("#fileRepo").innerHTML = result.getOrElse("repoName", "-").asInstanceOf[String]
-      dom.document.querySelector("#filePath").innerHTML = result.getOrElse("path", "-").asInstanceOf[String]
-      dom.document.querySelector("#fileRevision").innerHTML = result.getOrElse("revision", "-").asInstanceOf[String]
-    }
+    dom.document.querySelector("#fileRepo").innerHTML = file.repoName
+    dom.document.querySelector("#filePath").innerHTML = file.path
+    dom.document.querySelector("#fileRevision").innerHTML = file.revision.take(6)
+
+    dom.document.querySelector("#statusText").innerHTML = file.status.toString
+
+    renderRequestPanel(file)
   }
 
-  def renderPullRequest(): Unit = {
+  def renderPullRequest(pull: PullRequestPage): Unit = {
     dom.document.querySelector("#file").asInstanceOf[HTMLElement].style.display = "none"
     dom.document.querySelector("#pullRequest").asInstanceOf[HTMLElement].style.display = "block"
 
-    storage2.Storage.local.get(Map("repoName" -> "-", "startRevision" -> "-", "endRevision" -> "-")).foreach { result =>
-      dom.document.querySelector("#pullRequestRepo").innerHTML = result.getOrElse("repoName", "-").asInstanceOf[String]
-      dom.document.querySelector("#pullRequestStartRevision").innerHTML = result.getOrElse("startRevision", "-").asInstanceOf[String]
-      dom.document.querySelector("#pullRequestEndRevision").innerHTML = result.getOrElse("endRevision", "-").asInstanceOf[String]
+    dom.document.querySelector("#pullRequestRepo").innerHTML = pull.repoName
+    dom.document.querySelector("#pullRequestStartRevision").innerHTML = pull.startRevision.take(6)
+    dom.document.querySelector("#pullRequestEndRevision").innerHTML = pull.endRevision.take(6)
+
+    dom.document.querySelector("#statusText").innerHTML = pull.status.toString
+
+    renderRequestPanel(pull)
+  }
+
+  def renderRequestPanel(page: Page.Value): Unit = {
+    val requestPanel = dom.document.querySelector("#requestPanel").asInstanceOf[HTMLElement]
+
+    if (page.missingRevisions.isEmpty) {
+      requestPanel.style.display = "none"
+      return
     }
 
+    val commitText = page.missingRevisions.map(_.take(6)).mkString(" and ")
+    requestPanel.querySelector("#commitText").innerHTML = commitText
+    requestPanel.style.display = "block"
   }
 }

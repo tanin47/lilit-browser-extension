@@ -7,6 +7,8 @@ import org.scalajs.dom.Element
 import org.scalajs.dom.ext._
 import org.scalajs.dom.raw.HTMLElement
 
+import scala.scalajs.js
+
 object DiffView {
   case class Data(
     revision: String,
@@ -37,15 +39,33 @@ class DiffView(
     }
   )
 
-  observer.observe(
-    elem.querySelector("table tbody"),
-    new Options {
-      val childList = true
-      val attributes = false
-      val characterData = false
-      val subtree = false
-    }
-  )
+  println(s"[Codelab] Build ${elem.id}.")
+  Option(elem.querySelector("table tbody")) match {
+    case Some(tbody) =>
+      println(s"[Codelab] ${elem.id}'s diff is visible.")
+      observer.observe(
+        tbody,
+        new Options {
+          val childList = true
+          val attributes = false
+          val characterData = false
+          val subtree = false
+        }
+      )
+      tbody.setAttribute(PROCESSED_ATTR_NAME, "true")
+    // The diff is hidden because it is too long
+    case None =>
+      println(s"[Codelab] ${elem.id}'s diff is hidden.")
+      observer.observe(
+        elem.querySelector(".js-diff-load-container"),
+        new Options {
+          val childList = true
+          val attributes = false
+          val characterData = false
+          val subtree = false
+        }
+      )
+  }
 
   run()
 
@@ -78,6 +98,19 @@ class DiffView(
   }
 
   private[this] def run(): Unit = {
+    Option(elem.querySelector("table body"))
+      .filter(_.getAttribute(PROCESSED_ATTR_NAME) == null)
+      .foreach { tbody =>
+        observer.observe(
+          tbody,
+          new Options {
+            val childList = true
+            val attributes = false
+            val characterData = false
+            val subtree = false
+          }
+        )
+      }
     elem.querySelectorAll(".file-diff-split tr")
       .map(_.asInstanceOf[HTMLElement])
       .filter { row =>

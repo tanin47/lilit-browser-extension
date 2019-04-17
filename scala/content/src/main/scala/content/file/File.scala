@@ -7,11 +7,14 @@ import models.bindings
 import models.bindings.{FileRequest, FileRequestRequest}
 import org.scalajs.dom
 import org.scalajs.dom.raw.HTMLElement
+import storage.Storage
+import storage.Storage.Page.FilePage
+import storage.Storage.Status
 
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.scalajs.js.JavaScriptException
 
 object File {
   def apply(): Unit = {
@@ -51,29 +54,50 @@ object File {
     println("[Codelab] Fetch data")
 
     for {
-      _ <- chrome.storage2.Storage.local.set(Map(
-        "type" -> "file",
-        "repoName" -> repoName,
-        "revision" -> revision,
-        "path" -> path
+      _ <- Storage.setPage(FilePage(
+        repoName = repoName,
+        revision = revision,
+        path = path,
+        missingRevisions = Seq.empty,
+        status = Status.Loading
       ))
       host <- Config.getHost()
     } yield {
       chrome.runtime.Runtime.sendMessage(
         message = new FileRequestRequest(repoName, Seq(new FileRequest(path = path, revision = revision)).toJSArray),
         responseCallback = js.defined { data =>
-          println("[Codelab] Fetched data successfully")
+          val resp = data.asInstanceOf[bindings.FileRequestResponse]
 
-          data.asInstanceOf[bindings.FileRequestResponse].files.foreach { file =>
-            new View(
-              repoName = repoName,
-              revision = revision,
-              path = file.path,
-              host = host,
-              branchOpt = Some(branch),
-              selectedNodeIdOpt = selectedNodeIdOpt,
-              lineTokensList = LineTokens.build(file)
-            )
+          if (resp.success) {
+            println("[Codelab] Fetched data successfully")
+
+            Storage
+              .setMissingRevisions(resp.files.filterNot(_.isSupported).map(_.revision).distinct)
+              .foreach { _ =>
+                try {
+                  resp.files.foreach { file =>
+                    new View(
+                      repoName = repoName,
+                      revision = revision,
+                      path = file.path,
+                      host = host,
+                      branchOpt = Some(branch),
+                      selectedNodeIdOpt = selectedNodeIdOpt,
+                      lineTokensList = LineTokens.build(file)
+                    )
+                  }
+                  Storage.setStatus(Status.Completed)
+                  println("[Codelab] Rendered the page successfully.")
+                } catch {
+                  case e: JavaScriptException =>
+                    Storage.setStatus(Status.Failed)
+                    js.Dynamic.global.console.error("[Codelab] Failed to render the page. See the below error:")
+                    js.Dynamic.global.console.error(e.exception.asInstanceOf[js.Any])
+                }
+              }
+          } else {
+            println("[Codelab] Failed to fetch data")
+            Storage.setStatus(Status.Failed)
           }
         }
       )

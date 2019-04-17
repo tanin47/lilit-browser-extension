@@ -2,7 +2,7 @@ import chrome.declarativeContent.DeclarativeContent.PageStateMatcher.PageUrl
 import chrome.declarativeContent.DeclarativeContent.{PageStateMatcher, ShowPageAction}
 import chrome.events.Rule
 import helpers.Config
-import models.bindings.FileRequestRequest
+import models.bindings.{FileRequestRequest, FileRequestResponse}
 import org.scalajs.dom
 import org.scalajs.dom.ext.Ajax
 
@@ -59,11 +59,17 @@ object Background {
                   if (xhr.status == 200) {
                     JSON.parse(xhr.responseText)
                   } else {
-                    ()
+                    new FileRequestResponse {
+                      val success = false
+                      val files = js.Array()
+                    }
                   }
                 },
               failure = {
-
+                new FileRequestResponse {
+                  val success = false
+                  val files = js.Array()
+                }
               }
             )
         }
