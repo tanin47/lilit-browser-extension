@@ -1,8 +1,63 @@
 <!DOCTYPE html>
 <html>
-  <head></head>
+  <head>
+    <style type="text/css">
+      body {
+        position: relative;
+        vertical-align: middle;
+        font-size: 13px;
+        line-height: 24px;
+        font-family: BlinkMacSystemFont,-apple-system,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+        padding: 5px;
+        color: #333;
+        white-space: nowrap;
+      }
+
+      .info {
+        display: block;
+        padding: 0px 0px 8px;
+      }
+
+      #file {
+        display: none;
+      }
+
+      #pullRequest {
+        display: none;
+      }
+
+      #requestPanel {
+        display: block;
+        padding: 0px 0px 8px;
+        white-space: normal;
+      }
+
+      #remark {
+        display: block;
+        padding: 0px 0px 8px;
+        color: #666;
+      }
+    </style>
+  </head>
   <body>
-    Connected to <span id="host"></span>
+    <div class="info" id="file">
+      <strong>Repository:</strong> <span id="fileRepo">stripe/stripe-java</span><br/>
+      <strong>File:</strong> <span id="filePath">/some/path</span><br/>
+      <strong>Commit:</strong> <span id="fileRevision">some-commit</span>
+    </div>
+    <div class="info" id="pullRequest">
+      <strong>Repository:</strong> <span id="pullRequestRepo">stripe/stripe-java</span><br/>
+      <strong>Base commit:</strong> <span id="pullRequestStartRevision">base-commit</span><br/>
+      <strong>Current commit:</strong> <span id="pullRequestEndRevision">current-commit</span>
+    </div>
+    <div id="requestPanel">
+      The commits in this page aren't supported by Codelab. You can request Codelab to support this page by clicking on the button below:
+      <br/>
+      <button id="requestButton">Request the commits to be supported</button>
+    </div>
+    <div id="remark">
+      <strong>Status:</strong> Connected to <span id="host"></span>
+    </div>
     <script src="popup.js"></script>
   </body>
 </html>

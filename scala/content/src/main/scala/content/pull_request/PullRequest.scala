@@ -30,15 +30,22 @@ object PullRequest {
 
     val view = dom.document.querySelector("#files")
 
-    Config.getHost()
-      .foreach { host =>
-        new View(
-          repoName = repoName,
-          host = host,
-          startRevision = startRevision,
-          endRevision = endRevision,
-          elem = view
-        )
-      }
+    for {
+      _ <- chrome.storage2.Storage.local.set(Map(
+        "type" -> "pull",
+        "repoName" -> repoName,
+        "startRevision" -> startRevision,
+        "endRevision" -> endRevision
+      ))
+      host <- Config.getHost()
+    } yield {
+      new View(
+        repoName = repoName,
+        host = host,
+        startRevision = startRevision,
+        endRevision = endRevision,
+        elem = view
+      )
+    }
   }
 }

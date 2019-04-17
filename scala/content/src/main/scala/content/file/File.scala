@@ -50,28 +50,33 @@ object File {
 
     println("[Codelab] Fetch data")
 
-    Config.getHost()
-      .foreach { host =>
-        chrome.runtime.Runtime.sendMessage(
-          message = new FileRequestRequest(repoName, Seq(new FileRequest(path = path, revision = revision)).toJSArray),
-          responseCallback = js.defined { data =>
-            println("[Codelab] Fetched data successfully")
+    for {
+      _ <- chrome.storage2.Storage.local.set(Map(
+        "type" -> "file",
+        "repoName" -> repoName,
+        "revision" -> revision,
+        "path" -> path
+      ))
+      host <- Config.getHost()
+    } yield {
+      chrome.runtime.Runtime.sendMessage(
+        message = new FileRequestRequest(repoName, Seq(new FileRequest(path = path, revision = revision)).toJSArray),
+        responseCallback = js.defined { data =>
+          println("[Codelab] Fetched data successfully")
 
-            data.asInstanceOf[bindings.FileRequestResponse].files.foreach { file =>
-              new View(
-                repoName = repoName,
-                revision = revision,
-                path = file.path,
-                host = host,
-                branchOpt = Some(branch),
-                selectedNodeIdOpt = selectedNodeIdOpt,
-                lineTokensList = LineTokens.build(file)
-              )
-            }
+          data.asInstanceOf[bindings.FileRequestResponse].files.foreach { file =>
+            new View(
+              repoName = repoName,
+              revision = revision,
+              path = file.path,
+              host = host,
+              branchOpt = Some(branch),
+              selectedNodeIdOpt = selectedNodeIdOpt,
+              lineTokensList = LineTokens.build(file)
+            )
           }
-        )
-      }
-
-
+        }
+      )
+    }
   }
 }
