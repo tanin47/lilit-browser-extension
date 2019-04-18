@@ -1,12 +1,12 @@
 package storage
 
+import models.bindings.SetIconRequest
 import storage.Storage.Page.{FilePage, PullRequestPage}
 import storage.bindings.RawPage
 
 import scala.concurrent.{Future, Promise}
 import scala.scalajs.js
 import scala.util.Success
-
 import scala.scalajs.js.JSConverters._
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -132,6 +132,9 @@ object Storage {
         }
     }
 
+    chrome.runtime.Runtime.sendMessage(
+      message = new SetIconRequest(pageOpt = js.defined(raw))
+    )
     chrome.storage.Storage.local
       .set(js.Dictionary(
         "page" -> raw.asInstanceOf[js.Dictionary[js.Any]]
@@ -152,6 +155,11 @@ object Storage {
     } yield {
       ()
     }
+  }
+
+  def clear(): Future[Unit] = {
+    chrome.runtime.Runtime.sendMessage(message = new SetIconRequest(pageOpt = js.undefined))
+    chrome.storage.Storage.local.clear
   }
 
   def setStatus(status: Status.Value): Future[Unit] = {

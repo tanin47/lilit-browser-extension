@@ -130,7 +130,7 @@ buildProd := {
   val zipFolder = target.value / "prod"
 
   println(s"Building ${zipFile.getCanonicalPath}")
-  val entries = IO.listFiles(zipFolder).map { file => file -> file.relativeTo(zipFolder).get.toString }
+  val entries = Path.allSubpaths(zipFolder).map { case (file, _) => file -> file.relativeTo(zipFolder).get.toString }.toList
 
   entries.foreach { case (file, entry) =>
     println(s"  $entry -> ${file.getCanonicalPath}")

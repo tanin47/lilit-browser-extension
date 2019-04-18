@@ -1,13 +1,14 @@
 package content
 
+import chrome.pageAction.bindings.SetIconDetails
 import chrome.webNavigation.bindings.OnCommittedDetails
 import content.bindings.Tippy
 import content.file.File
 import content.pull_request.PullRequest
 import org.scalajs.dom
+import storage.Storage
 
 import scala.scalajs.js
-
 import scala.concurrent.ExecutionContext.Implicits.global
 
 object Content {
@@ -39,7 +40,7 @@ object Content {
 
     val tokens = dom.window.location.href.split("/")
 
-    chrome.storage2.Storage.local.clear()
+    Storage.clear()
       .foreach { _ =>
         if (tokens.length >= 6 && (tokens(5) == "blob" || tokens(5) == "tree")) {
           File.apply()

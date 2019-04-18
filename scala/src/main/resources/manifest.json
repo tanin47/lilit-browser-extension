@@ -1,9 +1,14 @@
 {
   "name": "Codelab [Alpha]",
-  "version": "0.0.0.2",
+  "version": "0.0.0.4",
   "description": "",
   "manifest_version": 2,
-  "permissions": ["declarativeContent", "activeTab", "storage", "webNavigation"],
+  "permissions": [
+    "declarativeContent",
+    "activeTab",
+    "storage",
+    "webNavigation"
+  ],
   "background": {
     "scripts": ["background.js"],
     "persistent": false

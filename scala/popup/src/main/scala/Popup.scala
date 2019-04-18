@@ -1,3 +1,4 @@
+import chrome.pageAction.bindings.SetIconDetails
 import chrome.tabs.bindings.{ReloadProperties, TabQuery}
 import helpers.Config
 import org.scalajs.dom
@@ -11,9 +12,8 @@ import storage.Storage.Page.{FilePage, PullRequestPage}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.scalajs.js
-import scala.scalajs.js.JSON
-
 import scala.scalajs.js.JSConverters._
+import scala.scalajs.js.JSON
 
 object Popup {
   def main(args: Array[String]): Unit = {
@@ -53,6 +53,7 @@ object Popup {
     }
 
     render()
+
   }
 
   def registerRequestButton(host: String): Unit = {
@@ -67,7 +68,8 @@ object Popup {
             data = InputData.str2ajax(JSON.stringify(js.Dynamic.literal(
               repo = page.repoName,
               revisions = page.missingRevisions.toJSArray,
-              rebuildJdk = false
+              rebuildJdk = false,
+              rebuildRevision = false
             ))),
             headers = Map(
               "Content-Type" -> "application/json",

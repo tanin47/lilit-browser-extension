@@ -15,7 +15,7 @@ class View(
   val lineTokensList: Seq[LineTokens]
 ) {
 
-  val highlightedLines = mutable.ListBuffer.empty[Int]
+  val highlightedLines = mutable.SortedSet.empty[Int]
 
   run()
 
@@ -35,13 +35,17 @@ class View(
       val shouldLineBeHighlighted = tokenizer.process(lineElem)
 
       if (shouldLineBeHighlighted) {
-        highlightedLines.append(lineTokens.line)
+        highlightedLines.add(lineTokens.line)
       }
     }
 
     highlightedLines.foreach { line =>
       val lineElem = dom.document.querySelector(s"#LC$line")
       lineElem.classList.add("highlighted")
+    }
+
+    highlightedLines.headOption.foreach { line =>
+      dom.window.location.hash = s"#LC$line"
     }
   }
 }

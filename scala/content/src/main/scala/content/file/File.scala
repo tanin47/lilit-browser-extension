@@ -11,9 +11,9 @@ import storage.Storage
 import storage.Storage.Page.FilePage
 import storage.Storage.Status
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.scalajs.js.JavaScriptException
 
 object File {
