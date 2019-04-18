@@ -14,5 +14,5 @@ trait Definition extends js.Object {
   def module: String
   def jarIdOpt: js.UndefOr[Int]
   def locationOpt: js.UndefOr[Location]
-  def counts: js.Array[UsageCount]
+  def count: UserUsageCount
 }

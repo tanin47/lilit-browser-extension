@@ -1,7 +1,7 @@
 package content.tokenizer
 
 import content.bindings.Tippy
-import models.{Definition, Token, Usage, UsageCount, UsageDefinition}
+import models.{Definition, Token, Usage, UsageDefinition}
 import org.scalajs.dom
 import org.scalajs.dom.Element
 import org.scalajs.dom.raw.Node
@@ -22,10 +22,8 @@ class LineTokenizer(
   var col: Int = 1
   var shouldLineBeHighlighted: Boolean = false
 
-  def getUsageUrl(count: UsageCount): String = count.module match {
-    case "Jdk" => s"$host/github/$repoName/$revision/jdk/${count.firstPath}?p=${count.nodeId}"
-    case "Jar" => s"$host/github/$repoName/$revision/${count.firstJarOpt.map(_.id).get}/${count.firstPath}?p=${count.nodeId}"
-    case "User" => s"/$repoName/blob/${branchOpt.getOrElse(revision)}/${count.firstPath}?p=${count.nodeId}"
+  def getUsageUrl(path: String, nodeId: String): String = {
+    s"/$repoName/blob/${branchOpt.getOrElse(revision)}/$path?p=$nodeId"
   }
 
   def makeUrlOpt(token: Token): Option[String] = token match {
@@ -40,10 +38,12 @@ class LineTokenizer(
         }
     case definition: Definition =>
       Some(
-        if (definition.counts.isEmpty) {
+        if (definition.count.mainCount == 0 && definition.count.otherCount == 0) {
           "javascript: return false;"
-        } else if (definition.counts.size == 1) {
-          getUsageUrl(definition.counts.head)
+        } else if (definition.count.mainCount > 0 && definition.count.otherCount == 0) {
+          getUsageUrl(definition.count.mainPath, definition.nodeId)
+        } else if (definition.count.mainCount == 0 && definition.count.otherFileCount == 1) {
+          getUsageUrl(definition.count.otherFirstFilePathOpt.get, definition.nodeId)
         } else {
           s"$host/github/$repoName/$revision/usage/${definition.nodeId}"
         }
@@ -53,12 +53,6 @@ class LineTokenizer(
   def getModuleName(definition: UsageDefinition): String = definition.module match {
     case "Jdk" => "JDK"
     case "Jar" => definition.jarOpt.map { j => s"${j.group}:${j.artifact}:${j.version}" }.get
-    case "User" => repoName
-  }
-
-  def getModuleName(count: UsageCount): String = count.module match {
-    case "Jdk" => "JDK"
-    case "Jar" => "jars"
     case "User" => repoName
   }
 
@@ -90,37 +84,28 @@ class LineTokenizer(
         }
         .getOrElse(s"Defined inside ${getModuleName(u.definition)}")
     case d: Definition =>
-      if (d.counts.isEmpty) {
+      if (d.count.mainCount == 0 && d.count.otherCount == 0) {
         "No occurrences found"
-      } else if (d.counts.size == 1) {
-        val first = d.counts.head
-
-        if (first.module == "User" && first.firstPath == path) {
-          s"Found ${first.count} ${renderOccurrenceWord(first.count)} only in this file"
-        } else {
-          s"Found ${first.count} ${renderOccurrenceWord(first.count)} only in ${first.firstPath} inside ${getModuleName(first)}"
-        }
+      } else if (d.count.mainCount > 0 && d.count.otherCount == 0) {
+        s"Found ${d.count.mainCount} ${renderOccurrenceWord(d.count.mainCount)} only in this file"
+      } else if (d.count.mainCount == 0 && d.count.otherFileCount == 1) {
+        s"Found ${d.count.otherCount} ${renderOccurrenceWord(d.count.otherCount)} only in ${d.count.otherFirstFilePathOpt.get}"
       } else {
-        val (thisFileCountOpt, otherFileCounts) = d.counts.partition { d => (d.module, d.firstPath) == ("User", path) }
+        val thisFileLabelOpt = if (d.count.mainCount > 0) {
+          Some(s"""Found <a href='${getUsageUrl(d.count.mainPath, d.nodeId)}'>${d.count.mainCount} ${renderOccurrenceWord(d.count.mainCount)} in this file</a>""")
+        } else {
+          None
+        }
 
-        val thisFileLabel = thisFileCountOpt
-          .map { count =>
-            s"""Found <a href='${getUsageUrl(count)}'>${count.count} ${renderOccurrenceWord(count.count)} in this file</a>"""
-          }
+        val otherFileLabelOpt = if (d.count.otherFileCount == 1) {
+          Some(s"Found <a href='${getUsageUrl(d.count.otherFirstFilePathOpt.get, d.nodeId)}'>${d.count.otherCount} ${renderOccurrenceWord(d.count.otherCount)} in ${d.count.otherFirstFilePathOpt.get}</a>")
+        } else if (d.count.otherFileCount > 1) {
+          Some(s"Found ${d.count.otherCount} ${renderOccurrenceWord(d.count.otherCount)} (${d.count.otherFileCount} ${renderFileWord(d.count.otherFileCount)})")
+        } else {
+          None
+        }
 
-        val otherFileLabels = otherFileCounts
-          .sortBy { c =>
-            c.module match {
-              case "Jdk" => 3
-              case "Jar" => 2
-              case "User" => 1
-            }
-          }
-          .map { count =>
-            s"Found ${count.count} ${renderOccurrenceWord(count.count)} inside ${getModuleName(count)} (${count.fileCount} ${renderFileWord(count.fileCount)})"
-          }
-
-        (thisFileLabel ++ otherFileLabels).mkString("<br/>")
+        (thisFileLabelOpt ++ otherFileLabelOpt).mkString("<br/>")
       }
   }
 

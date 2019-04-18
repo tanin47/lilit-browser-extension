@@ -79,7 +79,7 @@ object Definition {
       module = raw.module,
       jarIdOpt = raw.jarIdOpt.toOption,
       locationOpt = raw.locationOpt.filter(_ != null).map(Location.from).toOption,
-      counts = raw.counts.map(UsageCount.from).toSeq,
+      count = UserUsageCount.from(raw.count)
     )
   }
 }
@@ -89,31 +89,29 @@ case class Definition(
   module: String,
   jarIdOpt: Option[Int],
   locationOpt: Option[Location],
-  counts: Seq[UsageCount],
+  count: UserUsageCount
 ) extends Token {
   lazy val location = locationOpt.get
 }
 
-object UsageCount {
-  def from(raw: bindings.UsageCount): UsageCount = {
-    UsageCount(
-      nodeId = raw.nodeId,
-      module = raw.module,
-      count = raw.count,
-      fileCount = raw.fileCount,
-      firstJarOpt = raw.firstJarOpt.filter(_ != null).map(Jar.from).toOption,
-      firstPath = raw.firstPath,
+object UserUsageCount {
+  def from(raw: bindings.UserUsageCount): UserUsageCount = {
+    UserUsageCount(
+      mainPath = raw.mainPath,
+      mainCount = raw.mainCount,
+      otherCount = raw.otherCount,
+      otherFileCount = raw.otherFileCount,
+      otherFirstFilePathOpt = raw.otherFirstFilePathOpt.toOption,
     )
   }
 }
 
-case class UsageCount(
-  nodeId: String,
-  module: String,
-  count: Int,
-  fileCount: Int,
-  firstJarOpt: Option[Jar],
-  firstPath: String,
+case class UserUsageCount(
+  mainPath: String,
+  mainCount: Int,
+  otherCount: Int,
+  otherFileCount: Int,
+  otherFirstFilePathOpt: Option[String]
 )
 
 object Jar {

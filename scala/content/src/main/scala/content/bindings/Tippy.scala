@@ -17,6 +17,7 @@ object Tippy extends js.Any {
 
   trait SetDefaultsOptions extends js.Object {
     def animation: js.UndefOr[String]
+    def boundary: js.UndefOr[String]
     def interactive: js.UndefOr[Boolean]
     def maxWidth: js.UndefOr[Int]
     def arrow: js.UndefOr[Boolean]

@@ -25,6 +25,7 @@ object Content {
 
     Tippy.setDefaults(new Tippy.SetDefaultsOptions {
       val animation = "fade"
+      val boundary = "viewport"
       val interactive = true
       val maxWidth = 800
       val arrow = true
