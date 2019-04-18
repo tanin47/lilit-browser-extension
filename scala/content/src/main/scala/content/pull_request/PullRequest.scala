@@ -2,7 +2,7 @@ package content.pull_request
 
 import helpers.Config
 import org.scalajs.dom
-import org.scalajs.dom.raw.HTMLInputElement
+import org.scalajs.dom.raw.{HTMLElement, HTMLInputElement}
 import storage.Storage
 import storage.Storage.Page.PullRequestPage
 import storage.Storage.Status
@@ -31,7 +31,7 @@ object PullRequest {
 
     println(s"[Codelab] Base revision: $startRevision, target revision: $endRevision")
 
-    val view = dom.document.querySelector("#files")
+    val view = dom.document.querySelector("#files").asInstanceOf[HTMLElement]
 
     for {
       _ <- Storage.setPage(PullRequestPage(
@@ -43,13 +43,16 @@ object PullRequest {
       ))
       host <- Config.getHost()
     } yield {
-      new View(
-        repoName = repoName,
-        host = host,
-        startRevision = startRevision,
-        endRevision = endRevision,
-        elem = view
-      )
+      // The page might be navigated away.
+      if (dom.document.body.contains(view)) {
+        new View(
+          repoName = repoName,
+          host = host,
+          startRevision = startRevision,
+          endRevision = endRevision,
+          elem = view
+        )
+      }
     }
   }
 }

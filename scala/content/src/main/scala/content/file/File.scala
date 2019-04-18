@@ -53,52 +53,59 @@ object File {
 
     println("[Codelab] Fetch data")
 
+    val currentPage = FilePage(
+      repoName = repoName,
+      revision = revision,
+      path = path,
+      missingRevisions = Seq.empty,
+      status = Status.Loading
+    )
+
     for {
-      _ <- Storage.setPage(FilePage(
-        repoName = repoName,
-        revision = revision,
-        path = path,
-        missingRevisions = Seq.empty,
-        status = Status.Loading
-      ))
+      _ <- Storage.setPage(currentPage)
       host <- Config.getHost()
     } yield {
       chrome.runtime.Runtime.sendMessage(
         message = new FileRequestRequest(repoName, Seq(new FileRequest(path = path, revision = revision)).toJSArray),
         responseCallback = js.defined { data =>
-          val resp = data.asInstanceOf[bindings.FileRequestResponse]
+          Storage.getPage()
+            // The page might be navigated away.
+            .filter(_.contains(currentPage))
+            .foreach { _ =>
+              val resp = data.asInstanceOf[bindings.FileRequestResponse]
 
-          if (resp.success) {
-            println("[Codelab] Fetched data successfully")
+              if (resp.success) {
+                println("[Codelab] Fetched data successfully")
 
-            Storage
-              .setMissingRevisions(resp.files.filterNot(_.isSupported).map(_.revision).distinct)
-              .foreach { _ =>
-                try {
-                  resp.files.foreach { file =>
-                    new View(
-                      repoName = repoName,
-                      revision = revision,
-                      path = file.path,
-                      host = host,
-                      branchOpt = Some(branch),
-                      selectedNodeIdOpt = selectedNodeIdOpt,
-                      lineTokensList = LineTokens.build(file)
-                    )
+                Storage
+                  .setMissingRevisions(resp.files.filterNot(_.isSupported).map(_.revision).distinct)
+                  .foreach { _ =>
+                    try {
+                      resp.files.foreach { file =>
+                        new View(
+                          repoName = repoName,
+                          revision = revision,
+                          path = file.path,
+                          host = host,
+                          branchOpt = Some(branch),
+                          selectedNodeIdOpt = selectedNodeIdOpt,
+                          lineTokensList = LineTokens.build(file)
+                        )
+                      }
+                      Storage.setStatus(Status.Completed)
+                      println("[Codelab] Rendered the page successfully.")
+                    } catch {
+                      case e: JavaScriptException =>
+                        Storage.setStatus(Status.Failed)
+                        js.Dynamic.global.console.error("[Codelab] Failed to render the page. See the below error:")
+                        js.Dynamic.global.console.error(e.exception.asInstanceOf[js.Any])
+                    }
                   }
-                  Storage.setStatus(Status.Completed)
-                  println("[Codelab] Rendered the page successfully.")
-                } catch {
-                  case e: JavaScriptException =>
-                    Storage.setStatus(Status.Failed)
-                    js.Dynamic.global.console.error("[Codelab] Failed to render the page. See the below error:")
-                    js.Dynamic.global.console.error(e.exception.asInstanceOf[js.Any])
-                }
+              } else {
+                println("[Codelab] Failed to fetch data")
+                Storage.setStatus(Status.Failed)
               }
-          } else {
-            println("[Codelab] Failed to fetch data")
-            Storage.setStatus(Status.Failed)
-          }
+            }
         }
       )
     }

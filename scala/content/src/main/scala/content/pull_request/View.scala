@@ -4,6 +4,7 @@ import content.bindings.MutationObserver
 import content.bindings.MutationObserver.Options
 import content.tokenizer.LineTokens
 import models.bindings.{FileRequest, FileRequestRequest, FileRequestResponse}
+import org.scalajs.dom
 import org.scalajs.dom.Element
 import org.scalajs.dom.ext._
 import org.scalajs.dom.raw.HTMLElement
@@ -32,7 +33,7 @@ class View(
   host: String,
   startRevision: String,
   endRevision: String,
-  elem: Element
+  elem: HTMLElement
 ) {
 
   import View._
@@ -125,20 +126,23 @@ class View(
 
 
                 diffElems.foreach { diffElem =>
-                  new DiffView(
-                    repoName = repoName,
-                    path = diffElem.path,
-                    host = host,
-                    elem = diffElem.node,
-                    startRevisionData = DiffView.Data(
-                      revision = startRevision,
-                      lineTokens = LineTokens.build(fileByRevisionAndPath((startRevision, diffElem.path)))
-                    ),
-                    endRevisionData = DiffView.Data(
-                      revision = endRevision,
-                      lineTokens = LineTokens.build(fileByRevisionAndPath((endRevision, diffElem.path)))
+                  // The page might be navigated away.
+                  if (elem.contains(diffElem.node)) {
+                    new DiffView(
+                      repoName = repoName,
+                      path = diffElem.path,
+                      host = host,
+                      elem = diffElem.node,
+                      startRevisionData = DiffView.Data(
+                        revision = startRevision,
+                        lineTokens = LineTokens.build(fileByRevisionAndPath((startRevision, diffElem.path)))
+                      ),
+                      endRevisionData = DiffView.Data(
+                        revision = endRevision,
+                        lineTokens = LineTokens.build(fileByRevisionAndPath((endRevision, diffElem.path)))
+                      )
                     )
-                  )
+                  }
                 }
                 Storage.setStatus(Status.Completed)
                 println(s"[Codelab] Rendered successfully: $pathLogLine.")
