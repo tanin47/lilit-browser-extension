@@ -7,7 +7,7 @@ import chrome.tabs.bindings.TabQuery
 import helpers.Config
 import models.bindings.{BackgroundScriptRequest, FileRequestRequest, FileRequestResponse, SetIconRequest}
 import org.scalajs.dom
-import org.scalajs.dom.ext.Ajax
+import org.scalajs.dom.ext.{Ajax, AjaxException}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{Future, Promise}
@@ -92,19 +92,31 @@ object Background {
               )
           }
           .map { xhr =>
-            if (xhr.status == 200) {
-              JSON.parse(xhr.responseText)
-            } else {
-              new FileRequestResponse {
-                val success = false
-                val files = js.Array()
+            assert(xhr.status == 200)
+            JSON.parse(xhr.responseText)
+          }
+          .recover {
+            case e: AjaxException =>
+              if (e.xhr.status == 404) {
+                new FileRequestResponse {
+                  val success = false
+                  val files = js.Array()
+                  val unsupportedRepo = true
+                }
+              } else {
+                new FileRequestResponse {
+                  val success = false
+                  val files = js.Array()
+                  val unsupportedRepo = false
+                }
               }
-            }
-          },
+          }
+        ,
         failure = {
           new FileRequestResponse {
             val success = false
             val files = js.Array()
+            val unsupportedRepo = false
           }
         }
       )

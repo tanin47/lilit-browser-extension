@@ -144,18 +144,24 @@ class View(
                     )
                   }
                 }
-                Storage.setStatus(Status.Completed)
+                Storage.setCompleted()
                 println(s"[Codelab] Rendered successfully: $pathLogLine.")
               } catch {
                 case e: JavaScriptException =>
-                  Storage.setStatus(Status.Failed)
+                  Storage.setFailed(None)
                   js.Dynamic.global.console.error(s"[Codelab] Failed to render: $pathLogLine.")
                   js.Dynamic.global.console.error(e.exception.asInstanceOf[js.Any])
               }
             }
         } else {
           println(s"[Codelab] Failed to fetch data: $pathLogLine")
-          Storage.setStatus(Status.Failed)
+          Storage.setFailed(
+            if (resp.unsupportedRepo.contains(true)) {
+              Some(s"$repoName isn't supported.")
+            } else {
+              None
+            }
+          )
         }
       }
     )

@@ -35,29 +35,35 @@ object Storage {
       def repoName: String
       def missingRevisions: Seq[String]
       def status: Status.Value
+      def failureReasonOpt: Option[String]
 
       def setStatus(newStatus: Status.Value): Value
       def setMissingRevisions(newMissingRevisions: Seq[String]): Value
+      def setFailureReasonOpt(failureReasonOpt: Option[String]): Value
     }
     case class FilePage(
       repoName: String,
       revision: String,
       path: String,
       missingRevisions: Seq[String],
-      status: Status.Value
+      status: Status.Value,
+      failureReasonOpt: Option[String]
     ) extends Value {
       def setStatus(newStatus: Status.Value): Value = this.copy(status = newStatus)
       def setMissingRevisions(newMissingRevisions: Seq[String]): Value = this.copy(missingRevisions = newMissingRevisions)
+      def setFailureReasonOpt(newFailureReasonOpt: Option[String]): Value = this.copy(failureReasonOpt = newFailureReasonOpt)
     }
     case class PullRequestPage(
       repoName: String,
       startRevision: String,
       endRevision: String,
       missingRevisions: Seq[String],
-      status: Status.Value
+      status: Status.Value,
+      failureReasonOpt: Option[String]
     ) extends Value {
       def setStatus(newStatus: Status.Value): Value = this.copy(status = newStatus)
       def setMissingRevisions(newMissingRevisions: Seq[String]): Value = this.copy(missingRevisions = newMissingRevisions)
+      def setFailureReasonOpt(newFailureReasonOpt: Option[String]): Value = this.copy(failureReasonOpt = newFailureReasonOpt)
     }
 
     def convert(raw: RawPage): Value = {
@@ -67,13 +73,15 @@ object Storage {
           revision = raw.revisionOpt.get,
           path = raw.pathOpt.get,
           missingRevisions = raw.missingRevisions.toSeq,
-          status = Status.convert(raw.status))
+          status = Status.convert(raw.status),
+          failureReasonOpt = raw.failureReasonOpt.toOption)
         case "pull" => PullRequestPage(
           repoName = raw.repoName,
           startRevision = raw.startRevisionOpt.get,
           endRevision = raw.endRevisionOpt.get,
           missingRevisions = raw.missingRevisions.toSeq,
-          status = Status.convert(raw.status))
+          status = Status.convert(raw.status),
+          failureReasonOpt = raw.failureReasonOpt.toOption)
       }
     }
   }
@@ -96,6 +104,7 @@ object Storage {
                 val endRevisionOpt = dict.get("endRevisionOpt").map(_.asInstanceOf[String]).orUndefined
                 val missingRevisions = dict("missingRevisions").asInstanceOf[js.Array[String]]
                 val status = dict("status").asInstanceOf[String]
+                val failureReasonOpt = dict.get("failureReasonOpt").map(_.asInstanceOf[String]).orUndefined
               })
             }
         ))
@@ -118,6 +127,7 @@ object Storage {
           val endRevisionOpt = js.undefined
           val missingRevisions = file.missingRevisions.toJSArray
           val status = file.status.toString
+          val failureReasonOpt = file.failureReasonOpt.orUndefined
         }
       case pull: PullRequestPage =>
         new RawPage {
@@ -129,6 +139,7 @@ object Storage {
           val endRevisionOpt = js.defined(pull.endRevision)
           val missingRevisions = pull.missingRevisions.toJSArray
           val status = pull.status.toString
+          val failureReasonOpt = pull.failureReasonOpt.orUndefined
         }
     }
 
@@ -162,12 +173,29 @@ object Storage {
     chrome.storage.Storage.local.clear
   }
 
-  def setStatus(status: Status.Value): Future[Unit] = {
+  def setCompleted(): Future[Unit] = {
     for {
       pageOpt <- getPage()
       _ <- pageOpt
         .map { page =>
-          setPage(page.setStatus(status))
+          setPage(page.setStatus(Status.Completed))
+        }
+        .getOrElse(Future(()))
+    } yield {
+      ()
+    }
+  }
+
+  def setFailed(failureReasonOpt: Option[String]): Future[Unit] = {
+    for {
+      pageOpt <- getPage()
+      _ <- pageOpt
+        .map { page =>
+          setPage(
+            page
+              .setStatus(Status.Failed)
+              .setFailureReasonOpt(failureReasonOpt)
+          )
         }
         .getOrElse(Future(()))
     } yield {

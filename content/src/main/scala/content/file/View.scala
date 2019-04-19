@@ -1,5 +1,6 @@
 package content.file
 
+import content.tokenizer.LineTokenizer.HighlightType
 import content.tokenizer.{LineTokenizer, LineTokens}
 import org.scalajs.dom
 
@@ -15,7 +16,7 @@ class View(
   val lineTokensList: Seq[LineTokens]
 ) {
 
-  val highlightedLines = mutable.SortedSet.empty[Int]
+  val highlightedLines = mutable.SortedMap.empty[Int, HighlightType.Value]
 
   run()
 
@@ -32,20 +33,23 @@ class View(
       )
       val lineElem = dom.document.querySelector(s"#LC${lineTokens.line}")
 
-      val shouldLineBeHighlighted = tokenizer.process(lineElem)
+      val highlightTypeOpt = tokenizer.process(lineElem)
 
-      if (shouldLineBeHighlighted) {
-        highlightedLines.add(lineTokens.line)
+      highlightTypeOpt.foreach { highlightType =>
+        highlightedLines.put(lineTokens.line, highlightType)
       }
     }
 
-    highlightedLines.foreach { line =>
+    highlightedLines.foreach { case (line, _) =>
       val lineElem = dom.document.querySelector(s"#LC$line")
       lineElem.classList.add("highlighted")
     }
 
-    highlightedLines.headOption.foreach { line =>
-      dom.window.location.hash = s"#LC$line"
-    }
+    highlightedLines
+      .find(_._2 == HighlightType.Definition)
+      .orElse(highlightedLines.headOption)
+      .foreach { case (line, _) =>
+        dom.window.location.hash = s"#LC$line"
+      }
   }
 }

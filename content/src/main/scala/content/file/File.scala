@@ -58,7 +58,8 @@ object File {
       revision = revision,
       path = path,
       missingRevisions = Seq.empty,
-      status = Status.Loading
+      status = Status.Loading,
+      failureReasonOpt = None
     )
 
     for {
@@ -92,18 +93,24 @@ object File {
                           lineTokensList = LineTokens.build(file)
                         )
                       }
-                      Storage.setStatus(Status.Completed)
+                      Storage.setCompleted()
                       println("[Codelab] Rendered the page successfully.")
                     } catch {
                       case e: JavaScriptException =>
-                        Storage.setStatus(Status.Failed)
+                        Storage.setFailed(None)
                         js.Dynamic.global.console.error("[Codelab] Failed to render the page. See the below error:")
                         js.Dynamic.global.console.error(e.exception.asInstanceOf[js.Any])
                     }
                   }
               } else {
                 println("[Codelab] Failed to fetch data")
-                Storage.setStatus(Status.Failed)
+                Storage.setFailed(
+                  if (resp.unsupportedRepo.contains(true)) {
+                    Some(s"$repoName isn't supported.")
+                  } else {
+                    None
+                  }
+                )
               }
             }
         }

@@ -39,7 +39,8 @@ object PullRequest {
         startRevision = startRevision,
         endRevision = endRevision,
         missingRevisions = Seq.empty,
-        status = Status.Loading
+        status = Status.Loading,
+        failureReasonOpt = None
       ))
       host <- Config.getHost()
     } yield {

@@ -1,10 +1,17 @@
 package content.tokenizer
 
 import content.bindings.Tippy
+import content.tokenizer.LineTokenizer.HighlightType
 import models.{Definition, Token, Usage, UsageDefinition}
 import org.scalajs.dom
 import org.scalajs.dom.Element
 import org.scalajs.dom.raw.Node
+
+object LineTokenizer {
+  object HighlightType extends Enumeration {
+    val Definition, Usage = Value
+  }
+}
 
 class LineTokenizer(
   val repoName: String,
@@ -20,7 +27,16 @@ class LineTokenizer(
   val line = lineTokens.line
 
   var col: Int = 1
-  var shouldLineBeHighlighted: Boolean = false
+  var highlightTypeOpt: Option[HighlightType.Value] = None
+
+  def setHighlightType(htOpt: Option[HighlightType.Value]): Unit = {
+    highlightTypeOpt = highlightTypeOpt
+      .map {
+        case HighlightType.Definition => highlightTypeOpt
+        case HighlightType.Usage => htOpt
+      }
+      .getOrElse(htOpt)
+  }
 
   def getUsageUrl(path: String, nodeId: String): String = {
     s"/$repoName/blob/${branchOpt.getOrElse(revision)}/$path?p=$nodeId"
@@ -142,12 +158,24 @@ class LineTokenizer(
             dom.document.createTextNode(mainText)
           )
 
-        shouldLineBeHighlighted ||= selectedNodeIdOpt.exists { selectedNodeId =>
-          token match {
-            case u: Usage => u.definition.nodeId == selectedNodeId
-            case d: Definition => d.nodeId == selectedNodeId
+        setHighlightType(
+          selectedNodeIdOpt.flatMap { selectedNodeId =>
+            token match {
+              case u: Usage =>
+                if (u.definition.nodeId == selectedNodeId) {
+                  Some(HighlightType.Usage)
+                } else {
+                  None
+                }
+              case d: Definition =>
+                if (d.nodeId == selectedNodeId) {
+                  Some(HighlightType.Definition)
+                } else {
+                  None
+                }
+            }
           }
-        }
+        )
 
         start = tokenEnd + 1
 
@@ -185,9 +213,9 @@ class LineTokenizer(
     }
   }
 
-  def process(lineElem: Element): Boolean = {
+  def process(lineElem: Element): Option[HighlightType.Value] = {
     col = 1
     walk(lineElem)
-    shouldLineBeHighlighted
+    highlightTypeOpt
   }
 }

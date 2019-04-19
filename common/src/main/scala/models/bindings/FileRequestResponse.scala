@@ -14,5 +14,6 @@ object FileRequestResponse {
 
 trait FileRequestResponse extends js.Object {
   def success: Boolean
+  def unsupportedRepo: js.UndefOr[Boolean]
   def files: js.Array[FileRequestResponse.File]
 }

@@ -11,4 +11,5 @@ trait RawPage extends js.Object {
   def endRevisionOpt: js.UndefOr[String]
   def missingRevisions: js.Array[String]
   def status: String
+  def failureReasonOpt: js.UndefOr[String]
 }

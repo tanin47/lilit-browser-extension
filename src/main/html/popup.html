@@ -53,6 +53,14 @@
       #requestPanelSuccessMessage {
         color: hsl(141, 71%, 48%);
       }
+
+      #failureReasonPanel {
+        display: none;
+      }
+
+      #failureReasonText {
+        white-space: normal;
+      }
     </style>
   </head>
   <body>
@@ -70,7 +78,10 @@
       <strong>Host:</strong> <span id="host"></span>
     </div>
     <div id="status">
-      <strong>Status:</strong> <span id="statusText"></span>
+      <strong>Status:</strong> <span id="statusText"></span><br/>
+      <span id="failureReasonPanel">
+        <strong>Reason:</strong> <span id="failureReasonText"></span>
+      </span>
     </div>
     <div id="requestPanel">
       The commit(s), <span id="commitText"></span>, aren't indexed by Codelab.

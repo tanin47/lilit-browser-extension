@@ -6,7 +6,7 @@ import org.scalajs.dom.ext.Ajax
 import org.scalajs.dom.ext.Ajax.InputData
 import org.scalajs.dom.raw.{Event, HTMLButtonElement, HTMLElement}
 import storage.Storage
-import storage.Storage.Page
+import storage.Storage.{Page, Status}
 import storage.Storage.Page.{FilePage, PullRequestPage}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -106,9 +106,8 @@ object Popup {
     dom.document.querySelector("#filePath").innerHTML = file.path
     dom.document.querySelector("#fileRevision").innerHTML = file.revision.take(6)
 
-    dom.document.querySelector("#statusText").innerHTML = file.status.toString
 
-    renderRequestPanel(file)
+    renderCommon(file)
   }
 
   def renderPullRequest(pull: PullRequestPage): Unit = {
@@ -119,12 +118,19 @@ object Popup {
     dom.document.querySelector("#pullRequestStartRevision").innerHTML = pull.startRevision.take(6)
     dom.document.querySelector("#pullRequestEndRevision").innerHTML = pull.endRevision.take(6)
 
-    dom.document.querySelector("#statusText").innerHTML = pull.status.toString
-
-    renderRequestPanel(pull)
+    renderCommon(pull)
   }
 
-  def renderRequestPanel(page: Page.Value): Unit = {
+  def renderCommon(page: Page.Value): Unit = {
+    dom.document.querySelector("#statusText").innerHTML = page.status.toString
+
+    if (page.status == Status.Failed) {
+      dom.document.querySelector("#failureReasonPanel").asInstanceOf[HTMLElement].style.display = "inline-block"
+
+      dom.document.querySelector("#failureReasonText").innerHTML =
+        page.failureReasonOpt.getOrElse("Please use 'inspect' on the background script (which can be found in Extensions) to see the reason.")
+    }
+
     val requestPanel = dom.document.querySelector("#requestPanel").asInstanceOf[HTMLElement]
 
     if (page.missingRevisions.isEmpty) {
