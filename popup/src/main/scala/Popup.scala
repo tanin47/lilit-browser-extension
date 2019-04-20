@@ -64,7 +64,7 @@ object Popup {
         page <- Storage.getPage().map(_.get)
         _ <- Ajax
           .post(
-            url = s"$host/secret-admin/add",
+            url = s"$host/add",
             data = InputData.str2ajax(JSON.stringify(js.Dynamic.literal(
               repo = page.repoName,
               revisions = page.missingRevisions.toJSArray,

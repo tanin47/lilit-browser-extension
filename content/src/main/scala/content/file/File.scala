@@ -107,7 +107,9 @@ object File {
                 println("[Codelab] Failed to fetch data")
                 Storage.setFailed(
                   if (resp.unsupportedRepo.contains(true)) {
-                    Some(s"$repoName isn't supported.")
+                    Some(
+                      s"""$repoName isn't supported. See what to do <a href="$host/unsupported-repo"  target="_blank">here</a>."""
+                    )
                   } else {
                     None
                   }

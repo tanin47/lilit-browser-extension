@@ -20,7 +20,8 @@ module.exports = merge(common, {
   },
   plugins: [
     new CopyPlugin([
-      { from: 'src/main/resources/config_dev.json', to: 'config.json' }
+      { from: 'src/main/resources/config_dev.json', to: 'config.json' },
+      { from: 'src/main/resources/manifest_dev.json', to: 'manifest.json' }
     ])
   ]
 });

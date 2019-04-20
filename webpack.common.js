@@ -15,7 +15,6 @@ module.exports = {
       inject: false
     }),
     new CopyPlugin([
-      { from: 'src/main/resources/manifest.json', to: 'manifest.json' },
       { from: 'src/main/images', to: 'images' }
     ])
   ]

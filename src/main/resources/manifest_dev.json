@@ -1,0 +1,31 @@
+{
+  "name": "Lilit Dev [Alpha]",
+  "version": "0.0.0.6",
+  "description": "",
+  "manifest_version": 2,
+  "permissions": [
+    "declarativeContent",
+    "activeTab",
+    "storage",
+    "webNavigation",
+    "cookies",
+    "http://localhost:9000/*"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.github.com/*", "*://github.com/*"],
+      "css": ["content.css"],
+      "js": ["content.js"]
+    }
+  ],
+  "page_action": {
+    "default_popup": "popup.html"
+  },
+  "web_accessible_resources": [
+    "config.json"
+  ]
+}
