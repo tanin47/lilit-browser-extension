@@ -19,9 +19,6 @@ module.exports = merge(common, {
     minimize: false
   },
   plugins: [
-    new webpack.DefinePlugin({
-      __HOST__: JSON.stringify('https://sorceress-staging.herokuapp.com')
-    }),
     new CopyPlugin([
       { from: 'src/main/resources/config_prod.json', to: 'config.json' }
     ])

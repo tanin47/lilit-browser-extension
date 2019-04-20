@@ -1,5 +1,6 @@
 package content.file
 
+import chrome.cookies.GetCookieDetails
 import content.bindings.URLSearchParams
 import content.tokenizer.LineTokens
 import helpers.Config
@@ -63,8 +64,8 @@ object File {
     )
 
     for {
-      _ <- Storage.setPage(currentPage)
       host <- Config.getHost()
+      _ <- Storage.setPage(currentPage)
     } yield {
       chrome.runtime.Runtime.sendMessage(
         message = new FileRequestRequest(repoName, Seq(new FileRequest(path = path, revision = revision)).toJSArray),

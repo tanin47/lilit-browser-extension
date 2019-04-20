@@ -1,5 +1,5 @@
 {
-  "name": "Codelab [Alpha]",
+  "name": "Lilit [Alpha]",
   "version": "0.0.0.5",
   "description": "",
   "manifest_version": 2,
@@ -7,7 +7,9 @@
     "declarativeContent",
     "activeTab",
     "storage",
-    "webNavigation"
+    "webNavigation",
+    "cookies",
+    "http://localhost:9000/*"
   ],
   "background": {
     "scripts": ["background.js"],

@@ -68,7 +68,8 @@ lazy val popup = (project in file("popup"))
 lazy val root = (project in file("."))
   .aggregate(background, content, popup)
 
-name := "Codelab"
+name := "lilit-browser-extension"
+organization := "dev.lilit"
 
 cancelable in Global := true
 

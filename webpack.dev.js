@@ -19,9 +19,6 @@ module.exports = merge(common, {
     path: path.resolve(__dirname, 'target', 'dev')
   },
   plugins: [
-    new webpack.DefinePlugin({
-      __HOST__: JSON.stringify('http://localhost:9000')
-    }),
     new CopyPlugin([
       { from: 'src/main/resources/config_dev.json', to: 'config.json' }
     ])

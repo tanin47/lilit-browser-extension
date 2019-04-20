@@ -1,3 +1,4 @@
+import chrome.cookies.GetCookieDetails
 import chrome.declarativeContent.DeclarativeContent.PageStateMatcher.PageUrl
 import chrome.declarativeContent.DeclarativeContent.{PageStateMatcher, ShowPageAction}
 import chrome.events.Rule
@@ -77,41 +78,46 @@ object Background {
   }
 
   def processFileRequestRequest(req: FileRequestRequest, message: Message[Option[Any], Any]): Unit = {
+
+    val future = for {
+      host <- Config.getHost()
+      userIdCookieOpt <- chrome.cookies.Cookies.get(GetCookieDetails(url = host, name = "user_id"))
+      userSecretOpt <- chrome.cookies.Cookies.get(GetCookieDetails(url = host, name = "secret"))
+      xhr <- Ajax
+        .post(
+          url = s"$host/github/${req.repoName}/fileRequests",
+          data = JSON.stringify(js.Dynamic.literal(files = req.files)),
+          headers = Map(
+            "Content-Type" -> "application/json",
+            "Accept" -> "application/json",
+            "X-Lilit-Cookies" -> Seq(userIdCookieOpt, userSecretOpt).flatten.map { c => s"${c.name}=${c.value}" }.mkString(" ;")
+          )
+        )
+    } yield {
+      assert(xhr.status == 200)
+      JSON.parse(xhr.responseText)
+    }
+
+    val futureWithRecover = future.recover {
+      case e: AjaxException =>
+        if (e.xhr.status == 404) {
+          new FileRequestResponse {
+            val success = false
+            val files = js.Array()
+            val unsupportedRepo = true
+          }
+        } else {
+          new FileRequestResponse {
+            val success = false
+            val files = js.Array()
+            val unsupportedRepo = false
+          }
+        }
+    }
+
     message
       .response(
-        asyncResponse = Config.getHost()
-          .flatMap { host =>
-            Ajax
-              .post(
-                url = s"$host/github/${req.repoName}/fileRequests",
-                data = JSON.stringify(js.Dynamic.literal(files = req.files)),
-                headers = Map(
-                  "Content-Type" -> "application/json",
-                  "Accept" -> "application/json"
-                )
-              )
-          }
-          .map { xhr =>
-            assert(xhr.status == 200)
-            JSON.parse(xhr.responseText)
-          }
-          .recover {
-            case e: AjaxException =>
-              if (e.xhr.status == 404) {
-                new FileRequestResponse {
-                  val success = false
-                  val files = js.Array()
-                  val unsupportedRepo = true
-                }
-              } else {
-                new FileRequestResponse {
-                  val success = false
-                  val files = js.Array()
-                  val unsupportedRepo = false
-                }
-              }
-          }
-        ,
+        asyncResponse = futureWithRecover,
         failure = {
           new FileRequestResponse {
             val success = false
