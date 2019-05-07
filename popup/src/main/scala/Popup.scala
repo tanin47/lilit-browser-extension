@@ -17,7 +17,7 @@ import scala.scalajs.js.JSON
 
 object Popup {
   def main(args: Array[String]): Unit = {
-    println("[Codelab] Popup is opened")
+    println("[Lilit] Popup is opened")
     chrome.management.Management.getSelf
       .map { self =>
         if (self.installType == "development") {

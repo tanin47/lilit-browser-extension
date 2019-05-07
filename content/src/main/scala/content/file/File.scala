@@ -19,11 +19,11 @@ import scala.scalajs.js.JavaScriptException
 
 object File {
   def apply(): Unit = {
-    println(s"[Codelab] Process the page as a file: ${dom.window.location.href}")
+    println(s"[Lilit] Process the page as a file: ${dom.window.location.href}")
 
     val permalinkElems = dom.document.querySelectorAll(".js-permalink-shortcut")
     if (permalinkElems.length == 0) {
-      println("[Codelab] Unable to detect .js-permalink-shortcut. Do nothing")
+      println("[Lilit] Unable to detect .js-permalink-shortcut. Do nothing")
       return
     }
 
@@ -38,21 +38,21 @@ object File {
     val pathFromLocationHref = dom.window.location.pathname.split("/").drop(5).mkString("/")
 
     if (path != pathFromLocationHref) {
-      println("[Codelab] The paths from .js-permalink-shortcut and window.location.href do not match. The new page hasn't finished loading yet. Do nothing.")
+      println("[Lilit] The paths from .js-permalink-shortcut and window.location.href do not match. The new page hasn't finished loading yet. Do nothing.")
       return
     }
 
     if (!path.endsWith(".java")) {
-      println("[Codelab] The file is not java. Do nothing")
+      println("[Lilit] The file is not java. Do nothing")
       return
     }
 
-    println(s"[Codelab] repo: $repoName, revision: $revision, file: $path")
+    println(s"[Lilit] repo: $repoName, revision: $revision, file: $path")
 
     val branch = dom.window.location.href.split("/")(6)
     val selectedNodeIdOpt = new URLSearchParams(dom.window.location.search).get("p").toOption
 
-    println("[Codelab] Fetch data")
+    println("[Lilit] Fetch data")
 
     val currentPage = FilePage(
       repoName = repoName,
@@ -77,7 +77,7 @@ object File {
               val resp = data.asInstanceOf[bindings.FileRequestResponse]
 
               if (resp.success) {
-                println("[Codelab] Fetched data successfully")
+                println("[Lilit] Fetched data successfully")
 
                 Storage
                   .setMissingRevisions(resp.files.filterNot(_.isSupported).map(_.revision).distinct)
@@ -95,20 +95,20 @@ object File {
                         )
                       }
                       Storage.setCompleted()
-                      println("[Codelab] Rendered the page successfully.")
+                      println("[Lilit] Rendered the page successfully.")
                     } catch {
                       case e: JavaScriptException =>
                         Storage.setFailed(None)
-                        js.Dynamic.global.console.error("[Codelab] Failed to render the page. See the below error:")
+                        js.Dynamic.global.console.error("[Lilit] Failed to render the page. See the below error:")
                         js.Dynamic.global.console.error(e.exception.asInstanceOf[js.Any])
                     }
                   }
               } else {
-                println("[Codelab] Failed to fetch data")
+                println("[Lilit] Failed to fetch data")
                 Storage.setFailed(
                   if (resp.unsupportedRepo.contains(true)) {
                     Some(
-                      s"""$repoName isn't supported. See what to do <a href="$host/unsupported-repo"  target="_blank">here</a>."""
+                      s"""$repoName isn't supported. Please request for the support of this repo <a href="https://docs.google.com/forms/d/e/1FAIpQLSdEA_vQs1R1g-FLmu8HEV9zVvbRZ0x2-5zlp65s66Hkcl-GdQ/viewform"  target="_blank">here</a>."""
                     )
                   } else {
                     None

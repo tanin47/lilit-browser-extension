@@ -17,8 +17,8 @@ import scala.scalajs.js.JSConverters._
 import scala.scalajs.js.JavaScriptException
 
 object View {
-  val PROCESSED_ATTR_NAME = "data-codelab-processed"
-  val MONITORED_ATTR_NAME = "data-codelab-monitored"
+  val PROCESSED_ATTR_NAME = "data-lilit-processed"
+  val MONITORED_ATTR_NAME = "data-lilit-monitored"
 
   case class FileView(node: HTMLElement) {
     def path = {
@@ -40,7 +40,7 @@ class View(
 
   val observer = new MutationObserver(
     fn = { (_, _) =>
-      println("[Codelab] #files is mutated. Reprocessing.")
+      println("[Lilit] #files is mutated. Reprocessing.")
       run()
     }
   )
@@ -105,7 +105,7 @@ class View(
     }
 
     val pathLogLine = fileRequests.map(_.path).distinct.mkString(", ")
-    println(s"[Codelab] Fetch data for $pathLogLine")
+    println(s"[Lilit] Fetch data for $pathLogLine")
 
     chrome.runtime.Runtime.sendMessage(
       message = new FileRequestRequest(repoName, fileRequests.toJSArray),
@@ -113,7 +113,7 @@ class View(
         val resp = data.asInstanceOf[FileRequestResponse]
 
         if (resp.success) {
-          println(s"[Codelab] Fetched data successfully: $pathLogLine.")
+          println(s"[Lilit] Fetched data successfully: $pathLogLine.")
 
           val files = data.asInstanceOf[FileRequestResponse].files
 
@@ -145,16 +145,16 @@ class View(
                   }
                 }
                 Storage.setCompleted()
-                println(s"[Codelab] Rendered successfully: $pathLogLine.")
+                println(s"[Lilit] Rendered successfully: $pathLogLine.")
               } catch {
                 case e: JavaScriptException =>
                   Storage.setFailed(None)
-                  js.Dynamic.global.console.error(s"[Codelab] Failed to render: $pathLogLine.")
+                  js.Dynamic.global.console.error(s"[Lilit] Failed to render: $pathLogLine.")
                   js.Dynamic.global.console.error(e.exception.asInstanceOf[js.Any])
               }
             }
         } else {
-          println(s"[Codelab] Failed to fetch data: $pathLogLine")
+          println(s"[Lilit] Failed to fetch data: $pathLogLine")
           Storage.setFailed(
             if (resp.unsupportedRepo.contains(true)) {
               Some(

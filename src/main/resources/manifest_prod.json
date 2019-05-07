@@ -15,6 +15,7 @@
     "scripts": ["background.js"],
     "persistent": false
   },
+  "icons": { "128": "images/default-128.png" },
   "content_scripts": [
     {
       "matches": ["*://*.github.com/*", "*://github.com/*"],

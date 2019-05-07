@@ -148,7 +148,7 @@ class LineTokenizer(
           .map { url =>
             val anchor = dom.document.createElement("a")
             anchor.setAttribute("href", url)
-            anchor.classList.add("codelab-link")
+            anchor.classList.add("lilit-link")
             anchor.textContent = mainText
             anchor.setAttribute("data-tippy-content", makeTooltipContent(token))
             Tippy.apply(anchor)

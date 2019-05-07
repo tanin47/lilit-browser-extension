@@ -14,7 +14,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 object Content {
   def main(args: Array[String]): Unit = {
     chrome.runtime.Runtime.onMessage.listen { message =>
-      println(s"[Codelab] Content receives ${message.value.map(_.asInstanceOf[OnCommittedDetails].url)}")
+      println(s"[Lilit] Content receives ${message.value.map(_.asInstanceOf[OnCommittedDetails].url)}")
       process()
     }
 
@@ -22,7 +22,7 @@ object Content {
   }
 
   def process(): Unit = {
-    println("[Codelab] Detect github")
+    println("[Lilit] Detect github")
 
     Tippy.setDefaults(new Tippy.SetDefaultsOptions {
       val animation = "fade"
@@ -47,7 +47,7 @@ object Content {
         } else if (tokens.length >= 6 && tokens(5) == "pull") {
           PullRequest.apply()
         } else {
-          println("[Codelab] The page is neither a file nor a pull request.")
+          println("[Lilit] The page is neither a file nor a pull request.")
         }
       }
   }

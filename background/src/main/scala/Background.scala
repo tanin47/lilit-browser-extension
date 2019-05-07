@@ -34,7 +34,7 @@ object Background {
           )
         }
         .map { _ =>
-          println("[Codelab] Page action is installed.")
+          println("[Lilit] Page action is installed.")
         }
     }
 

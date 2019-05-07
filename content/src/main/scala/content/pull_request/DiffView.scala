@@ -17,7 +17,7 @@ object DiffView {
     val lineTokensByLine = lineTokens.groupBy(_.line).mapValues(_.head)
   }
 
-  val PROCESSED_ATTR_NAME = "data-codelab-processed"
+  val PROCESSED_ATTR_NAME = "data-lilit-processed"
   val LINE_NUMBER_ATTR_NAME = "data-line-number"
 }
 
@@ -34,15 +34,15 @@ class DiffView(
 
   val observer = new MutationObserver(
     fn = { (_, _) =>
-      println(s"[Codelab] ${elem.id} is mutated")
+      println(s"[Lilit] ${elem.id} is mutated")
       run()
     }
   )
 
-  println(s"[Codelab] Build ${elem.id}.")
+  println(s"[Lilit] Build ${elem.id}.")
   Option(elem.querySelector("table tbody")) match {
     case Some(tbody) =>
-      println(s"[Codelab] ${elem.id}'s diff is visible.")
+      println(s"[Lilit] ${elem.id}'s diff is visible.")
       observer.observe(
         tbody,
         new Options {
@@ -55,7 +55,7 @@ class DiffView(
       tbody.setAttribute(PROCESSED_ATTR_NAME, "true")
     // The diff is hidden because it is too long
     case None =>
-      println(s"[Codelab] ${elem.id}'s diff is hidden.")
+      println(s"[Lilit] ${elem.id}'s diff is hidden.")
       observer.observe(
         elem.querySelector(".js-diff-load-container"),
         new Options {
