@@ -33,7 +33,7 @@ class LineTokenizer(
     highlightTypeOpt = highlightTypeOpt
       .map {
         case HighlightType.Definition => highlightTypeOpt
-        case HighlightType.Usage => htOpt
+        case HighlightType.Usage => htOpt.orElse(highlightTypeOpt)
       }
       .getOrElse(htOpt)
   }
