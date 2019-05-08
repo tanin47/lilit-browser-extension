@@ -1,5 +1,6 @@
 {
-  "name": "Lilit [Alpha]",
+  "name": "Lilit.dev",
+  "short_name": "lilit.dev",
   "version": "0.0.0.6",
   "description": "",
   "manifest_version": 2,
@@ -9,7 +10,7 @@
     "storage",
     "webNavigation",
     "cookies",
-    "https://lilit-staging.herokuapp.com/*"
+    "https://lilit.dev/*"
   ],
   "background": {
     "scripts": ["background.js"],

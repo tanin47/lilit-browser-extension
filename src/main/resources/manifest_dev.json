@@ -1,5 +1,6 @@
 {
-  "name": "Lilit Dev [Alpha]",
+  "name": "Lilit.dev [Local]",
+  "short_name": "lilit.dev",
   "version": "0.0.0.6",
   "description": "",
   "manifest_version": 2,

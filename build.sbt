@@ -127,7 +127,7 @@ buildProd := {
   buildWebpackProd.value
   buildSassProd.value
 
-  val zipFile = target.value / "sorceress-chrome-extension.zip"
+  val zipFile = target.value / "lilit-chrome-extension.zip"
   val zipFolder = target.value / "prod"
 
   println(s"Building ${zipFile.getCanonicalPath}")
