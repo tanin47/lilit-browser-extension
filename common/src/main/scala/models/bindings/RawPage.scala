@@ -1,4 +1,4 @@
-package storage.bindings
+package models.bindings
 
 import scala.scalajs.js
 

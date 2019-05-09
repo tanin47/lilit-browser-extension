@@ -1,16 +1,14 @@
 package content.file
 
-import chrome.cookies.GetCookieDetails
+import content.Content
 import content.bindings.URLSearchParams
 import content.tokenizer.LineTokens
 import helpers.Config
-import models.bindings
-import models.bindings.{FileRequest, FileRequestRequest}
+import models.Page.Status
+import models.bindings.{FileRequest, FileRequestRequest, FileRequestResponse}
+import models.{FilePage, bindings}
 import org.scalajs.dom
 import org.scalajs.dom.raw.HTMLElement
-import storage.Storage
-import storage.Storage.Page.FilePage
-import storage.Storage.Status
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.scalajs.js
@@ -63,61 +61,76 @@ object File {
       failureReasonOpt = None
     )
 
+    Content.state.setPage(Some(currentPage))
+
     for {
       host <- Config.getHost()
-      _ <- Storage.setPage(currentPage)
     } yield {
       chrome.runtime.Runtime.sendMessage(
         message = new FileRequestRequest(repoName, Seq(new FileRequest(path = path, revision = revision)).toJSArray),
         responseCallback = js.defined { data =>
-          Storage.getPage()
-            // The page might be navigated away.
-            .filter(_.contains(currentPage))
-            .foreach { _ =>
-              val resp = data.asInstanceOf[bindings.FileRequestResponse]
-
-              if (resp.success) {
-                println("[Lilit] Fetched data successfully")
-
-                Storage
-                  .setMissingRevisions(resp.files.filterNot(_.isSupported).map(_.revision).distinct)
-                  .foreach { _ =>
-                    try {
-                      resp.files.foreach { file =>
-                        new View(
-                          repoName = repoName,
-                          revision = revision,
-                          path = file.path,
-                          host = host,
-                          branchOpt = Some(branch),
-                          selectedNodeIdOpt = selectedNodeIdOpt,
-                          lineTokensList = LineTokens.build(file)
-                        )
-                      }
-                      Storage.setCompleted()
-                      println("[Lilit] Rendered the page successfully.")
-                    } catch {
-                      case e: JavaScriptException =>
-                        Storage.setFailed(None)
-                        js.Dynamic.global.console.error("[Lilit] Failed to render the page. See the below error:")
-                        js.Dynamic.global.console.error(e.exception.asInstanceOf[js.Any])
-                    }
-                  }
-              } else {
-                println("[Lilit] Failed to fetch data")
-                Storage.setFailed(
-                  if (resp.unsupportedRepo.contains(true)) {
-                    Some(
-                      s"""$repoName isn't supported. Please request for the support of this repo <a href="https://docs.google.com/forms/d/e/1FAIpQLSdEA_vQs1R1g-FLmu8HEV9zVvbRZ0x2-5zlp65s66Hkcl-GdQ/viewform"  target="_blank">here</a>."""
-                    )
-                  } else {
-                    None
-                  }
-                )
-              }
-            }
+          if (Content.state.hasPage(currentPage)) {
+            build(
+              currentPage = currentPage,
+              host = host,
+              branch = branch,
+              selectedNodeIdOpt = selectedNodeIdOpt,
+              resp = data.asInstanceOf[bindings.FileRequestResponse]
+            )
+          } else {
+            println(s"[Lilit] The page is changed from ${currentPage.id} to ${Content.state.getPage.map(_.id)}. Halt.")
+          }
         }
       )
     }
+  }
+
+  def build(
+    currentPage: FilePage,
+    host: String,
+    branch: String,
+    selectedNodeIdOpt: Option[String],
+    resp: FileRequestResponse
+  ): Unit = {
+    if (resp.success) {
+      println("[Lilit] Fetched data successfully")
+
+      Content.state.setMissingRevisions(currentPage, resp.files.filterNot(_.isSupported).map(_.revision).distinct)
+
+      try {
+        resp.files.foreach { file =>
+          new View(
+            repoName = currentPage.repoName,
+            revision = currentPage.revision,
+            path = file.path,
+            host = host,
+            branchOpt = Some(branch),
+            selectedNodeIdOpt = selectedNodeIdOpt,
+            lineTokensList = LineTokens.build(file)
+          )
+        }
+
+        Content.state.complete(currentPage)
+        println("[Lilit] Rendered the page successfully.")
+      } catch {
+        case e: JavaScriptException =>
+          Content.state.fail(currentPage, None)
+          js.Dynamic.global.console.error("[Lilit] Failed to render the page. See the below error:")
+          js.Dynamic.global.console.error(e.exception.asInstanceOf[js.Any])
+      }
+    } else {
+      println("[Lilit] Failed to fetch data")
+      Content.state.fail(
+        currentPage,
+        if (resp.unsupportedRepo.contains(true)) {
+          Some(
+            s"""${currentPage.repoName} isn't supported. See what to do <a href="$host/unsupported-repo"  target="_blank">here</a>."""
+          )
+        } else {
+          None
+        }
+      )
+    }
+
   }
 }

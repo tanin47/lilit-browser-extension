@@ -1,21 +1,41 @@
 package content
 
-import chrome.pageAction.bindings.SetIconDetails
-import chrome.webNavigation.bindings.OnCommittedDetails
 import content.bindings.Tippy
 import content.file.File
 import content.pull_request.PullRequest
+import models.bindings.{ContentRequest, ContentResponse, ReprocessRequest, ReprocessResponse}
 import org.scalajs.dom
-import storage.Storage
+import state.State
 
-import scala.scalajs.js
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.scalajs.js
+import scala.scalajs.js.JSConverters._
 
 object Content {
+  val state = new State
+
   def main(args: Array[String]): Unit = {
     chrome.runtime.Runtime.onMessage.listen { message =>
-      println(s"[Lilit] Content receives ${message.value.map(_.asInstanceOf[OnCommittedDetails].url)}")
-      process()
+      message.value
+        .map(_.asInstanceOf[ContentRequest])
+        .foreach {
+          case msg if msg.tpe == ReprocessRequest.tpe =>
+            println(s"[Lilit] Content receives ${msg.asInstanceOf[ReprocessRequest].details.url}")
+            process()
+            message.response(
+              asyncResponse = Future(new ReprocessResponse {}),
+              failure = ()
+            )
+          case msg if msg.tpe == ContentRequest.tpe =>
+            println(s"[Lilit] Content receives ContentRequest from Popup")
+            message.response(
+              asyncResponse = Future(new ContentResponse {
+                val page = state.getPage.map(_.toRaw).orUndefined
+              }),
+              failure = ()
+            )
+        }
     }
 
     process()
@@ -40,15 +60,13 @@ object Content {
 
     val tokens = dom.window.location.href.split("/")
 
-    Storage.clear()
-      .foreach { _ =>
-        if (tokens.length >= 6 && (tokens(5) == "blob" || tokens(5) == "tree")) {
-          File.apply()
-        } else if (tokens.length >= 6 && tokens(5) == "pull") {
-          PullRequest.apply()
-        } else {
-          println("[Lilit] The page is neither a file nor a pull request.")
-        }
-      }
+    if (tokens.length >= 6 && (tokens(5) == "blob" || tokens(5) == "tree")) {
+      File.apply()
+    } else if (tokens.length >= 6 && tokens(5) == "pull") {
+      PullRequest.apply()
+    } else {
+      state.setPage(None)
+      println("[Lilit] The page is neither a file nor a pull request.")
+    }
   }
 }

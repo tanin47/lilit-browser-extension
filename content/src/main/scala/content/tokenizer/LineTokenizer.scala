@@ -126,6 +126,12 @@ class LineTokenizer(
   }
 
   def modify(node: Node): Option[Seq[Node]] = {
+    // It's already built. This is because Github caches the element.
+    if (node.parentNode.asInstanceOf[Element].classList.contains("lilit-link")) {
+      Tippy.apply(node.parentNode.asInstanceOf[Element])
+      return None
+    }
+
     val elemStart = col
     val elemEnd = col + node.nodeValue.length - 1
 

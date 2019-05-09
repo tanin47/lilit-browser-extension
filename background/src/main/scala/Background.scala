@@ -6,7 +6,7 @@ import chrome.pageAction.bindings.SetIconDetails
 import chrome.runtime.Runtime.Message
 import chrome.tabs.bindings.TabQuery
 import helpers.Config
-import models.bindings.{BackgroundScriptRequest, FileRequestRequest, FileRequestResponse, SetIconRequest}
+import models.bindings.{FileRequestRequest, FileRequestResponse, MessageRequest, ReprocessRequest, PageUpdated}
 import org.scalajs.dom
 import org.scalajs.dom.ext.{Ajax, AjaxException}
 
@@ -39,21 +39,22 @@ object Background {
     }
 
     chrome.webNavigation.WebNavigation.onHistoryStateUpdated.listen { details =>
-      chrome.tabs.Tabs.sendMessage(details.tabId, details)
+      chrome.tabs.Tabs.sendMessage(details.tabId, new ReprocessRequest(details = details))
     }
 
     chrome.runtime.Runtime.onMessage.listen { message =>
       message.value
         .foreach { req =>
-          req.asInstanceOf[BackgroundScriptRequest].tpe match {
+          req.asInstanceOf[MessageRequest].tpe match {
             case "FileRequestRequest" => processFileRequestRequest(req.asInstanceOf[FileRequestRequest], message)
-            case "SetIconRequest" => processSetIconRequest(req.asInstanceOf[SetIconRequest], message)
+            case "PageUpdated" => processSetIconRequest(req.asInstanceOf[PageUpdated], message)
+            case _ => // do nothing
           }
         }
     }
   }
 
-  def processSetIconRequest(req: SetIconRequest, message: Message[Option[Any], Any]): Unit = {
+  def processSetIconRequest(req: PageUpdated, message: Message[Option[Any], Any]): Unit = {
     val iconPath = req.pageOpt
       .map { page =>
         if (page.missingRevisions.nonEmpty) {

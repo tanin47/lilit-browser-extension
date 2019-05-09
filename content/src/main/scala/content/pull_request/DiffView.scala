@@ -1,6 +1,6 @@
 package content.pull_request
 
-import content.bindings.MutationObserver
+import content.bindings.{MutationObserver, Tippy}
 import content.bindings.MutationObserver.Options
 import content.tokenizer.{LineTokenizer, LineTokens}
 import org.scalajs.dom.Element
@@ -39,35 +39,33 @@ class DiffView(
     }
   )
 
-  println(s"[Lilit] Build ${elem.id}.")
-  Option(elem.querySelector("table tbody")) match {
-    case Some(tbody) =>
-      println(s"[Lilit] ${elem.id}'s diff is visible.")
-      observer.observe(
-        tbody,
-        new Options {
-          val childList = true
-          val attributes = false
-          val characterData = false
-          val subtree = false
-        }
-      )
-      tbody.setAttribute(PROCESSED_ATTR_NAME, "true")
-    // The diff is hidden because it is too long
-    case None =>
-      println(s"[Lilit] ${elem.id}'s diff is hidden.")
-      observer.observe(
-        elem.querySelector(".js-diff-load-container"),
-        new Options {
-          val childList = true
-          val attributes = false
-          val characterData = false
-          val subtree = false
-        }
-      )
+  def monitor(): Unit = {
+    Option(elem.querySelector("table tbody")) match {
+      case Some(tbody) =>
+        println(s"[Lilit] ${elem.id}'s diff is visible.")
+        observer.observe(
+          tbody,
+          new Options {
+            val childList = true
+            val attributes = false
+            val characterData = false
+            val subtree = false
+          }
+        )
+      // The diff is hidden because it is too long
+      case None =>
+        println(s"[Lilit] ${elem.id}'s diff is hidden.")
+        observer.observe(
+          elem.querySelector(".js-diff-load-container"),
+          new Options {
+            val childList = true
+            val attributes = false
+            val characterData = false
+            val subtree = false
+          }
+        )
+    }
   }
-
-  run()
 
   private[this] def buildLine(lineIndexElem: Element, lineElem: Element, data: DiffView.Data): Unit = {
     Option(lineIndexElem.getAttribute(LINE_NUMBER_ATTR_NAME)).foreach { line =>
@@ -97,9 +95,11 @@ class DiffView(
     }
   }
 
-  private[this] def run(): Unit = {
+  def run(): Unit = {
+    println(s"[Lilit] Build ${elem.id}.")
+    monitor()
+
     Option(elem.querySelector("table body"))
-      .filter(_.getAttribute(PROCESSED_ATTR_NAME) == null)
       .foreach { tbody =>
         observer.observe(
           tbody,
@@ -114,11 +114,17 @@ class DiffView(
     elem.querySelectorAll(".file-diff-split tr")
       .map(_.asInstanceOf[HTMLElement])
       .filter { row =>
-        row.children.length == 4 && row.getAttribute(PROCESSED_ATTR_NAME) == null
+        row.children.length == 4
       }
       .foreach { row =>
         buildLine(row.children.item(0), row.children.item(1), startRevisionData)
         buildLine(row.children.item(2), row.children.item(3), endRevisionData)
       }
+  }
+
+  def activateTooltips(): Unit = {
+    elem.querySelectorAll(".lilit-link").foreach { case node: Element =>
+      Tippy.apply(node)
+    }
   }
 }

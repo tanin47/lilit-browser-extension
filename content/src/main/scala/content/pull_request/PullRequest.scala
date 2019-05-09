@@ -1,11 +1,11 @@
 package content.pull_request
 
+import content.Content
 import helpers.Config
+import models.Page.Status
+import models.PullRequestPage
 import org.scalajs.dom
 import org.scalajs.dom.raw.{HTMLElement, HTMLInputElement}
-import storage.Storage
-import storage.Storage.Page.PullRequestPage
-import storage.Storage.Status
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -17,6 +17,7 @@ object PullRequest {
 
     if (!pathTokens.drop(5).headOption.contains("files")) {
       println("[Lilit] The tab 'Files changed' is not visible. Do nothing.")
+      Content.state.setPage(None)
       return
     }
 
@@ -33,26 +34,32 @@ object PullRequest {
 
     val view = dom.document.querySelector("#files").asInstanceOf[HTMLElement]
 
+    val page = PullRequestPage(
+      repoName = repoName,
+      startRevision = startRevision,
+      endRevision = endRevision,
+      missingRevisions = Seq.empty,
+      status = Status.Loading,
+      failureReasonOpt = None
+    )
+
+    Content.state.setPage(Some(page))
+
     for {
-      _ <- Storage.setPage(PullRequestPage(
-        repoName = repoName,
-        startRevision = startRevision,
-        endRevision = endRevision,
-        missingRevisions = Seq.empty,
-        status = Status.Loading,
-        failureReasonOpt = None
-      ))
       host <- Config.getHost()
     } yield {
-      // The page might be navigated away.
-      if (dom.document.body.contains(view)) {
+      println(s"[Lilit] Build ${page.id}.")
+      if (Content.state.hasPage(page)) {
         new View(
+          page = page,
           repoName = repoName,
           host = host,
           startRevision = startRevision,
           endRevision = endRevision,
           elem = view
         )
+      } else {
+        println(s"[Lilit] The page is changed from ${page.id} to ${Content.state.getPage.map(_.id)}. Halt.")
       }
     }
   }

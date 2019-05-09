@@ -11,4 +11,4 @@ class FileRequestRequest(
   val repoName: String,
   val files: js.Array[FileRequest],
   val tpe: String = "FileRequestRequest"
-) extends BackgroundScriptRequest
+) extends MessageRequest

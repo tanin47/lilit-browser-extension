@@ -1,19 +1,18 @@
-import chrome.pageAction.bindings.SetIconDetails
 import chrome.tabs.bindings.{ReloadProperties, TabQuery}
 import helpers.Config
+import models.Page.Status
+import models.{FilePage, Page, PullRequestPage}
+import models.bindings.{ContentRequest, ContentResponse, MessageRequest}
 import org.scalajs.dom
 import org.scalajs.dom.ext.Ajax
 import org.scalajs.dom.ext.Ajax.InputData
 import org.scalajs.dom.raw.{Event, HTMLButtonElement, HTMLElement}
-import storage.Storage
-import storage.Storage.{Page, Status}
-import storage.Storage.Page.{FilePage, PullRequestPage}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.scalajs.js
-import scala.scalajs.js.JSConverters._
 import scala.scalajs.js.JSON
+import scala.scalajs.js.JSConverters._
 
 object Popup {
   def main(args: Array[String]): Unit = {
@@ -42,26 +41,42 @@ object Popup {
         }
       }
 
-    Config.getHost()
-      .foreach { host =>
-        dom.document.querySelector("#host").innerHTML = host
-        registerRequestButton(host)
-      }
-
-    chrome.storage.Storage.onChanged.listen { _ =>
-      render()
+    chrome.runtime.Runtime.onMessage.listen { message =>
+      message.value
+        .foreach { req =>
+          req.asInstanceOf[MessageRequest].tpe match {
+            case "PageUpdated" => update()
+            case _ =>
+          }
+        }
     }
 
-    render()
-
+    update()
   }
 
-  def registerRequestButton(host: String): Unit = {
+  def update(): Unit = {
+    for {
+      host <- Config.getHost()
+      pageOpt <- chrome.tabs.Tabs.query(TabQuery(active = true, currentWindow = true)).flatMap { tabs =>
+        tabs.headOption.flatMap(_.id.toOption)
+          .map { tabId =>
+            chrome.tabs.Tabs.sendMessage(tabId, new ContentRequest).map { resp =>
+              resp.asInstanceOf[ContentResponse].page.toOption.map { raw => Page.convert(raw) }
+            }
+          }
+          .getOrElse(Future(None))
+      }
+    } yield {
+      render(host, pageOpt)
+      dom.document.body.style.display = "block"
+    }
+  }
+
+  def registerRequestButton(host: String, page: Page): Unit = {
     val requestButton = dom.document.querySelector("#requestButton").asInstanceOf[HTMLElement]
 
     requestButton.addEventListener("click", { _: Event =>
       for {
-        page <- Storage.getPage().map(_.get)
         _ <- Ajax
           .post(
             url = s"$host/add",
@@ -83,8 +98,15 @@ object Popup {
     })
   }
 
-  def render(): Unit = {
-    Storage.getPage().foreach {
+  def render(host: String, pageOpt: Option[Page]): Unit = {
+    js.Dynamic.global.console.log(pageOpt.asInstanceOf[js.Any])
+    dom.document.querySelector("#host").innerHTML = host
+
+    pageOpt.foreach { page =>
+      registerRequestButton(host, page)
+    }
+
+    pageOpt match {
       case Some(file: FilePage) => renderFile(file)
       case Some(pull: PullRequestPage) => renderPullRequest(pull)
       case None => renderEmpty()
@@ -121,7 +143,7 @@ object Popup {
     renderCommon(pull)
   }
 
-  def renderCommon(page: Page.Value): Unit = {
+  def renderCommon(page: Page): Unit = {
     dom.document.querySelector("#statusText").innerHTML = page.status.toString
 
     if (page.status == Status.Failed) {
