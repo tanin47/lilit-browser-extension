@@ -1,7 +1,8 @@
 Lilit's Browser Extension
 ==========================
 
-You can install the browser extension here: https://chrome.google.com/webstore/detail/lilit-alpha/jneikemokfonahdggpfmjboadekgagif
+* Website: https://lilit.dev
+* Browser extension: https://chrome.google.com/webstore/detail/lilit-alpha/jneikemokfonahdggpfmjboadekgagif
 
 
 Security
