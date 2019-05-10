@@ -99,9 +99,11 @@ object UserUsageCount {
     UserUsageCount(
       mainPath = raw.mainPath,
       mainCount = raw.mainCount,
+      mainFirstLineOpt = raw.mainFirstLineOpt.toOption,
       otherCount = raw.otherCount,
       otherFileCount = raw.otherFileCount,
       otherFirstFilePathOpt = raw.otherFirstFilePathOpt.toOption,
+      otherFirstFileFirstLineOpt = raw.otherFirstFileFirstLineOpt.toOption,
     )
   }
 }
@@ -109,9 +111,11 @@ object UserUsageCount {
 case class UserUsageCount(
   mainPath: String,
   mainCount: Int,
+  mainFirstLineOpt: Option[Int],
   otherCount: Int,
   otherFileCount: Int,
-  otherFirstFilePathOpt: Option[String]
+  otherFirstFilePathOpt: Option[String],
+  otherFirstFileFirstLineOpt: Option[Int]
 )
 
 object Jar {

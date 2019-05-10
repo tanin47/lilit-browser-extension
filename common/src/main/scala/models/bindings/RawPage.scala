@@ -3,6 +3,7 @@ package models.bindings
 import scala.scalajs.js
 
 trait RawPage extends js.Object {
+  def url: String
   def repoName: String
   def tpe: String
   def revisionOpt: js.UndefOr[String]

@@ -34,6 +34,7 @@ object Page {
   def convert(raw: RawPage): Page = {
     raw.tpe match {
       case "file" => FilePage(
+        url = raw.url,
         repoName = raw.repoName,
         revision = raw.revisionOpt.get,
         path = raw.pathOpt.get,
@@ -41,6 +42,7 @@ object Page {
         status = Status.convert(raw.status),
         failureReasonOpt = raw.failureReasonOpt.toOption)
       case "pull" => PullRequestPage(
+        url = raw.url,
         repoName = raw.repoName,
         startRevision = raw.startRevisionOpt.get,
         endRevision = raw.endRevisionOpt.get,
@@ -53,6 +55,7 @@ object Page {
 
 sealed trait Page {
   def repoName: String
+  def url: String
   def id: Int
 
   var missingRevisions: Seq[String]
@@ -77,6 +80,7 @@ sealed trait Page {
 }
 
 case class FilePage(
+  url: String,
   repoName: String,
   revision: String,
   path: String,
@@ -86,6 +90,7 @@ case class FilePage(
   id: Int = Page.getId
 ) extends Page { self =>
   def toRaw = new RawPage {
+    val url = self.url
     val repoName = self.repoName
     val tpe = "file"
     val revisionOpt = js.defined(revision)
@@ -98,6 +103,7 @@ case class FilePage(
   }
 }
 case class PullRequestPage(
+  url: String,
   repoName: String,
   startRevision: String,
   endRevision: String,
@@ -107,6 +113,7 @@ case class PullRequestPage(
   id: Int = Page.getId
 ) extends Page { self =>
   def toRaw = new RawPage {
+    val url = self.url
     val repoName = self.repoName
     val tpe = "pull"
     val revisionOpt = js.undefined

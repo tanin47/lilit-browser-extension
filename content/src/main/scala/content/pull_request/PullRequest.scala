@@ -1,7 +1,7 @@
 package content.pull_request
 
 import content.Content
-import helpers.Config
+import helpers.{Config, UrlHelper}
 import models.Page.Status
 import models.PullRequestPage
 import org.scalajs.dom
@@ -12,6 +12,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 object PullRequest {
   def apply(): Unit = {
     println(s"[Lilit] Process the page as a pull request: ${dom.window.location.href}")
+
 
     val pathTokens = dom.window.location.pathname.split("/")
 
@@ -35,6 +36,7 @@ object PullRequest {
     val view = dom.document.querySelector("#files").asInstanceOf[HTMLElement]
 
     val page = PullRequestPage(
+      url = dom.window.location.href,
       repoName = repoName,
       startRevision = startRevision,
       endRevision = endRevision,

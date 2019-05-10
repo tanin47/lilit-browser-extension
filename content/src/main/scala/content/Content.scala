@@ -3,6 +3,7 @@ package content
 import content.bindings.Tippy
 import content.file.File
 import content.pull_request.PullRequest
+import helpers.UrlHelper
 import models.bindings.{ContentRequest, ContentResponse, ReprocessRequest, ReprocessResponse}
 import org.scalajs.dom
 import state.State
@@ -59,6 +60,11 @@ object Content {
     })
 
     val tokens = dom.window.location.href.split("/")
+
+    if (Content.state.getPage.exists { page => UrlHelper.isEquivalent(page.url, dom.window.location.href) }) {
+      println(s"[Lilit] ${dom.window.location.href} is equivalent to the previous URL. Do nothing.")
+      return
+    }
 
     if (tokens.length >= 6 && (tokens(5) == "blob" || tokens(5) == "tree")) {
       File.apply()

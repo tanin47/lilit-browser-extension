@@ -42,14 +42,7 @@ class View(
 
     highlightedLines.foreach { case (line, _) =>
       val lineElem = dom.document.querySelector(s"#LC$line")
-      lineElem.classList.add("highlighted")
+      lineElem.classList.add("lilit-highlighted")
     }
-
-    highlightedLines
-      .find(_._2 == HighlightType.Definition)
-      .orElse(highlightedLines.headOption)
-      .foreach { case (line, _) =>
-        dom.window.location.hash = s"#LC$line"
-      }
   }
 }

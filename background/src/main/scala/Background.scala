@@ -39,6 +39,7 @@ object Background {
     }
 
     chrome.webNavigation.WebNavigation.onHistoryStateUpdated.listen { details =>
+      js.Dynamic.global.console.log(details)
       chrome.tabs.Tabs.sendMessage(details.tabId, new ReprocessRequest(details = details))
     }
 

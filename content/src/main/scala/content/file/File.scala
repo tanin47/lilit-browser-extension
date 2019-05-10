@@ -3,7 +3,7 @@ package content.file
 import content.Content
 import content.bindings.URLSearchParams
 import content.tokenizer.LineTokens
-import helpers.Config
+import helpers.{Config, UrlHelper}
 import models.Page.Status
 import models.bindings.{FileRequest, FileRequestRequest, FileRequestResponse}
 import models.{FilePage, bindings}
@@ -53,6 +53,7 @@ object File {
     println("[Lilit] Fetch data")
 
     val currentPage = FilePage(
+      url = dom.window.location.href,
       repoName = repoName,
       revision = revision,
       path = path,
