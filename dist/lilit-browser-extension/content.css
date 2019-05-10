@@ -1,0 +1,20 @@
+.lilit-link {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px dashed #aaa; }
+  .lilit-link:hover {
+    text-decoration: none;
+    border-bottom-style: solid; }
+
+.lilit-highlighted {
+  background-color: #fff0bb; }
+
+.tippy-tooltip {
+  white-space: nowrap; }
+  .tippy-tooltip a {
+    color: #fff;
+    border-bottom: 1px dotted #fff;
+    text-decoration: none; }
+    .tippy-tooltip a:hover {
+      text-decoration: none;
+      border-bottom: 1px solid #fff; }
