@@ -2,7 +2,7 @@ Lilit's Browser Extension
 ==========================
 
 * Website: https://lilit.dev
-* Browser extension: https://chrome.google.com/webstore/detail/lilit-alpha/jneikemokfonahdggpfmjboadekgagif
+* Browser extension: https://chrome.google.com/webstore/detail/lilitdev/jneikemokfonahdggpfmjboadekgagif
 
 
 Security
