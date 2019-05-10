@@ -8,14 +8,14 @@ Lilit's Browser Extension
 Security
 ---------
 
-Please see `src/main/resources/manifest_prod.json` for the permissions we ask.
+Please see `dist/lilit-browser-extension/manifest.json` for the permissions we ask.
 
 
 Develop
 --------
 
 1. Run `npm install`
-2. Run `sbt ~buildDev`. Any change is re-compiled immediately.
+2. Run `sbt ~buildLocal`. Any change is re-compiled immediately.
 
 
 Release

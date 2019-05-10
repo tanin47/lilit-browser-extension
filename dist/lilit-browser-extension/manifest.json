@@ -1,0 +1,52 @@
+{
+   "background": {
+      "persistent": false,
+      "scripts": [
+         "background.js"
+      ]
+   },
+   "content_scripts": [
+      {
+         "css": [
+            "content.css"
+         ],
+         "js": [
+            "content.js"
+         ],
+         "matches": [
+            "*://*.github.com/*",
+            "*://github.com/*"
+         ]
+      },
+      {
+         "js": [
+            "modify-path.js"
+         ],
+         "matches": [
+            "*://lilit.dev/*",
+            "*://*.lilit.dev/*"
+         ]
+      }
+   ],
+   "description": "",
+   "icons": {
+      "128": "images/default-128.png"
+   },
+   "manifest_version": 2,
+   "name": "Lilit.dev",
+   "page_action": {
+      "default_popup": "popup.html"
+   },
+   "permissions": [
+      "declarativeContent",
+      "activeTab",
+      "webNavigation",
+      "cookies",
+      "https://lilit.dev/*"
+   ],
+   "short_name": "lilit.dev",
+   "version": "0.0.0.10",
+   "web_accessible_resources": [
+      "config.json"
+   ]
+}

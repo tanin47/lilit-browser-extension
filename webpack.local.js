@@ -1,10 +1,10 @@
 const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
-const path = require('path');
+const path = require('path')
 const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 
-const env = 'prod';
+const env = 'local'
 
 const jsSourceDir = './target/generated-js-source/' + env;
 
@@ -15,12 +15,9 @@ module.exports = merge(common, {
     popup: path.resolve(jsSourceDir, 'popup.js'),
     'modify-path': path.resolve(jsSourceDir, 'modify-path.js')
   },
-  mode: 'production',
-  devtool: 'source-map',
+  mode: 'development',
+  devtool: 'inline-source-map',
   output: {
-    path: path.resolve(__dirname, 'dist', 'lilit-browser-extension')
+    path: path.resolve(__dirname, 'target', env)
   },
-  optimization: {
-    minimize: false
-  }
 });

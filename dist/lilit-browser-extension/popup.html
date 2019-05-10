@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+      body {
+        position: relative;
+        vertical-align: middle;
+        font-size: 13px;
+        line-height: 24px;
+        font-family: BlinkMacSystemFont,-apple-system,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+        padding: 0px;
+        margin: 0px;
+        color: #333;
+      }
+
+      .info {
+        display: block;
+        padding: 5px 5px 0px;
+        white-space: nowrap;
+      }
+
+      #file {
+        display: none;
+      }
+
+      #pullRequest {
+        display: none;
+      }
+
+      #requestPanel {
+        display: block;
+        padding: 5px 5px 8px;
+        white-space: normal;
+        background-color: hsl(48,  100%, 67%);
+      }
+
+      #requestButton {
+        white-space: nowrap;
+      }
+
+      #status {
+        display: block;
+        padding: 0px 5px 8px;
+        white-space: nowrap;
+      }
+
+      #remark {
+        display: block;
+        padding: 0px 5px 0px;
+        white-space: nowrap;
+      }
+
+      #requestPanelSuccessMessage {
+        color: hsl(141, 71%, 48%);
+      }
+
+      #failureReasonPanel {
+        display: none;
+      }
+
+      #failureReasonText {
+        white-space: normal;
+      }
+    </style>
+  </head>
+  <body style="display: none;">
+    <div class="info" id="file">
+      <strong>Repository:</strong> <span id="fileRepo">stripe/stripe-java</span><br/>
+      <strong>File:</strong> <span id="filePath">/some/path</span><br/>
+      <strong>Commit:</strong> <span id="fileRevision">some-commit</span>
+    </div>
+    <div class="info" id="pullRequest">
+      <strong>Repository:</strong> <span id="pullRequestRepo">stripe/stripe-java</span><br/>
+      <strong>Base commit:</strong> <span id="pullRequestStartRevision">base-commit</span><br/>
+      <strong>Current commit:</strong> <span id="pullRequestEndRevision">current-commit</span>
+    </div>
+    <div id="remark">
+      <strong>Host:</strong> <span id="host"></span>
+    </div>
+    <div id="status">
+      <strong>Status:</strong> <span id="statusText"></span><br/>
+      <span id="failureReasonPanel">
+        <strong>Reason:</strong> <span id="failureReasonText"></span>
+      </span>
+    </div>
+    <div id="requestPanel">
+      The commit(s), <span id="commitText"></span>, aren't indexed by Lilit.
+      <br/>
+      <button id="requestButton">
+        Click here to index the commit(s)
+      </button>
+      <span id="requestPanelSuccessMessage" style="display: none;">
+        We've received your request. Indexing a commit can take up to 10 minutes.
+        Please later reload the page to see if the commits have been supported.
+      </span>
+    </div>
+    <script src="popup.js"></script>
+  </body>
+</html>

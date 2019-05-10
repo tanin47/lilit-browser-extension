@@ -1,16 +1,13 @@
 {
-  "name": "Lilit.dev [Local]",
+  "name": "Lilit.dev",
   "short_name": "lilit.dev",
-  "version": "0.0.0.6",
+  "version": "0.0.0.10",
   "description": "",
   "manifest_version": 2,
   "permissions": [
     "declarativeContent",
     "activeTab",
-    "storage",
     "webNavigation",
-    "cookies",
-    "http://localhost:9000/*"
   ],
   "background": {
     "scripts": ["background.js"],
