@@ -230,6 +230,8 @@ class LineTokenizer(
   }
 
   def process(lineElem: Element): Option[HighlightType.Value] = {
+    if (lineElem == null) { return None }
+
     col = 1
     walk(lineElem)
     highlightTypeOpt
