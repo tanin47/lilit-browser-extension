@@ -28,7 +28,7 @@ object PullRequestSplitViewTest extends BrowserTest {
       "#LC4".getAttribute("class").split(" ").toSet.contains("lilit-highlighted") ==> true
     }
 
-    "see usages" - {
+    "sees usages" - {
       go("https://github.com/tanin47/test-java-repo/pull/1/files?diff=split")
 
       waitUntil {
@@ -52,7 +52,44 @@ object PullRequestSplitViewTest extends BrowserTest {
     }
 
     "expands" - {
+      def test(shouldWait: Boolean): Unit = {
+        go("https://github.com/tanin47/test-java-repo/pull/5/files?diff=split")
 
+        if (shouldWait) {
+          waitUntil {
+            "#diff-0 .diff-table tr:nth-child(6) td:nth-child(2) .lilit-link".items.nonEmpty
+          }
+        }
+
+        // Expand
+        "#diff-0 .diff-table tr".items.length ==> 9
+        "#diff-0 .diff-table tr a".click()
+        waitUntil { "#diff-0 .diff-table tr.blob-expanded".items.length == 20 }
+
+        val linkOnTheLeft = "#diff-0 .diff-table tr:nth-child(2) td:nth-child(2) .lilit-link"
+        linkOnTheLeft.hover()
+        linkOnTheLeft.getToolTip.getText ==> "Defined in src/main/java/test_java_repo/Library.java inside tanin47/test-java-repo"
+
+        val link = "#diff-0 .diff-table tr:nth-child(2) td:nth-child(4) .lilit-link"
+
+        link.hover()
+        link.getToolTip.getText ==> "Defined in src/main/java/test_java_repo/Library.java inside tanin47/test-java-repo"
+        link.click()
+
+        waitUntil {
+          webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/848084a2498fa8fe96a2daffc5e48d3cd9af9d90/src/main/java/test_java_repo/Library.java?p=Class_Library_job_55_c169390cd477_2#L3"
+        }
+
+        "#LC3".getAttribute("class").split(" ").toSet.contains("lilit-highlighted") ==> true
+      }
+
+      "immediately (possibly before load)" - {
+        test(false)
+      }
+
+      "after load" - {
+        test(true)
+      }
     }
 
     "works with the ajaxically-loaded diffs" - {
