@@ -1,7 +1,16 @@
-
-import java.io.ByteArrayInputStream
-
 import scala.sys.process.Process
+
+name := "lilit-browser-extension"
+organization := "dev.lilit"
+
+cancelable in Global := true
+
+libraryDependencies ++= Seq(
+  "com.lihaoyi" %% "utest" % "0.6.7" % Test,
+  "org.seleniumhq.selenium" % "selenium-java" % "3.141.59" % Test,
+  "org.seleniumhq.selenium" % "selenium-chrome-driver" % "3.141.59" % Test,
+)
+testFrameworks += new TestFramework("utest.runner.Framework")
 
 scalaVersion in ThisBuild := "2.12.8"
 scalaJSUseMainModuleInitializer in ThisBuild := true
@@ -82,13 +91,6 @@ lazy val popup = (project in file("popup"))
   )
 
 
-lazy val root = (project in file("."))
-  .aggregate(background, content, popup, modifyPath)
-
-name := "lilit-browser-extension"
-organization := "dev.lilit"
-
-cancelable in Global := true
 
 watchSources ++= Seq(
   (background / Compile / fastOptJS / watchSources).value,

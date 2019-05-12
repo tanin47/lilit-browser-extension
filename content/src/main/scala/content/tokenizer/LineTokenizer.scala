@@ -43,7 +43,7 @@ class LineTokenizer(
   }
 
   def getUsageUrl(path: String, nodeId: String, firstLine: Int): String = {
-    s"/$repoName/blob/${branchOpt.getOrElse(revision)}/$path?p=$nodeId#LC$firstLine"
+    s"/$repoName/blob/${branchOpt.getOrElse(revision)}/$path?p=$nodeId#L$firstLine"
   }
 
   def makeUrlOpt(token: Token): Option[LinkType] = token match {
@@ -53,7 +53,7 @@ class LineTokenizer(
           usage.definition.module match {
             case "Jdk" => UrlLink(s"$host/github/$repoName/$revision/jdk/${location.path}?p=${usage.definition.nodeId}")
             case "Jar" => UrlLink(s"$host/github/$repoName/$revision/jar/${usage.definition.jarOpt.get.id}/${location.path}?p=${usage.definition.nodeId}")
-            case "User" => UrlLink(s"/$repoName/blob/${branchOpt.getOrElse(revision)}/${location.path}?p=${usage.definition.nodeId}#LC${location.start.line}")
+            case "User" => UrlLink(s"/$repoName/blob/${branchOpt.getOrElse(revision)}/${location.path}?p=${usage.definition.nodeId}#L${location.start.line}")
           }
         }
     case definition: Definition =>

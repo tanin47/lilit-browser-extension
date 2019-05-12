@@ -7667,7 +7667,7 @@ $c_Lcontent_tokenizer_LineTokenizer.prototype.makeUrlOpt__Lmodels_Token__s_Optio
       } else if ((x1 === "User")) {
         var jsx$2 = this.repoName$1;
         var this$2 = this.branchOpt$1;
-        var jsx$1 = new $c_Lcontent_tokenizer_LineTokenizer$UrlLink().init___T(((((((((("/" + jsx$2) + "/blob/") + (this$2.isEmpty__Z() ? this.revision$1 : this$2.get__O())) + "/") + location.path$1) + "?p=") + x2.definition$2.nodeId$1) + "#LC") + location.start$1.line$1))
+        var jsx$1 = new $c_Lcontent_tokenizer_LineTokenizer$UrlLink().init___T(((((((((("/" + jsx$2) + "/blob/") + (this$2.isEmpty__Z() ? this.revision$1 : this$2.get__O())) + "/") + location.path$1) + "?p=") + x2.definition$2.nodeId$1) + "#L") + location.start$1.line$1))
       } else {
         var jsx$1;
         throw new $c_s_MatchError().init___O(x1)
@@ -7844,9 +7844,12 @@ $c_Lcontent_tokenizer_LineTokenizer.prototype.modify__Lorg_scalajs_dom_raw_Node_
 $c_Lcontent_tokenizer_LineTokenizer.prototype.getUsageUrl__T__T__I__T = (function(path, nodeId, firstLine) {
   var jsx$1 = this.repoName$1;
   var this$1 = this.branchOpt$1;
-  return ((((((((("/" + jsx$1) + "/blob/") + (this$1.isEmpty__Z() ? this.revision$1 : this$1.get__O())) + "/") + path) + "?p=") + nodeId) + "#LC") + firstLine)
+  return ((((((((("/" + jsx$1) + "/blob/") + (this$1.isEmpty__Z() ? this.revision$1 : this$1.get__O())) + "/") + path) + "?p=") + nodeId) + "#L") + firstLine)
 });
 $c_Lcontent_tokenizer_LineTokenizer.prototype.process__Lorg_scalajs_dom_raw_Element__s_Option = (function(lineElem) {
+  if ((lineElem === null)) {
+    return $m_s_None$()
+  };
   this.col$1 = 1;
   this.walk__Lorg_scalajs_dom_raw_Node__s_Option(lineElem);
   return this.highlightTypeOpt$1

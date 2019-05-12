@@ -57,14 +57,22 @@ object Popup {
   def update(): Unit = {
     for {
       host <- Config.getHost()
-      pageOpt <- chrome.tabs.Tabs.query(TabQuery(active = true, currentWindow = true)).flatMap { tabs =>
-        tabs.headOption.flatMap(_.id.toOption)
-          .map { tabId =>
-            chrome.tabs.Tabs.sendMessage(tabId, new ContentRequest).map { resp =>
-              resp.asInstanceOf[ContentResponse].page.toOption.map { raw => Page.convert(raw) }
+      pageOpt <- {
+        val future = if (dom.window.location.search == "?test") {
+          chrome.tabs.Tabs.query(TabQuery(index = 0))
+        } else {
+          chrome.tabs.Tabs.query(TabQuery(active = true, currentWindow = true))
+        }
+
+        future.flatMap { tabs =>
+          tabs.headOption.flatMap(_.id.toOption)
+            .map { tabId =>
+              chrome.tabs.Tabs.sendMessage(tabId, new ContentRequest).map { resp =>
+                resp.asInstanceOf[ContentResponse].page.toOption.map { raw => Page.convert(raw) }
+              }
             }
-          }
-          .getOrElse(Future(None))
+            .getOrElse(Future(None))
+        }
       }
     } yield {
       render(host, pageOpt)
