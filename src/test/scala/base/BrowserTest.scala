@@ -210,6 +210,10 @@ abstract class BrowserTest extends TestSuite {
       }
     }
 
+    def getToolTip: WebElement = {
+      waitUntil { getAttribute("aria-describedby") != null }
+      s"#${getAttribute("aria-describedby")}".getElement
+    }
     def hover(): Unit = tryForSuccess { new Actions(webDriver).moveToElement(getElement).perform() }
     def click(): Unit = tryForSuccess { getElement.click() }
     def sendKeys(keysToSend: CharSequence*): Unit = tryForSuccess { getElement.sendKeys(keysToSend:_*) }

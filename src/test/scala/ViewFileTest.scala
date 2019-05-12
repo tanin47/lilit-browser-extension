@@ -1,7 +1,5 @@
 import base.BrowserTest
-import org.openqa.selenium.Keys
 import utest._
-import scala.collection.JavaConverters._
 
 object ViewFileTest extends BrowserTest {
   val tests = Tests {
@@ -13,8 +11,7 @@ object ViewFileTest extends BrowserTest {
 
       usage.hover()
 
-      waitUntil { usage.getAttribute("aria-describedby") != null }
-      s"#${usage.getAttribute("aria-describedby")}".getText ==> "Defined in this file on the line 153"
+      usage.getToolTip.getText ==> "Defined in this file on the line 153"
 
       usage.click()
 
@@ -33,9 +30,7 @@ object ViewFileTest extends BrowserTest {
       waitUntil { definition.items.nonEmpty }
 
       definition.hover()
-
-      waitUntil { definition.getAttribute("aria-describedby") != null }
-      s"#${definition.getAttribute("aria-describedby")}".getText.trim ==>
+      definition.getToolTip.getText ==>
         """
           |Found 1 occurrence in this file
           |Found 1 occurrence in src/test/java/test_java_repo/MainTest.java

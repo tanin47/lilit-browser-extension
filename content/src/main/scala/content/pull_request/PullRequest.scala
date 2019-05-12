@@ -2,6 +2,7 @@ package content.pull_request
 
 import content.Content
 import helpers.{Config, UrlHelper}
+import io.lemonlabs.uri.Url
 import models.Page.Status
 import models.PullRequestPage
 import org.scalajs.dom
@@ -13,7 +14,6 @@ object PullRequest {
   def apply(): Unit = {
     println(s"[Lilit] Process the page as a pull request: ${dom.window.location.href}")
 
-
     val pathTokens = dom.window.location.pathname.split("/")
 
     if (!pathTokens.drop(5).headOption.contains("files")) {
@@ -22,14 +22,22 @@ object PullRequest {
       return
     }
 
-    if (dom.document.querySelectorAll("input[name=comparison_start_oid]").length == 0) {
-      println("[Lilit] Unable to detect input[name=compaison_start_oid]. Maybe the page hasn't finished loading yet. Do nothing.")
+    val repoName = s"${pathTokens(1)}/${pathTokens(2)}"
+
+    if (dom.document.querySelectorAll(".js-pull-refresh-on-pjax").length == 0) {
+      println("[Lilit] Unable to detect '#files_bucket .js-pull-refresh-on-ajax'. Maybe the page hasn't finished loading yet. Do nothing.")
       return
     }
 
-    val repoName = s"${pathTokens(1)}/${pathTokens(2)}"
-    val startRevision = dom.document.querySelector("input[name=comparison_start_oid]").asInstanceOf[HTMLInputElement].value
-    val endRevision = dom.document.querySelector("input[name=comparison_end_oid]").asInstanceOf[HTMLInputElement].value
+    val commitUrl = Url.parse(dom.document.querySelector(".js-pull-refresh-on-pjax").getAttribute("data-url"))
+    val startRevision = commitUrl.query.param("base_commit_oid").getOrElse {
+      println(s"[Lilit] Unable to read base_commit_oid from $commitUrl")
+      throw new Exception(s"[Lilit] Unable to read base_commit_oid from $commitUrl")
+    }
+    val endRevision = commitUrl.query.param("end_commit_oid").getOrElse {
+      println(s"[Lilit] Unable to read end_commit_oid from $commitUrl")
+      throw new Exception(s"[Lilit] Unable to read end_commit_oid from $commitUrl")
+    }
 
     println(s"[Lilit] Base revision: $startRevision, target revision: $endRevision")
 

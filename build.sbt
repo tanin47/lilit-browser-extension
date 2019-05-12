@@ -11,6 +11,7 @@ libraryDependencies ++= Seq(
   "org.seleniumhq.selenium" % "selenium-chrome-driver" % "3.141.59" % Test,
 )
 testFrameworks += new TestFramework("utest.runner.Framework")
+Test / parallelExecution := false
 
 scalaVersion in ThisBuild := "2.12.8"
 scalaJSUseMainModuleInitializer in ThisBuild := true
@@ -56,6 +57,7 @@ lazy val content = (project in file("content"))
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % "0.9.2",
       "net.lullabyte" %%% "scala-js-chrome" % "0.5.8",
+      "io.lemonlabs" %%% "scala-uri" % "1.4.5"
     ),
     scalacOptions ++= Seq(
       "-P:scalajs:sjsDefinedByDefault"
@@ -149,6 +151,8 @@ buildLocal := {
 val buildProd = taskKey[Unit]("build the prod version")
 val buildWebpackProd = taskKey[Unit]("run webpack (prod)")
 val buildSassProd = taskKey[Unit]("run node-sass (prod)")
+
+Test / compile := (Test / compile).dependsOn(buildProd).value
 
 buildSassProd := {
   execute("./node_modules/.bin/node-sass ./src/main/scss --output ./dist/lilit-browser-extension")
