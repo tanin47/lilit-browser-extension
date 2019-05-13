@@ -1,9 +1,9 @@
 import base.BrowserTest
 import utest._
 
-object PullRequestSplitViewTest extends BrowserTest {
+object PullRequestTest extends BrowserTest {
   val tests = Tests {
-    "jumps to a definition" - {
+    "jumps to a definition (split view)" - {
       go("https://github.com/tanin47/test-java-repo/pull/5/files?diff=split")
 
       waitUntil {
@@ -28,7 +28,30 @@ object PullRequestSplitViewTest extends BrowserTest {
       "#LC4".getAttribute("class").split(" ").toSet.contains("lilit-highlighted") ==> true
     }
 
-    "sees usages" - {
+    "jumps to a definition (unified view)" - {
+      go("https://github.com/tanin47/test-java-repo/pull/1/files?diff=unified")
+
+      waitUntil {
+        "#diff-0 .diff-table tr:nth-child(11) td:nth-child(4) .lilit-link".items.nonEmpty
+      }
+
+      val linkOnSubtract = "#diff-0 .diff-table tr:nth-child(8) td:nth-child(4) .lilit-link"
+      linkOnSubtract.hover()
+      linkOnSubtract.getToolTip.getText ==> "Found 1 occurrence only in src/test/java/test_java_repo/MainTest.java"
+
+      val link = "#diff-0 .diff-table tr:nth-child(10) td:nth-child(4) .lilit-link"
+      link.hover()
+      link.getToolTip.getText ==> "Defined in src/main/java/test_java_repo/Library.java inside tanin47/test-java-repo"
+      link.click()
+
+      waitUntil {
+        webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/24e0307ad76ce2fc344f3fba3b37d48344a15f21/src/main/java/test_java_repo/Library.java?p=Class_Library_job_50_59c4590cd477_2#L3"
+      }
+
+      "#LC3".getAttribute("class").split(" ").toSet.contains("lilit-highlighted") ==> true
+    }
+
+    "sees usages (split view)" - {
       go("https://github.com/tanin47/test-java-repo/pull/1/files?diff=split")
 
       waitUntil {
@@ -45,7 +68,7 @@ object PullRequestSplitViewTest extends BrowserTest {
       link.click()
 
       waitUntil {
-        webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/a7ffb8edbf181e08b25e3223a4619d1d9cf3a878/src/test/java/test_java_repo/MainTest.java?p=Class_Main_job_76_8819853fd7386_2#L10"
+        webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/ccbb01030195533496b220ad9703b407d4240687/src/test/java/test_java_repo/MainTest.java?p=Class_Main_job_82_28b457e115363_2#L10"
       }
 
       "#LC10".getAttribute("class").split(" ").toSet.contains("lilit-highlighted") ==> true

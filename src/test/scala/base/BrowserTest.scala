@@ -104,6 +104,8 @@ abstract class BrowserTest extends TestSuite {
       webDriver.getWindowHandles.size ==> 1
       webDriver.switchTo().window(mainWindowHandle)
     }
+
+    go("chrome://version")
   }
 
   override def utestBeforeEach(path: Seq[String]): Unit = {

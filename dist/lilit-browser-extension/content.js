@@ -7216,26 +7216,52 @@ $c_Lcontent_pull$undrequest_DiffView.prototype.run__V = (function() {
     $this.subtree = false;
     jsx$1.observe(arg1, $this)
   };
-  var nodes = this.elem$1.querySelectorAll(".file-diff-split tr");
-  var this$7 = new $c_Lorg_scalajs_dom_ext_package$PimpedNodeList().init___Lorg_scalajs_dom_raw_NodeList(nodes);
-  var this$6 = $m_sc_Seq$();
-  var bf = this$6.ReusableCBFInstance$2;
-  var b = $f_sc_TraversableLike__builder$1__psc_TraversableLike__scg_CanBuildFrom__scm_Builder(this$7, bf);
-  var this$8 = new $c_Lorg_scalajs_dom_ext_EasySeq$$anon$1().init___Lorg_scalajs_dom_ext_EasySeq(this$7);
-  while (this$8.hasNext__Z()) {
-    var arg1$1 = this$8.next__O();
-    b.$$plus$eq__O__scm_Builder(arg1$1)
-  };
-  b.result__O().filter__F1__O(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$3$1) {
-    return (function(row$2) {
-      return ((row$2.children.length | 0) === 4)
-    })
-  })(this))).foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$4$1) {
-    return (function(row$3$2) {
-      this$4$1.buildLine__p1__Lorg_scalajs_dom_raw_Element__Lorg_scalajs_dom_raw_Element__Lcontent_pull$undrequest_DiffView$Data__V(row$3$2.children.item(0), row$3$2.children.item(1), this$4$1.startRevisionData$1);
-      this$4$1.buildLine__p1__Lorg_scalajs_dom_raw_Element__Lorg_scalajs_dom_raw_Element__Lcontent_pull$undrequest_DiffView$Data__V(row$3$2.children.item(2), row$3$2.children.item(3), this$4$1.endRevisionData$1)
-    })
-  })(this)))
+  if ((!(!this.elem$1.querySelector("table").classList.contains("file-diff-split")))) {
+    var nodes = this.elem$1.querySelectorAll("table tr");
+    var this$7 = new $c_Lorg_scalajs_dom_ext_package$PimpedNodeList().init___Lorg_scalajs_dom_raw_NodeList(nodes);
+    var this$6 = $m_sc_Seq$();
+    var bf = this$6.ReusableCBFInstance$2;
+    var b = $f_sc_TraversableLike__builder$1__psc_TraversableLike__scg_CanBuildFrom__scm_Builder(this$7, bf);
+    var this$8 = new $c_Lorg_scalajs_dom_ext_EasySeq$$anon$1().init___Lorg_scalajs_dom_ext_EasySeq(this$7);
+    while (this$8.hasNext__Z()) {
+      var arg1$1 = this$8.next__O();
+      b.$$plus$eq__O__scm_Builder(arg1$1)
+    };
+    b.result__O().filter__F1__O(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$3$1) {
+      return (function(row$2) {
+        return ((row$2.children.length | 0) === 4)
+      })
+    })(this))).foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$4$1) {
+      return (function(row$3$2) {
+        this$4$1.buildLine__p1__Lorg_scalajs_dom_raw_Element__Lorg_scalajs_dom_raw_Element__Lcontent_pull$undrequest_DiffView$Data__V(row$3$2.children.item(0), row$3$2.children.item(1), this$4$1.startRevisionData$1);
+        this$4$1.buildLine__p1__Lorg_scalajs_dom_raw_Element__Lorg_scalajs_dom_raw_Element__Lcontent_pull$undrequest_DiffView$Data__V(row$3$2.children.item(2), row$3$2.children.item(3), this$4$1.endRevisionData$1)
+      })
+    })(this)))
+  } else {
+    var nodes$1 = this.elem$1.querySelectorAll("table tr");
+    var this$11 = new $c_Lorg_scalajs_dom_ext_package$PimpedNodeList().init___Lorg_scalajs_dom_raw_NodeList(nodes$1);
+    var this$10 = $m_sc_Seq$();
+    var bf$1 = this$10.ReusableCBFInstance$2;
+    var b$1 = $f_sc_TraversableLike__builder$1__psc_TraversableLike__scg_CanBuildFrom__scm_Builder(this$11, bf$1);
+    var this$12 = new $c_Lorg_scalajs_dom_ext_EasySeq$$anon$1().init___Lorg_scalajs_dom_ext_EasySeq(this$11);
+    while (this$12.hasNext__Z()) {
+      var arg1$2 = this$12.next__O();
+      b$1.$$plus$eq__O__scm_Builder(arg1$2)
+    };
+    b$1.result__O().filter__F1__O(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$6$1) {
+      return (function(row$4$2) {
+        return ((row$4$2.children.length | 0) === 4)
+      })
+    })(this))).foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$7$1) {
+      return (function(row$5$2) {
+        if ((!(!row$5$2.children.item(0).classList.contains("empty-cell")))) {
+          this$7$1.buildLine__p1__Lorg_scalajs_dom_raw_Element__Lorg_scalajs_dom_raw_Element__Lcontent_pull$undrequest_DiffView$Data__V(row$5$2.children.item(1), row$5$2.children.item(3), this$7$1.endRevisionData$1)
+        } else {
+          this$7$1.buildLine__p1__Lorg_scalajs_dom_raw_Element__Lorg_scalajs_dom_raw_Element__Lcontent_pull$undrequest_DiffView$Data__V(row$5$2.children.item(0), row$5$2.children.item(3), this$7$1.startRevisionData$1)
+        }
+      })
+    })(this)))
+  }
 });
 $c_Lcontent_pull$undrequest_DiffView.prototype.monitor__V = (function() {
   var x1 = $m_s_Option$().apply__O__s_Option(this.elem$1.querySelector("table tbody"));
