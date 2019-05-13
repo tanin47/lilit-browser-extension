@@ -93,11 +93,39 @@ object PullRequestSplitViewTest extends BrowserTest {
     }
 
     "works with the ajaxically-loaded diffs" - {
+      go("https://github.com/tanin47/test-java-repo/pull/3/files?diff=split")
 
+      waitUntil { "#diff-37 table tr:nth-child(6) td:nth-child(4) .lilit-link".items.nonEmpty }
+
+      val link = "#diff-37 table tr:nth-child(6) td:nth-child(4) .lilit-link"
+      link.hover()
+      link.getToolTip.getText ==> "Defined in src/main/java/test_java_repo/Library.java inside tanin47/test-java-repo"
+      link.click()
+
+      waitUntil {
+        webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/ace7f3130c5993d3c51c6406b4cb8ff77ab16051/src/main/java/test_java_repo/Library.java?p=Class_Library_job_57_66afa90cd477_2#L3"
+      }
     }
 
     "request for a commit" - {
+      go("https://github.com/tanin47/test-java-repo/pull/6/files?diff=split")
 
+      webDriver.switchTo().window(openNewTab())
+      go("chrome-extension://fahmaaghhglfmonjliepjlchgpgfmobi/popup.html?test")
+
+      waitUntil { "#requestPanel".getText.contains("The commit(s), 7bc997, aren't indexed by Lilit.") }
+
+      "#requestButton".click()
+
+      waitUntil {
+        "#requestPanel".getText.contains(
+          """
+            |We've received your request. Indexing a commit can take up to 10 minutes. Please later reload the page to see if the commits have been supported.
+          """.stripMargin.trim
+        )
+      }
+
+      "#requestButton".isRendered() ==> false
     }
   }
 }
