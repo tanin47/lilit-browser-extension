@@ -111,15 +111,34 @@ class DiffView(
           }
         )
       }
-    elem.querySelectorAll(".file-diff-split tr")
-      .map(_.asInstanceOf[HTMLElement])
-      .filter { row =>
-        row.children.length == 4
-      }
-      .foreach { row =>
-        buildLine(row.children.item(0), row.children.item(1), startRevisionData)
-        buildLine(row.children.item(2), row.children.item(3), endRevisionData)
-      }
+
+    if (elem.querySelector("table").classList.contains("file-diff-split")) {
+      // Split view
+      elem.querySelectorAll("table tr")
+        .map(_.asInstanceOf[HTMLElement])
+        .filter { row =>
+          row.children.length == 4
+        }
+        .foreach { row =>
+          buildLine(row.children.item(0), row.children.item(1), startRevisionData)
+          buildLine(row.children.item(2), row.children.item(3), endRevisionData)
+        }
+    } else {
+      // Unified view
+      elem.querySelectorAll("table tr")
+        .map(_.asInstanceOf[HTMLElement])
+        .filter { row =>
+          row.children.length == 4
+        }
+        .foreach { row =>
+          if (row.children.item(0).classList.contains("empty-cell")) {
+            // The cell 0 is empty. This means it's a new line.
+            buildLine(row.children.item(1), row.children.item(3), endRevisionData)
+          } else {
+            buildLine(row.children.item(0), row.children.item(3), startRevisionData)
+          }
+        }
+    }
   }
 
   def activateTooltips(): Unit = {
