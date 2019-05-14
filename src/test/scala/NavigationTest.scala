@@ -45,6 +45,7 @@ object NavigationTest extends BrowserTest {
 
         ".tabnav-tab".items(1).click()
         waitUntil { ".commits-listing".nonEmpty }
+        Thread.sleep(1000)
 
         ".tabnav-tab".items(3).click()
         val link = ".lilit-link"
@@ -61,6 +62,7 @@ object NavigationTest extends BrowserTest {
 
         ".tabnav-tab".items(1).click()
         waitUntil { ".commits-listing".nonEmpty }
+        Thread.sleep(1000)
 
         webDriver.navigate().back()
         val link = ".lilit-link"
@@ -73,13 +75,14 @@ object NavigationTest extends BrowserTest {
 
     "Navigate file tree" - {
       "click" - {
-        go("https://github.com/tanin47/test-java-repo/blob/master/src/main/java/test_java_repo/Main.java")
+        go("https://github.com/tanin47/test-java-repo/blob/d022270ccb8f346cb8ef2136c4212ff71802eff5/src/main/java/test_java_repo/Main.java")
 
         waitUntil { ".lilit-link".nonEmpty }
 
         ".js-path-segment".items(4).click()
 
         waitUntil { ".files .js-navigation-open".items.size >= 2 }
+        Thread.sleep(1000)
 
         ".files .js-navigation-open".items(2).click()
 
@@ -93,13 +96,14 @@ object NavigationTest extends BrowserTest {
       }
 
       "use back button" - {
-        go("https://github.com/tanin47/test-java-repo/blob/master/src/main/java/test_java_repo/Main.java")
+        go("https://github.com/tanin47/test-java-repo/blob/d022270ccb8f346cb8ef2136c4212ff71802eff5/src/main/java/test_java_repo/Main.java")
 
         waitUntil { ".lilit-link".nonEmpty }
 
         ".js-path-segment".items(4).click()
 
         waitUntil { ".files .js-navigation-open".items.size >= 2 }
+        Thread.sleep(1000)
 
         webDriver.navigate().back()
 

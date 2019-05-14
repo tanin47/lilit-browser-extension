@@ -7,6 +7,7 @@ import org.scalajs.dom
 import org.scalajs.dom.ext.Ajax
 import org.scalajs.dom.ext.Ajax.InputData
 import org.scalajs.dom.raw.{Event, HTMLButtonElement, HTMLElement}
+import state.State
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -15,6 +16,8 @@ import scala.scalajs.js.JSON
 import scala.scalajs.js.JSConverters._
 
 object Popup {
+  var pageOpt: Option[Page] = None
+
   def main(args: Array[String]): Unit = {
     println("[Lilit] Popup is opened")
     chrome.management.Management.getSelf
@@ -51,6 +54,7 @@ object Popup {
         }
     }
 
+    registerRequestButton()
     update()
   }
 
@@ -75,46 +79,49 @@ object Popup {
         }
       }
     } yield {
-      render(host, pageOpt)
+      Popup.pageOpt = pageOpt
+      render(host)
       dom.document.body.style.display = "block"
     }
   }
 
-  def registerRequestButton(host: String, page: Page): Unit = {
+  def registerRequestButton(): Unit = {
     val requestButton = dom.document.querySelector("#requestButton").asInstanceOf[HTMLElement]
 
     requestButton.addEventListener("click", { _: Event =>
-      for {
-        _ <- Ajax
-          .post(
-            url = s"$host/add",
-            data = InputData.str2ajax(JSON.stringify(js.Dynamic.literal(
-              repo = page.repoName,
-              revisions = page.missingRevisions.toJSArray,
-              rebuildJdk = false,
-              rebuildRevision = false
-            ))),
-            headers = Map(
-              "Content-Type" -> "application/json",
-              "Accept" -> "application/json"
-            )
-          )
-      } yield {
-        dom.document.querySelector("#requestPanelSuccessMessage").asInstanceOf[HTMLElement].style.display = "block"
-        requestButton.style.display = "none"
+      Popup.pageOpt match {
+        case Some(page) =>
+          for {
+            host <- Config.getHost()
+            _ <- Ajax
+              .post(
+                url = s"$host/add",
+                data = InputData.str2ajax(JSON.stringify(js.Dynamic.literal(
+                  repo = page.repoName,
+                  revisions = page.missingRevisions.toJSArray,
+                  rebuildJdk = false,
+                  rebuildRevision = false
+                ))),
+                headers = Map(
+                  "Content-Type" -> "application/json",
+                  "Accept" -> "application/json"
+                )
+              )
+          } yield {
+            dom.document.querySelector("#requestPanelSuccessMessage").asInstanceOf[HTMLElement].style.display = "block"
+            requestButton.style.display = "none"
+          }
+        case None =>
+          println("[Lilit] pageOpt is None. Do nothing.")
       }
     })
   }
 
-  def render(host: String, pageOpt: Option[Page]): Unit = {
+  def render(host: String): Unit = {
     js.Dynamic.global.console.log(pageOpt.asInstanceOf[js.Any])
     dom.document.querySelector("#host").innerHTML = host
 
-    pageOpt.foreach { page =>
-      registerRequestButton(host, page)
-    }
-
-    pageOpt match {
+    Popup.pageOpt match {
       case Some(file: FilePage) => renderFile(file)
       case Some(pull: PullRequestPage) => renderPullRequest(pull)
       case None => renderEmpty()

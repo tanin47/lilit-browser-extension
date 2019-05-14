@@ -68,7 +68,7 @@ object PullRequestTest extends BrowserTest {
       link.click()
 
       waitUntil {
-        webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/ccbb01030195533496b220ad9703b407d4240687/src/test/java/test_java_repo/MainTest.java?p=Class_Main_job_82_28b457e115363_2#L10"
+        webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/f6dee0110a9b1319accc3ab435e2ad9f3870776c/src/test/java/test_java_repo/MainTest.java?p=Class_Main_job_86_1c926580ec374_2#L10"
       }
 
       "#LC10".getAttribute("class").split(" ").toSet.contains("lilit-highlighted") ==> true
