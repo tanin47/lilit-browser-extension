@@ -216,6 +216,7 @@ abstract class BrowserTest extends TestSuite {
       waitUntil { getAttribute("aria-describedby") != null }
       s"#${getAttribute("aria-describedby")}".getElement
     }
+    def getClasses: Seq[String] = tryForSuccess { getElement.getAttribute("class").split(" ").map(_.trim) }
     def hover(): Unit = tryForSuccess { new Actions(webDriver).moveToElement(getElement).perform() }
     def click(): Unit = tryForSuccess { getElement.click() }
     def sendKeys(keysToSend: CharSequence*): Unit = tryForSuccess { getElement.sendKeys(keysToSend:_*) }
