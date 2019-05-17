@@ -50,28 +50,26 @@ class LineTokenizer(
     case usage: Usage =>
       usage.definition.locationOpt
         .map { location =>
-          usage.definition.module match {
-            case "Jdk" => UrlLink(s"$host/github/$repoName/$revision/jdk/${location.path}?p=${usage.definition.nodeId}")
-            case "Jar" => UrlLink(s"$host/github/$repoName/$revision/jar/${usage.definition.jarOpt.get.id}/${location.path}?p=${usage.definition.nodeId}")
-            case "User" => UrlLink(s"/$repoName/blob/${branchOpt.getOrElse(revision)}/${location.path}?p=${usage.definition.nodeId}#L${location.start.line}")
+          if (usage.definition.id.startsWith("jdk_")) {
+            UrlLink(s"$host/github/$repoName/$revision/jdk/${location.path}?p=${usage.definition.id}")
+          } else if (usage.definition.id.startsWith("jar_")) {
+            UrlLink(s"$host/github/$repoName/$revision/jar/${usage.definition.jarOpt.get.id}/${location.path}?p=${usage.definition.id}")
+          } else {
+            UrlLink(s"/$repoName/blob/${branchOpt.getOrElse(revision)}/${location.path}?p=${usage.definition.id}#L${location.start.line}")
           }
         }
     case definition: Definition =>
-      if (definition.count.mainCount == 0 && definition.count.otherCount == 0) {
-        Some(NoLink)
-      } else if (definition.count.mainCount > 0 && definition.count.otherCount == 0) {
-        Some(UrlLink(getUsageUrl(definition.count.mainPath, definition.nodeId, definition.count.mainFirstLineOpt.get)))
-      } else if (definition.count.mainCount == 0 && definition.count.otherFileCount == 1) {
-        Some(UrlLink(getUsageUrl(definition.count.otherFirstFilePathOpt.get, definition.nodeId, definition.count.otherFirstFileFirstLineOpt.get)))
-      } else {
-        Some(UrlLink(s"$host/github/$repoName/$revision/usage/${definition.nodeId}"))
-      }
+      Some(UrlLink(s"$host/github/$repoName/$revision/usage/${definition.id}"))
   }
 
-  def getModuleName(definition: UsageDefinition): String = definition.module match {
-    case "Jdk" => "JDK"
-    case "Jar" => definition.jarOpt.map { j => s"${j.group}:${j.artifact}:${j.version}" }.get
-    case "User" => repoName
+  def getModuleName(definition: UsageDefinition): String = {
+    if (definition.id.startsWith("jdk_")) {
+      "JDK"
+    } else if (definition.id.startsWith("jar_")) {
+      definition.jarOpt.map { j => s"${j.group}:${j.artifact}:${j.version}" }.get
+    } else {
+      repoName
+    }
   }
 
   def renderOccurrenceWord(count: Int): String = {
@@ -94,7 +92,7 @@ class LineTokenizer(
     case u: Usage =>
       u.definition.locationOpt
         .map { location =>
-          if (location.path == path && u.definition.module == "User") {
+          if (location.path == path && u.definition.id.startsWith("u_")) {
             s"Defined in this file on the line ${location.start.line}"
           } else {
             s"Defined in ${location.path} inside ${getModuleName(u.definition)}"
@@ -102,29 +100,7 @@ class LineTokenizer(
         }
         .getOrElse(s"Defined inside ${getModuleName(u.definition)}")
     case d: Definition =>
-      if (d.count.mainCount == 0 && d.count.otherCount == 0) {
-        "No occurrences found"
-      } else if (d.count.mainCount > 0 && d.count.otherCount == 0) {
-        s"Found ${d.count.mainCount} ${renderOccurrenceWord(d.count.mainCount)} only in this file"
-      } else if (d.count.mainCount == 0 && d.count.otherFileCount == 1) {
-        s"Found ${d.count.otherCount} ${renderOccurrenceWord(d.count.otherCount)} only in ${d.count.otherFirstFilePathOpt.get}"
-      } else {
-        val thisFileLabelOpt = if (d.count.mainCount > 0) {
-          Some(s"""Found <a href='${getUsageUrl(d.count.mainPath, d.nodeId, d.count.mainFirstLineOpt.get)}'>${d.count.mainCount} ${renderOccurrenceWord(d.count.mainCount)} in this file</a>""")
-        } else {
-          None
-        }
-
-        val otherFileLabelOpt = if (d.count.otherFileCount == 1) {
-          Some(s"Found <a href='${getUsageUrl(d.count.otherFirstFilePathOpt.get, d.nodeId, d.count.otherFirstFileFirstLineOpt.get)}'>${d.count.otherCount} ${renderOccurrenceWord(d.count.otherCount)} in ${d.count.otherFirstFilePathOpt.get}</a>")
-        } else if (d.count.otherFileCount > 1) {
-          Some(s"Found ${d.count.otherCount} ${renderOccurrenceWord(d.count.otherCount)} (${d.count.otherFileCount} ${renderFileWord(d.count.otherFileCount)})")
-        } else {
-          None
-        }
-
-        (thisFileLabelOpt ++ otherFileLabelOpt).mkString("<br/>")
-      }
+      "Click to find all usages"
   }
 
   def modify(node: Node): Option[Seq[Node]] = {
@@ -178,13 +154,13 @@ class LineTokenizer(
           selectedNodeIdOpt.flatMap { selectedNodeId =>
             token match {
               case u: Usage =>
-                if (u.definition.nodeId == selectedNodeId) {
+                if (u.definition.id == selectedNodeId) {
                   Some(HighlightType.Usage)
                 } else {
                   None
                 }
               case d: Definition =>
-                if (d.nodeId == selectedNodeId) {
+                if (d.id == selectedNodeId) {
                   Some(HighlightType.Definition)
                 } else {
                   None
