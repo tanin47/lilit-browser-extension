@@ -1,7 +1,7 @@
 {
   "name": "Lilit.dev",
   "short_name": "lilit.dev",
-  "version": "0.0.0.13",
+  "version": "0.0.0.14",
   "description": "",
   "manifest_version": 2,
   "permissions": [
