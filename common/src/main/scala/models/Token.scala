@@ -40,34 +40,20 @@ object Usage {
   def from(raw: bindings.Usage): Usage = {
     Usage(
       location = Location.from(raw.location),
-      definition = UsageDefinition.from(raw.definition),
+      definitionId = raw.definitionId,
+      definitionJarOpt = raw.definitionJarOpt.filter(_ != null).map(Jar.from).toOption,
+      definitionLocationOpt = raw.definitionLocationOpt.filter(_ != null).map(Location.from).toOption,
     )
   }
 }
 
 case class Usage(
   location: Location,
-  definition: UsageDefinition
+  definitionId: String,
+  definitionJarOpt: Option[Jar],
+  definitionLocationOpt: Option[Location],
 ) extends Token {
   lazy val locationOpt = Some(location)
-}
-
-object UsageDefinition {
-  def from(raw: bindings.UsageDefinition): UsageDefinition = {
-    UsageDefinition(
-      id = raw.id,
-      jarOpt = raw.jarOpt.filter(_ != null).map(Jar.from).toOption,
-      locationOpt = raw.locationOpt.filter(_ != null).map(Location.from).toOption,
-    )
-  }
-}
-
-case class UsageDefinition(
-  id: String,
-  jarOpt: Option[Jar],
-  locationOpt: Option[Location]
-) {
-  lazy val location = locationOpt.get
 }
 
 object Definition {

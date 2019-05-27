@@ -4,5 +4,7 @@ import scala.scalajs.js
 
 trait Usage extends js.Object {
   def location: Location
-  def definition: UsageDefinition
+  def definitionId: String
+  def definitionJarOpt: js.UndefOr[Jar]
+  def definitionLocationOpt: js.UndefOr[Location]
 }

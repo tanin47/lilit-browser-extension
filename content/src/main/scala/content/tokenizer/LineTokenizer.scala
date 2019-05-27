@@ -2,7 +2,7 @@ package content.tokenizer
 
 import content.bindings.Tippy
 import content.tokenizer.LineTokenizer.{HighlightType, LinkType, NoLink, UrlLink}
-import models.{Definition, Token, Usage, UsageDefinition}
+import models.{Definition, Jar, Token, Usage}
 import org.scalajs.dom
 import org.scalajs.dom.Element
 import org.scalajs.dom.raw.Node
@@ -48,25 +48,25 @@ class LineTokenizer(
 
   def makeUrlOpt(token: Token): Option[LinkType] = token match {
     case usage: Usage =>
-      usage.definition.locationOpt
+      usage.definitionLocationOpt
         .map { location =>
-          if (usage.definition.id.startsWith("jdk_")) {
-            UrlLink(s"$host/github/$repoName/$revision/jdk/${location.path}?p=${usage.definition.id}")
-          } else if (usage.definition.id.startsWith("jar_")) {
-            UrlLink(s"$host/github/$repoName/$revision/jar/${usage.definition.jarOpt.get.id}/${location.path}?p=${usage.definition.id}")
+          if (usage.definitionId.startsWith("jdk_")) {
+            UrlLink(s"$host/github/$repoName/$revision/jdk/${location.path}?p=${usage.definitionId}")
+          } else if (usage.definitionId.startsWith("jar_")) {
+            UrlLink(s"$host/github/$repoName/$revision/jar/${usage.definitionJarOpt.get.id}/${location.path}?p=${usage.definitionId}")
           } else {
-            UrlLink(s"/$repoName/blob/${branchOpt.getOrElse(revision)}/${location.path}?p=${usage.definition.id}#L${location.start.line}")
+            UrlLink(s"/$repoName/blob/${branchOpt.getOrElse(revision)}/${location.path}?p=${usage.definitionId}#L${location.start.line}")
           }
         }
     case definition: Definition =>
       Some(UrlLink(s"$host/github/$repoName/$revision/usage/${definition.id}"))
   }
 
-  def getModuleName(definition: UsageDefinition): String = {
-    if (definition.id.startsWith("jdk_")) {
+  def getModuleName(definitionId: String, definitionJarOpt: Option[Jar]): String = {
+    if (definitionId.startsWith("jdk_")) {
       "JDK"
-    } else if (definition.id.startsWith("jar_")) {
-      definition.jarOpt.map { j => s"${j.group}:${j.artifact}:${j.version}" }.get
+    } else if (definitionId.startsWith("jar_")) {
+      definitionJarOpt.map { j => s"${j.group}:${j.artifact}:${j.version}" }.get
     } else {
       repoName
     }
@@ -90,15 +90,15 @@ class LineTokenizer(
 
   def makeTooltipContent(token: Token): String = token match {
     case u: Usage =>
-      u.definition.locationOpt
+      u.definitionLocationOpt
         .map { location =>
-          if (location.path == path && u.definition.id.startsWith("u_")) {
+          if (location.path == path && u.definitionId.startsWith("u_")) {
             s"Defined in this file on the line ${location.start.line}"
           } else {
-            s"Defined in ${location.path} inside ${getModuleName(u.definition)}"
+            s"Defined in ${location.path} inside ${getModuleName(u.definitionId, u.definitionJarOpt)}"
           }
         }
-        .getOrElse(s"Defined inside ${getModuleName(u.definition)}")
+        .getOrElse(s"Defined inside ${getModuleName(u.definitionId, u.definitionJarOpt)}")
     case d: Definition =>
       "Click to find all usages"
   }
@@ -154,7 +154,7 @@ class LineTokenizer(
           selectedNodeIdOpt.flatMap { selectedNodeId =>
             token match {
               case u: Usage =>
-                if (u.definition.id == selectedNodeId) {
+                if (u.definitionId == selectedNodeId) {
                   Some(HighlightType.Usage)
                 } else {
                   None

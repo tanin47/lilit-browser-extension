@@ -30,12 +30,7 @@ object ViewFileTest extends BrowserTest {
       waitUntil { definition.items.nonEmpty }
 
       definition.hover()
-      definition.getToolTip.getText ==>
-        """
-          |Found 1 occurrence in this file
-          |Found 1 occurrence in src/test/java/test_java_repo/MainTest.java
-        """.stripMargin.trim
-
+      definition.getToolTip.getText ==> "Click to find all usages"
       definition.click()
 
       waitUntil { webDriver.getCurrentUrl.startsWith("https://lilit.dev") }
