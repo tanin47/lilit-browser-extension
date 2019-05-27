@@ -7876,58 +7876,51 @@ function $h_Lcontent_tokenizer_LineTokenizer() {
   /*<skip>*/
 }
 $h_Lcontent_tokenizer_LineTokenizer.prototype = $c_Lcontent_tokenizer_LineTokenizer.prototype;
-$c_Lcontent_tokenizer_LineTokenizer.prototype.renderFileWord__I__T = (function(count) {
-  return ((count === 1) ? "file" : "files")
-});
 $c_Lcontent_tokenizer_LineTokenizer.prototype.makeUrlOpt__Lmodels_Token__s_Option = (function(token) {
   if ($is_Lmodels_Usage(token)) {
     var x2 = token;
-    var this$1 = x2.definition$2.locationOpt$1;
+    var this$1 = x2.definitionLocationOpt$2;
     if (this$1.isEmpty__Z()) {
       return $m_s_None$()
     } else {
       var arg1 = this$1.get__O();
       var location = arg1;
-      var x1 = x2.definition$2.module$1;
-      if ((x1 === "Jdk")) {
-        var jsx$1 = new $c_Lcontent_tokenizer_LineTokenizer$UrlLink().init___T(((((((((this.host$1 + "/github/") + this.repoName$1) + "/") + this.revision$1) + "/jdk/") + location.path$1) + "?p=") + x2.definition$2.nodeId$1))
-      } else if ((x1 === "Jar")) {
-        var jsx$1 = new $c_Lcontent_tokenizer_LineTokenizer$UrlLink().init___T(((((((((((this.host$1 + "/github/") + this.repoName$1) + "/") + this.revision$1) + "/jar/") + x2.definition$2.jarOpt$1.get__O().id$1) + "/") + location.path$1) + "?p=") + x2.definition$2.nodeId$1))
-      } else if ((x1 === "User")) {
-        var jsx$2 = this.repoName$1;
-        var this$2 = this.branchOpt$1;
-        var jsx$1 = new $c_Lcontent_tokenizer_LineTokenizer$UrlLink().init___T(((((((((("/" + jsx$2) + "/blob/") + (this$2.isEmpty__Z() ? this.revision$1 : this$2.get__O())) + "/") + location.path$1) + "?p=") + x2.definition$2.nodeId$1) + "#L") + location.start$1.line$1))
+      var thiz = x2.definitionId$2;
+      if ((((thiz.length | 0) >= 0) && (thiz.substring(0, ("jdk_".length | 0)) === "jdk_"))) {
+        var jsx$1 = new $c_Lcontent_tokenizer_LineTokenizer$UrlLink().init___T(((((((((this.host$1 + "/github/") + this.repoName$1) + "/") + this.revision$1) + "/jdk/") + location.path$1) + "?p=") + x2.definitionId$2))
       } else {
-        var jsx$1;
-        throw new $c_s_MatchError().init___O(x1)
+        var thiz$1 = x2.definitionId$2;
+        if ((((thiz$1.length | 0) >= 0) && (thiz$1.substring(0, ("jar_".length | 0)) === "jar_"))) {
+          var jsx$1 = new $c_Lcontent_tokenizer_LineTokenizer$UrlLink().init___T(((((((((((this.host$1 + "/github/") + this.repoName$1) + "/") + this.revision$1) + "/jar/") + x2.definitionJarOpt$2.get__O().id$1) + "/") + location.path$1) + "?p=") + x2.definitionId$2))
+        } else {
+          var jsx$2 = this.repoName$1;
+          var this$12 = this.branchOpt$1;
+          var jsx$1 = new $c_Lcontent_tokenizer_LineTokenizer$UrlLink().init___T(((((((((("/" + jsx$2) + "/blob/") + (this$12.isEmpty__Z() ? this.revision$1 : this$12.get__O())) + "/") + location.path$1) + "?p=") + x2.definitionId$2) + "#L") + location.start$1.line$1))
+        }
       };
       return new $c_s_Some().init___O(jsx$1)
     }
   } else if ($is_Lmodels_Definition(token)) {
     var x3 = token;
-    return (((x3.count$2.mainCount$1 === 0) && (x3.count$2.otherCount$1 === 0)) ? new $c_s_Some().init___O($m_Lcontent_tokenizer_LineTokenizer$NoLink$()) : (((x3.count$2.mainCount$1 > 0) && (x3.count$2.otherCount$1 === 0)) ? new $c_s_Some().init___O(new $c_Lcontent_tokenizer_LineTokenizer$UrlLink().init___T(this.getUsageUrl__T__T__I__T(x3.count$2.mainPath$1, x3.nodeId$2, (x3.count$2.mainFirstLineOpt$1.get__O() | 0)))) : (((x3.count$2.mainCount$1 === 0) && (x3.count$2.otherFileCount$1 === 1)) ? new $c_s_Some().init___O(new $c_Lcontent_tokenizer_LineTokenizer$UrlLink().init___T(this.getUsageUrl__T__T__I__T(x3.count$2.otherFirstFilePathOpt$1.get__O(), x3.nodeId$2, (x3.count$2.otherFirstFileFirstLineOpt$1.get__O() | 0)))) : new $c_s_Some().init___O(new $c_Lcontent_tokenizer_LineTokenizer$UrlLink().init___T(((((((this.host$1 + "/github/") + this.repoName$1) + "/") + this.revision$1) + "/usage/") + x3.nodeId$2))))))
+    return new $c_s_Some().init___O(new $c_Lcontent_tokenizer_LineTokenizer$UrlLink().init___T(((((((this.host$1 + "/github/") + this.repoName$1) + "/") + this.revision$1) + "/usage/") + x3.id$2)))
   } else {
     throw new $c_s_MatchError().init___O(token)
   }
 });
-$c_Lcontent_tokenizer_LineTokenizer.prototype.getModuleName__Lmodels_UsageDefinition__T = (function(definition) {
-  var x1 = definition.module$1;
-  if ((x1 === "Jdk")) {
+$c_Lcontent_tokenizer_LineTokenizer.prototype.getModuleName__T__s_Option__T = (function(definitionId, definitionJarOpt) {
+  if ((((definitionId.length | 0) >= 0) && (definitionId.substring(0, ("jdk_".length | 0)) === "jdk_"))) {
     return "JDK"
-  } else if ((x1 === "Jar")) {
-    var this$1 = definition.jarOpt$1;
-    if (this$1.isEmpty__Z()) {
+  } else if ((((definitionId.length | 0) >= 0) && (definitionId.substring(0, ("jar_".length | 0)) === "jar_"))) {
+    if (definitionJarOpt.isEmpty__Z()) {
       var jsx$1 = $m_s_None$()
     } else {
-      var arg1 = this$1.get__O();
+      var arg1 = definitionJarOpt.get__O();
       var j = arg1;
       var jsx$1 = new $c_s_Some().init___O(((((j.group$1 + ":") + j.artifact$1) + ":") + j.version$1))
     };
     return jsx$1.get__O()
-  } else if ((x1 === "User")) {
-    return this.repoName$1
   } else {
-    throw new $c_s_MatchError().init___O(x1)
+    return this.repoName$1
   }
 });
 $c_Lcontent_tokenizer_LineTokenizer.prototype.setHighlightType__s_Option__V = (function(htOpt) {
@@ -7950,9 +7943,6 @@ $c_Lcontent_tokenizer_LineTokenizer.prototype.setHighlightType__s_Option__V = (f
     var this$2 = new $c_s_Some().init___O(jsx$1)
   };
   this.highlightTypeOpt$1 = (this$2.isEmpty__Z() ? htOpt : this$2.get__O())
-});
-$c_Lcontent_tokenizer_LineTokenizer.prototype.renderOccurrenceWord__I__T = (function(count) {
-  return ((count === 1) ? "occurrence" : "occurrences")
 });
 $c_Lcontent_tokenizer_LineTokenizer.prototype.modify__Lorg_scalajs_dom_raw_Node__s_Option = (function(node) {
   if ((!(!node.parentNode.classList.contains("lilit-link")))) {
@@ -8027,13 +8017,13 @@ $c_Lcontent_tokenizer_LineTokenizer.prototype.modify__Lorg_scalajs_dom_raw_Node_
         var selectedNodeId = arg1$1;
         if ($is_Lmodels_Usage(token)) {
           var x2$1 = token;
-          var jsx$6 = ((x2$1.definition$2.nodeId$1 === selectedNodeId) ? new $c_s_Some().init___O($m_Lcontent_tokenizer_LineTokenizer$HighlightType$().Usage$2) : $m_s_None$())
+          var jsx$6 = ((x2$1.definitionId$2 === selectedNodeId) ? new $c_s_Some().init___O($m_Lcontent_tokenizer_LineTokenizer$HighlightType$().Usage$2) : $m_s_None$())
         } else {
           if ((!$is_Lmodels_Definition(token))) {
             throw new $c_s_MatchError().init___O(token)
           };
           var x3 = token;
-          var jsx$6 = ((x3.nodeId$2 === selectedNodeId) ? new $c_s_Some().init___O($m_Lcontent_tokenizer_LineTokenizer$HighlightType$().Definition$2) : $m_s_None$())
+          var jsx$6 = ((x3.id$2 === selectedNodeId) ? new $c_s_Some().init___O($m_Lcontent_tokenizer_LineTokenizer$HighlightType$().Definition$2) : $m_s_None$())
         }
       };
       this$2$1.setHighlightType__s_Option__V(jsx$6);
@@ -8069,11 +8059,6 @@ $c_Lcontent_tokenizer_LineTokenizer.prototype.modify__Lorg_scalajs_dom_raw_Node_
   } else {
     return $m_s_None$()
   }
-});
-$c_Lcontent_tokenizer_LineTokenizer.prototype.getUsageUrl__T__T__I__T = (function(path, nodeId, firstLine) {
-  var jsx$1 = this.repoName$1;
-  var this$1 = this.branchOpt$1;
-  return ((((((((("/" + jsx$1) + "/blob/") + (this$1.isEmpty__Z() ? this.revision$1 : this$1.get__O())) + "/") + path) + "?p=") + nodeId) + "#L") + firstLine)
 });
 $c_Lcontent_tokenizer_LineTokenizer.prototype.process__Lorg_scalajs_dom_raw_Element__s_Option = (function(lineElem) {
   if ((lineElem === null)) {
@@ -8161,31 +8146,23 @@ $c_Lcontent_tokenizer_LineTokenizer.prototype.init___T__T__T__T__s_Option__s_Opt
 $c_Lcontent_tokenizer_LineTokenizer.prototype.makeTooltipContent__Lmodels_Token__T = (function(token) {
   if ($is_Lmodels_Usage(token)) {
     var x2 = token;
-    var this$1 = x2.definition$2.locationOpt$1;
+    var this$1 = x2.definitionLocationOpt$2;
     if (this$1.isEmpty__Z()) {
-      var this$2 = $m_s_None$()
+      var this$7 = $m_s_None$()
     } else {
       var arg1 = this$1.get__O();
       var location = arg1;
-      var this$2 = new $c_s_Some().init___O((((location.path$1 === this.path$1) && (x2.definition$2.module$1 === "User")) ? ("Defined in this file on the line " + location.start$1.line$1) : ((("Defined in " + location.path$1) + " inside ") + this.getModuleName__Lmodels_UsageDefinition__T(x2.definition$2))))
+      if ((location.path$1 === this.path$1)) {
+        var thiz = x2.definitionId$2;
+        var jsx$1 = (((thiz.length | 0) >= 0) && (thiz.substring(0, ("u_".length | 0)) === "u_"))
+      } else {
+        var jsx$1 = false
+      };
+      var this$7 = new $c_s_Some().init___O((jsx$1 ? ("Defined in this file on the line " + location.start$1.line$1) : ((("Defined in " + location.path$1) + " inside ") + this.getModuleName__T__s_Option__T(x2.definitionId$2, x2.definitionJarOpt$2))))
     };
-    return (this$2.isEmpty__Z() ? ("Defined inside " + this.getModuleName__Lmodels_UsageDefinition__T(x2.definition$2)) : this$2.get__O())
+    return (this$7.isEmpty__Z() ? ("Defined inside " + this.getModuleName__T__s_Option__T(x2.definitionId$2, x2.definitionJarOpt$2)) : this$7.get__O())
   } else if ($is_Lmodels_Definition(token)) {
-    var x3 = token;
-    if (((x3.count$2.mainCount$1 === 0) && (x3.count$2.otherCount$1 === 0))) {
-      return "No occurrences found"
-    } else if (((x3.count$2.mainCount$1 > 0) && (x3.count$2.otherCount$1 === 0))) {
-      return (((("Found " + x3.count$2.mainCount$1) + " ") + this.renderOccurrenceWord__I__T(x3.count$2.mainCount$1)) + " only in this file")
-    } else if (((x3.count$2.mainCount$1 === 0) && (x3.count$2.otherFileCount$1 === 1))) {
-      return ((((("Found " + x3.count$2.otherCount$1) + " ") + this.renderOccurrenceWord__I__T(x3.count$2.otherCount$1)) + " only in ") + x3.count$2.otherFirstFilePathOpt$1.get__O())
-    } else {
-      var thisFileLabelOpt = ((x3.count$2.mainCount$1 > 0) ? new $c_s_Some().init___O((((((("Found <a href='" + this.getUsageUrl__T__T__I__T(x3.count$2.mainPath$1, x3.nodeId$2, (x3.count$2.mainFirstLineOpt$1.get__O() | 0))) + "'>") + x3.count$2.mainCount$1) + " ") + this.renderOccurrenceWord__I__T(x3.count$2.mainCount$1)) + " in this file</a>")) : $m_s_None$());
-      var otherFileLabelOpt = ((x3.count$2.otherFileCount$1 === 1) ? new $c_s_Some().init___O((((((((("Found <a href='" + this.getUsageUrl__T__T__I__T(x3.count$2.otherFirstFilePathOpt$1.get__O(), x3.nodeId$2, (x3.count$2.otherFirstFileFirstLineOpt$1.get__O() | 0))) + "'>") + x3.count$2.otherCount$1) + " ") + this.renderOccurrenceWord__I__T(x3.count$2.otherCount$1)) + " in ") + x3.count$2.otherFirstFilePathOpt$1.get__O()) + "</a>")) : ((x3.count$2.otherFileCount$1 > 1) ? new $c_s_Some().init___O((((((((("Found " + x3.count$2.otherCount$1) + " ") + this.renderOccurrenceWord__I__T(x3.count$2.otherCount$1)) + " (") + x3.count$2.otherFileCount$1) + " ") + this.renderFileWord__I__T(x3.count$2.otherFileCount$1)) + ")")) : $m_s_None$()));
-      var jsx$2 = thisFileLabelOpt.toList__sci_List();
-      var jsx$1 = otherFileLabelOpt.toList__sci_List();
-      var this$5 = $m_sc_Iterable$();
-      return jsx$2.$$plus$plus__sc_GenTraversableOnce__scg_CanBuildFrom__O(jsx$1, this$5.ReusableCBFInstance$2).mkString__T__T("<br/>")
-    }
+    return "Click to find all usages"
   } else {
     throw new $c_s_MatchError().init___O(token)
   }
@@ -19154,19 +19131,16 @@ $c_Lmodels_Definition$.prototype.init___ = (function() {
   return this
 });
 $c_Lmodels_Definition$.prototype.from__Lmodels_bindings_Definition__Lmodels_Definition = (function(raw) {
-  var jsx$3 = raw.nodeId;
-  var jsx$2 = raw.module;
-  var value = raw.jarIdOpt;
-  var jsx$1 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value));
-  var value$1 = raw.locationOpt;
-  var value$2 = (((value$1 === (void 0)) || (value$1 !== null)) ? value$1 : (void 0));
-  if ((value$2 === (void 0))) {
-    var value$4 = (void 0)
+  var jsx$1 = raw.id;
+  var value = raw.locationOpt;
+  var value$1 = (((value === (void 0)) || (value !== null)) ? value : (void 0));
+  if ((value$1 === (void 0))) {
+    var value$3 = (void 0)
   } else {
-    var value$3 = $m_Lmodels_Location$().from__Lmodels_bindings_Location__Lmodels_Location(value$2);
-    var value$4 = value$3
+    var value$2 = $m_Lmodels_Location$().from__Lmodels_bindings_Location__Lmodels_Location(value$1);
+    var value$3 = value$2
   };
-  return new $c_Lmodels_Definition().init___T__T__s_Option__s_Option__Lmodels_UserUsageCount(jsx$3, jsx$2, jsx$1, ((value$4 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$4)), $m_Lmodels_UserUsageCount$().from__Lmodels_bindings_UserUsageCount__Lmodels_UserUsageCount(raw.count))
+  return new $c_Lmodels_Definition().init___T__s_Option(jsx$1, ((value$3 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$3)))
 });
 var $d_Lmodels_Definition$ = new $TypeData().initClass({
   Lmodels_Definition$: 0
@@ -19298,7 +19272,26 @@ $c_Lmodels_Usage$.prototype.init___ = (function() {
   return this
 });
 $c_Lmodels_Usage$.prototype.from__Lmodels_bindings_Usage__Lmodels_Usage = (function(raw) {
-  return new $c_Lmodels_Usage().init___Lmodels_Location__Lmodels_UsageDefinition($m_Lmodels_Location$().from__Lmodels_bindings_Location__Lmodels_Location(raw.location), $m_Lmodels_UsageDefinition$().from__Lmodels_bindings_UsageDefinition__Lmodels_UsageDefinition(raw.definition))
+  var jsx$3 = $m_Lmodels_Location$().from__Lmodels_bindings_Location__Lmodels_Location(raw.location);
+  var jsx$2 = raw.definitionId;
+  var value = raw.definitionJarOpt;
+  var value$1 = (((value === (void 0)) || (value !== null)) ? value : (void 0));
+  if ((value$1 === (void 0))) {
+    var value$3 = (void 0)
+  } else {
+    var value$2 = $m_Lmodels_Jar$().from__Lmodels_bindings_Jar__Lmodels_Jar(value$1);
+    var value$3 = value$2
+  };
+  var jsx$1 = ((value$3 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$3));
+  var value$4 = raw.definitionLocationOpt;
+  var value$5 = (((value$4 === (void 0)) || (value$4 !== null)) ? value$4 : (void 0));
+  if ((value$5 === (void 0))) {
+    var value$7 = (void 0)
+  } else {
+    var value$6 = $m_Lmodels_Location$().from__Lmodels_bindings_Location__Lmodels_Location(value$5);
+    var value$7 = value$6
+  };
+  return new $c_Lmodels_Usage().init___Lmodels_Location__T__s_Option__s_Option(jsx$3, jsx$2, jsx$1, ((value$7 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$7)))
 });
 var $d_Lmodels_Usage$ = new $TypeData().initClass({
   Lmodels_Usage$: 0
@@ -19315,100 +19308,6 @@ function $m_Lmodels_Usage$() {
     $n_Lmodels_Usage$ = new $c_Lmodels_Usage$().init___()
   };
   return $n_Lmodels_Usage$
-}
-/** @constructor */
-function $c_Lmodels_UsageDefinition$() {
-  $c_O.call(this)
-}
-$c_Lmodels_UsageDefinition$.prototype = new $h_O();
-$c_Lmodels_UsageDefinition$.prototype.constructor = $c_Lmodels_UsageDefinition$;
-/** @constructor */
-function $h_Lmodels_UsageDefinition$() {
-  /*<skip>*/
-}
-$h_Lmodels_UsageDefinition$.prototype = $c_Lmodels_UsageDefinition$.prototype;
-$c_Lmodels_UsageDefinition$.prototype.init___ = (function() {
-  return this
-});
-$c_Lmodels_UsageDefinition$.prototype.from__Lmodels_bindings_UsageDefinition__Lmodels_UsageDefinition = (function(raw) {
-  var jsx$3 = raw.nodeId;
-  var jsx$2 = raw.module;
-  var value = raw.jarOpt;
-  var value$1 = (((value === (void 0)) || (value !== null)) ? value : (void 0));
-  if ((value$1 === (void 0))) {
-    var value$3 = (void 0)
-  } else {
-    var value$2 = $m_Lmodels_Jar$().from__Lmodels_bindings_Jar__Lmodels_Jar(value$1);
-    var value$3 = value$2
-  };
-  var jsx$1 = ((value$3 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$3));
-  var value$4 = raw.locationOpt;
-  var value$5 = (((value$4 === (void 0)) || (value$4 !== null)) ? value$4 : (void 0));
-  if ((value$5 === (void 0))) {
-    var value$7 = (void 0)
-  } else {
-    var value$6 = $m_Lmodels_Location$().from__Lmodels_bindings_Location__Lmodels_Location(value$5);
-    var value$7 = value$6
-  };
-  return new $c_Lmodels_UsageDefinition().init___T__T__s_Option__s_Option(jsx$3, jsx$2, jsx$1, ((value$7 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$7)))
-});
-var $d_Lmodels_UsageDefinition$ = new $TypeData().initClass({
-  Lmodels_UsageDefinition$: 0
-}, false, "models.UsageDefinition$", {
-  Lmodels_UsageDefinition$: 1,
-  O: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lmodels_UsageDefinition$.prototype.$classData = $d_Lmodels_UsageDefinition$;
-var $n_Lmodels_UsageDefinition$ = (void 0);
-function $m_Lmodels_UsageDefinition$() {
-  if ((!$n_Lmodels_UsageDefinition$)) {
-    $n_Lmodels_UsageDefinition$ = new $c_Lmodels_UsageDefinition$().init___()
-  };
-  return $n_Lmodels_UsageDefinition$
-}
-/** @constructor */
-function $c_Lmodels_UserUsageCount$() {
-  $c_O.call(this)
-}
-$c_Lmodels_UserUsageCount$.prototype = new $h_O();
-$c_Lmodels_UserUsageCount$.prototype.constructor = $c_Lmodels_UserUsageCount$;
-/** @constructor */
-function $h_Lmodels_UserUsageCount$() {
-  /*<skip>*/
-}
-$h_Lmodels_UserUsageCount$.prototype = $c_Lmodels_UserUsageCount$.prototype;
-$c_Lmodels_UserUsageCount$.prototype.init___ = (function() {
-  return this
-});
-$c_Lmodels_UserUsageCount$.prototype.from__Lmodels_bindings_UserUsageCount__Lmodels_UserUsageCount = (function(raw) {
-  var jsx$6 = raw.mainPath;
-  var jsx$5 = raw.mainCount;
-  var value = raw.mainFirstLineOpt;
-  var jsx$4 = ((value === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value));
-  var jsx$3 = raw.otherCount;
-  var jsx$2 = raw.otherFileCount;
-  var value$1 = raw.otherFirstFilePathOpt;
-  var jsx$1 = ((value$1 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$1));
-  var value$2 = raw.otherFirstFileFirstLineOpt;
-  return new $c_Lmodels_UserUsageCount().init___T__I__s_Option__I__I__s_Option__s_Option(jsx$6, (jsx$5 | 0), jsx$4, (jsx$3 | 0), (jsx$2 | 0), jsx$1, ((value$2 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$2)))
-});
-var $d_Lmodels_UserUsageCount$ = new $TypeData().initClass({
-  Lmodels_UserUsageCount$: 0
-}, false, "models.UserUsageCount$", {
-  Lmodels_UserUsageCount$: 1,
-  O: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lmodels_UserUsageCount$.prototype.$classData = $d_Lmodels_UserUsageCount$;
-var $n_Lmodels_UserUsageCount$ = (void 0);
-function $m_Lmodels_UserUsageCount$() {
-  if ((!$n_Lmodels_UserUsageCount$)) {
-    $n_Lmodels_UserUsageCount$ = new $c_Lmodels_UserUsageCount$().init___()
-  };
-  return $n_Lmodels_UserUsageCount$
 }
 var $b_Lmodels_bindings_FileRequest = (void 0);
 function $a_Lmodels_bindings_FileRequest() {
@@ -25911,242 +25810,6 @@ var $d_Lmodels_Position = new $TypeData().initClass({
 });
 $c_Lmodels_Position.prototype.$classData = $d_Lmodels_Position;
 /** @constructor */
-function $c_Lmodels_UsageDefinition() {
-  $c_O.call(this);
-  this.location$1 = null;
-  this.nodeId$1 = null;
-  this.module$1 = null;
-  this.jarOpt$1 = null;
-  this.locationOpt$1 = null;
-  this.bitmap$0$1 = false
-}
-$c_Lmodels_UsageDefinition.prototype = new $h_O();
-$c_Lmodels_UsageDefinition.prototype.constructor = $c_Lmodels_UsageDefinition;
-/** @constructor */
-function $h_Lmodels_UsageDefinition() {
-  /*<skip>*/
-}
-$h_Lmodels_UsageDefinition.prototype = $c_Lmodels_UsageDefinition.prototype;
-$c_Lmodels_UsageDefinition.prototype.productPrefix__T = (function() {
-  return "UsageDefinition"
-});
-$c_Lmodels_UsageDefinition.prototype.productArity__I = (function() {
-  return 4
-});
-$c_Lmodels_UsageDefinition.prototype.equals__O__Z = (function(x$1) {
-  if ((this === x$1)) {
-    return true
-  } else if ($is_Lmodels_UsageDefinition(x$1)) {
-    var UsageDefinition$1 = x$1;
-    if (((this.nodeId$1 === UsageDefinition$1.nodeId$1) && (this.module$1 === UsageDefinition$1.module$1))) {
-      var x = this.jarOpt$1;
-      var x$2 = UsageDefinition$1.jarOpt$1;
-      var jsx$1 = ((x === null) ? (x$2 === null) : x.equals__O__Z(x$2))
-    } else {
-      var jsx$1 = false
-    };
-    if (jsx$1) {
-      var x$3 = this.locationOpt$1;
-      var x$4 = UsageDefinition$1.locationOpt$1;
-      return ((x$3 === null) ? (x$4 === null) : x$3.equals__O__Z(x$4))
-    } else {
-      return false
-    }
-  } else {
-    return false
-  }
-});
-$c_Lmodels_UsageDefinition.prototype.productElement__I__O = (function(x$1) {
-  switch (x$1) {
-    case 0: {
-      return this.nodeId$1;
-      break
-    }
-    case 1: {
-      return this.module$1;
-      break
-    }
-    case 2: {
-      return this.jarOpt$1;
-      break
-    }
-    case 3: {
-      return this.locationOpt$1;
-      break
-    }
-    default: {
-      throw new $c_jl_IndexOutOfBoundsException().init___T(("" + x$1))
-    }
-  }
-});
-$c_Lmodels_UsageDefinition.prototype.toString__T = (function() {
-  return $m_sr_ScalaRunTime$().$$undtoString__s_Product__T(this)
-});
-$c_Lmodels_UsageDefinition.prototype.hashCode__I = (function() {
-  var this$2 = $m_s_util_hashing_MurmurHash3$();
-  return this$2.productHash__s_Product__I__I(this, (-889275714))
-});
-$c_Lmodels_UsageDefinition.prototype.productIterator__sc_Iterator = (function() {
-  return new $c_sr_ScalaRunTime$$anon$1().init___s_Product(this)
-});
-$c_Lmodels_UsageDefinition.prototype.init___T__T__s_Option__s_Option = (function(nodeId, module, jarOpt, locationOpt) {
-  this.nodeId$1 = nodeId;
-  this.module$1 = module;
-  this.jarOpt$1 = jarOpt;
-  this.locationOpt$1 = locationOpt;
-  return this
-});
-function $is_Lmodels_UsageDefinition(obj) {
-  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.Lmodels_UsageDefinition)))
-}
-function $isArrayOf_Lmodels_UsageDefinition(obj, depth) {
-  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.Lmodels_UsageDefinition)))
-}
-var $d_Lmodels_UsageDefinition = new $TypeData().initClass({
-  Lmodels_UsageDefinition: 0
-}, false, "models.UsageDefinition", {
-  Lmodels_UsageDefinition: 1,
-  O: 1,
-  s_Product: 1,
-  s_Equals: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lmodels_UsageDefinition.prototype.$classData = $d_Lmodels_UsageDefinition;
-/** @constructor */
-function $c_Lmodels_UserUsageCount() {
-  $c_O.call(this);
-  this.mainPath$1 = null;
-  this.mainCount$1 = 0;
-  this.mainFirstLineOpt$1 = null;
-  this.otherCount$1 = 0;
-  this.otherFileCount$1 = 0;
-  this.otherFirstFilePathOpt$1 = null;
-  this.otherFirstFileFirstLineOpt$1 = null
-}
-$c_Lmodels_UserUsageCount.prototype = new $h_O();
-$c_Lmodels_UserUsageCount.prototype.constructor = $c_Lmodels_UserUsageCount;
-/** @constructor */
-function $h_Lmodels_UserUsageCount() {
-  /*<skip>*/
-}
-$h_Lmodels_UserUsageCount.prototype = $c_Lmodels_UserUsageCount.prototype;
-$c_Lmodels_UserUsageCount.prototype.productPrefix__T = (function() {
-  return "UserUsageCount"
-});
-$c_Lmodels_UserUsageCount.prototype.productArity__I = (function() {
-  return 7
-});
-$c_Lmodels_UserUsageCount.prototype.equals__O__Z = (function(x$1) {
-  if ((this === x$1)) {
-    return true
-  } else if ($is_Lmodels_UserUsageCount(x$1)) {
-    var UserUsageCount$1 = x$1;
-    if (((this.mainPath$1 === UserUsageCount$1.mainPath$1) && (this.mainCount$1 === UserUsageCount$1.mainCount$1))) {
-      var x = this.mainFirstLineOpt$1;
-      var x$2 = UserUsageCount$1.mainFirstLineOpt$1;
-      var jsx$2 = ((x === null) ? (x$2 === null) : x.equals__O__Z(x$2))
-    } else {
-      var jsx$2 = false
-    };
-    if (((jsx$2 && (this.otherCount$1 === UserUsageCount$1.otherCount$1)) && (this.otherFileCount$1 === UserUsageCount$1.otherFileCount$1))) {
-      var x$3 = this.otherFirstFilePathOpt$1;
-      var x$4 = UserUsageCount$1.otherFirstFilePathOpt$1;
-      var jsx$1 = ((x$3 === null) ? (x$4 === null) : x$3.equals__O__Z(x$4))
-    } else {
-      var jsx$1 = false
-    };
-    if (jsx$1) {
-      var x$5 = this.otherFirstFileFirstLineOpt$1;
-      var x$6 = UserUsageCount$1.otherFirstFileFirstLineOpt$1;
-      return ((x$5 === null) ? (x$6 === null) : x$5.equals__O__Z(x$6))
-    } else {
-      return false
-    }
-  } else {
-    return false
-  }
-});
-$c_Lmodels_UserUsageCount.prototype.productElement__I__O = (function(x$1) {
-  switch (x$1) {
-    case 0: {
-      return this.mainPath$1;
-      break
-    }
-    case 1: {
-      return this.mainCount$1;
-      break
-    }
-    case 2: {
-      return this.mainFirstLineOpt$1;
-      break
-    }
-    case 3: {
-      return this.otherCount$1;
-      break
-    }
-    case 4: {
-      return this.otherFileCount$1;
-      break
-    }
-    case 5: {
-      return this.otherFirstFilePathOpt$1;
-      break
-    }
-    case 6: {
-      return this.otherFirstFileFirstLineOpt$1;
-      break
-    }
-    default: {
-      throw new $c_jl_IndexOutOfBoundsException().init___T(("" + x$1))
-    }
-  }
-});
-$c_Lmodels_UserUsageCount.prototype.toString__T = (function() {
-  return $m_sr_ScalaRunTime$().$$undtoString__s_Product__T(this)
-});
-$c_Lmodels_UserUsageCount.prototype.init___T__I__s_Option__I__I__s_Option__s_Option = (function(mainPath, mainCount, mainFirstLineOpt, otherCount, otherFileCount, otherFirstFilePathOpt, otherFirstFileFirstLineOpt) {
-  this.mainPath$1 = mainPath;
-  this.mainCount$1 = mainCount;
-  this.mainFirstLineOpt$1 = mainFirstLineOpt;
-  this.otherCount$1 = otherCount;
-  this.otherFileCount$1 = otherFileCount;
-  this.otherFirstFilePathOpt$1 = otherFirstFilePathOpt;
-  this.otherFirstFileFirstLineOpt$1 = otherFirstFileFirstLineOpt;
-  return this
-});
-$c_Lmodels_UserUsageCount.prototype.hashCode__I = (function() {
-  var acc = (-889275714);
-  acc = $m_sr_Statics$().mix__I__I__I(acc, $m_sr_Statics$().anyHash__O__I(this.mainPath$1));
-  acc = $m_sr_Statics$().mix__I__I__I(acc, this.mainCount$1);
-  acc = $m_sr_Statics$().mix__I__I__I(acc, $m_sr_Statics$().anyHash__O__I(this.mainFirstLineOpt$1));
-  acc = $m_sr_Statics$().mix__I__I__I(acc, this.otherCount$1);
-  acc = $m_sr_Statics$().mix__I__I__I(acc, this.otherFileCount$1);
-  acc = $m_sr_Statics$().mix__I__I__I(acc, $m_sr_Statics$().anyHash__O__I(this.otherFirstFilePathOpt$1));
-  acc = $m_sr_Statics$().mix__I__I__I(acc, $m_sr_Statics$().anyHash__O__I(this.otherFirstFileFirstLineOpt$1));
-  return $m_sr_Statics$().finalizeHash__I__I__I(acc, 7)
-});
-$c_Lmodels_UserUsageCount.prototype.productIterator__sc_Iterator = (function() {
-  return new $c_sr_ScalaRunTime$$anon$1().init___s_Product(this)
-});
-function $is_Lmodels_UserUsageCount(obj) {
-  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.Lmodels_UserUsageCount)))
-}
-function $isArrayOf_Lmodels_UserUsageCount(obj, depth) {
-  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.Lmodels_UserUsageCount)))
-}
-var $d_Lmodels_UserUsageCount = new $TypeData().initClass({
-  Lmodels_UserUsageCount: 0
-}, false, "models.UserUsageCount", {
-  Lmodels_UserUsageCount: 1,
-  O: 1,
-  s_Product: 1,
-  s_Equals: 1,
-  s_Serializable: 1,
-  Ljava_io_Serializable: 1
-});
-$c_Lmodels_UserUsageCount.prototype.$classData = $d_Lmodels_UserUsageCount;
-/** @constructor */
 function $c_Lorg_parboiled2_Parser() {
   $c_Lorg_parboiled2_RuleDSL.call(this);
   this.initialValueStackSize$2 = 0;
@@ -29487,11 +29150,8 @@ $c_Ljava_nio_charset_UnsupportedCharsetException.prototype.$classData = $d_Ljava
 function $c_Lmodels_Definition() {
   $c_Lmodels_Token.call(this);
   this.location$2 = null;
-  this.nodeId$2 = null;
-  this.module$2 = null;
-  this.jarIdOpt$2 = null;
+  this.id$2 = null;
   this.locationOpt$2 = null;
-  this.count$2 = null;
   this.bitmap$0$2 = false
 }
 $c_Lmodels_Definition.prototype = new $h_Lmodels_Token();
@@ -29505,31 +29165,17 @@ $c_Lmodels_Definition.prototype.productPrefix__T = (function() {
   return "Definition"
 });
 $c_Lmodels_Definition.prototype.productArity__I = (function() {
-  return 5
+  return 2
 });
 $c_Lmodels_Definition.prototype.equals__O__Z = (function(x$1) {
   if ((this === x$1)) {
     return true
   } else if ($is_Lmodels_Definition(x$1)) {
     var Definition$1 = x$1;
-    if (((this.nodeId$2 === Definition$1.nodeId$2) && (this.module$2 === Definition$1.module$2))) {
-      var x = this.jarIdOpt$2;
-      var x$2 = Definition$1.jarIdOpt$2;
-      var jsx$2 = ((x === null) ? (x$2 === null) : x.equals__O__Z(x$2))
-    } else {
-      var jsx$2 = false
-    };
-    if (jsx$2) {
-      var x$3 = this.locationOpt$2;
-      var x$4 = Definition$1.locationOpt$2;
-      var jsx$1 = ((x$3 === null) ? (x$4 === null) : x$3.equals__O__Z(x$4))
-    } else {
-      var jsx$1 = false
-    };
-    if (jsx$1) {
-      var x$5 = this.count$2;
-      var x$6 = Definition$1.count$2;
-      return ((x$5 === null) ? (x$6 === null) : x$5.equals__O__Z(x$6))
+    if ((this.id$2 === Definition$1.id$2)) {
+      var x = this.locationOpt$2;
+      var x$2 = Definition$1.locationOpt$2;
+      return ((x === null) ? (x$2 === null) : x.equals__O__Z(x$2))
     } else {
       return false
     }
@@ -29540,23 +29186,11 @@ $c_Lmodels_Definition.prototype.equals__O__Z = (function(x$1) {
 $c_Lmodels_Definition.prototype.productElement__I__O = (function(x$1) {
   switch (x$1) {
     case 0: {
-      return this.nodeId$2;
+      return this.id$2;
       break
     }
     case 1: {
-      return this.module$2;
-      break
-    }
-    case 2: {
-      return this.jarIdOpt$2;
-      break
-    }
-    case 3: {
       return this.locationOpt$2;
-      break
-    }
-    case 4: {
-      return this.count$2;
       break
     }
     default: {
@@ -29587,12 +29221,9 @@ $c_Lmodels_Definition.prototype.location$lzycompute__p2__Lmodels_Location = (fun
 $c_Lmodels_Definition.prototype.productIterator__sc_Iterator = (function() {
   return new $c_sr_ScalaRunTime$$anon$1().init___s_Product(this)
 });
-$c_Lmodels_Definition.prototype.init___T__T__s_Option__s_Option__Lmodels_UserUsageCount = (function(nodeId, module, jarIdOpt, locationOpt, count) {
-  this.nodeId$2 = nodeId;
-  this.module$2 = module;
-  this.jarIdOpt$2 = jarIdOpt;
+$c_Lmodels_Definition.prototype.init___T__s_Option = (function(id, locationOpt) {
+  this.id$2 = id;
   this.locationOpt$2 = locationOpt;
-  this.count$2 = count;
   return this
 });
 function $is_Lmodels_Definition(obj) {
@@ -30010,7 +29641,9 @@ function $c_Lmodels_Usage() {
   $c_Lmodels_Token.call(this);
   this.locationOpt$2 = null;
   this.location$2 = null;
-  this.definition$2 = null;
+  this.definitionId$2 = null;
+  this.definitionJarOpt$2 = null;
+  this.definitionLocationOpt$2 = null;
   this.bitmap$0$2 = false
 }
 $c_Lmodels_Usage.prototype = new $h_Lmodels_Token();
@@ -30031,7 +29664,7 @@ $c_Lmodels_Usage.prototype.locationOpt$lzycompute__p2__s_Some = (function() {
   return this.locationOpt$2
 });
 $c_Lmodels_Usage.prototype.productArity__I = (function() {
-  return 2
+  return 4
 });
 $c_Lmodels_Usage.prototype.equals__O__Z = (function(x$1) {
   if ((this === x$1)) {
@@ -30040,10 +29673,17 @@ $c_Lmodels_Usage.prototype.equals__O__Z = (function(x$1) {
     var Usage$1 = x$1;
     var x = this.location$2;
     var x$2 = Usage$1.location$2;
-    if (((x === null) ? (x$2 === null) : x.equals__O__Z(x$2))) {
-      var x$3 = this.definition$2;
-      var x$4 = Usage$1.definition$2;
-      return ((x$3 === null) ? (x$4 === null) : x$3.equals__O__Z(x$4))
+    if ((((x === null) ? (x$2 === null) : x.equals__O__Z(x$2)) && (this.definitionId$2 === Usage$1.definitionId$2))) {
+      var x$3 = this.definitionJarOpt$2;
+      var x$4 = Usage$1.definitionJarOpt$2;
+      var jsx$1 = ((x$3 === null) ? (x$4 === null) : x$3.equals__O__Z(x$4))
+    } else {
+      var jsx$1 = false
+    };
+    if (jsx$1) {
+      var x$5 = this.definitionLocationOpt$2;
+      var x$6 = Usage$1.definitionLocationOpt$2;
+      return ((x$5 === null) ? (x$6 === null) : x$5.equals__O__Z(x$6))
     } else {
       return false
     }
@@ -30058,13 +29698,28 @@ $c_Lmodels_Usage.prototype.productElement__I__O = (function(x$1) {
       break
     }
     case 1: {
-      return this.definition$2;
+      return this.definitionId$2;
+      break
+    }
+    case 2: {
+      return this.definitionJarOpt$2;
+      break
+    }
+    case 3: {
+      return this.definitionLocationOpt$2;
       break
     }
     default: {
       throw new $c_jl_IndexOutOfBoundsException().init___T(("" + x$1))
     }
   }
+});
+$c_Lmodels_Usage.prototype.init___Lmodels_Location__T__s_Option__s_Option = (function(location, definitionId, definitionJarOpt, definitionLocationOpt) {
+  this.location$2 = location;
+  this.definitionId$2 = definitionId;
+  this.definitionJarOpt$2 = definitionJarOpt;
+  this.definitionLocationOpt$2 = definitionLocationOpt;
+  return this
 });
 $c_Lmodels_Usage.prototype.toString__T = (function() {
   return $m_sr_ScalaRunTime$().$$undtoString__s_Product__T(this)
@@ -30084,11 +29739,6 @@ $c_Lmodels_Usage.prototype.hashCode__I = (function() {
 });
 $c_Lmodels_Usage.prototype.productIterator__sc_Iterator = (function() {
   return new $c_sr_ScalaRunTime$$anon$1().init___s_Product(this)
-});
-$c_Lmodels_Usage.prototype.init___Lmodels_Location__Lmodels_UsageDefinition = (function(location, definition) {
-  this.location$2 = location;
-  this.definition$2 = definition;
-  return this
 });
 function $is_Lmodels_Usage(obj) {
   return (!(!((obj && obj.$classData) && obj.$classData.ancestors.Lmodels_Usage)))
