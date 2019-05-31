@@ -13,7 +13,7 @@
     "scripts": ["background.js"],
     "persistent": false
   },
-  "icons": { "128": "images/default-128.png" },
+  "icons": { "512": "images/logo.png" },
   "content_scripts": [
     {
       "matches": ["*://*.github.com/*", "*://github.com/*"],
