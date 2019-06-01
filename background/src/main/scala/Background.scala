@@ -68,7 +68,7 @@ object Background {
           }
         }
       }
-      .getOrElse("images/default-128.png")
+      .getOrElse("images/logo.png")
     message.response(
       asyncResponse = message.sender.tab
         .map { tab =>
