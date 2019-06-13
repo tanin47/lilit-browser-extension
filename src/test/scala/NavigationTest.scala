@@ -16,12 +16,12 @@ object NavigationTest extends BrowserTest {
       link.click()
 
       waitUntil {
-        webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/d022270ccb8f346cb8ef2136c4212ff71802eff5/src/main/java/test_java_repo/Library.java?p=Class_Library_job_56_d3ea090cd477_2#L3"
+        webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/d022270ccb8f346cb8ef2136c4212ff71802eff5/src/main/java/test_java_repo/Library.java?p=u_5_26_build_src/main/java/test_java_repo/Library.java_2_Class_Library#L3"
       }
 
       waitUntil {
         link.hover()
-        link.getToolTip.getText == "Found 145 occurrences only in src/main/java/test_java_repo/Main.java"
+        link.getToolTip.getText == "Click to find all usages"
       }
 
       webDriver.navigate().back()
@@ -33,7 +33,7 @@ object NavigationTest extends BrowserTest {
       webDriver.navigate().forward()
       waitUntil {
         link.hover()
-        link.getToolTip.getText == "Found 145 occurrences only in src/main/java/test_java_repo/Main.java"
+        link.getToolTip.getText == "Click to find all usages"
       }
     }
 
@@ -91,7 +91,7 @@ object NavigationTest extends BrowserTest {
         val link = ".lilit-link"
         waitUntil {
           link.hover()
-          link.getToolTip.getText == "Found 1 occurrence only in src/test/java/test_java_repo/MainTest.java"
+          link.getToolTip.getText == "Click to find all usages"
         }
       }
 
@@ -112,7 +112,7 @@ object NavigationTest extends BrowserTest {
         val link = ".lilit-link"
         waitUntil {
           link.hover()
-          link.getToolTip.getText == "Found 1 occurrence only in src/test/java/test_java_repo/MainTest.java"
+          link.getToolTip.getText == "Click to find all usages"
         }
       }
     }

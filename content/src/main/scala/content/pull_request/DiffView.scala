@@ -112,7 +112,8 @@ class DiffView(
         )
       }
 
-    if (elem.querySelector("table").classList.contains("file-diff-split")) {
+    val table = elem.querySelector("table")
+    if (table != null && table.classList.contains("file-diff-split")) {
       // Split view
       elem.querySelectorAll("table tr")
         .map(_.asInstanceOf[HTMLElement])
