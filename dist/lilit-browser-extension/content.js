@@ -7216,7 +7216,8 @@ $c_Lcontent_pull$undrequest_DiffView.prototype.run__V = (function() {
     $this.subtree = false;
     jsx$1.observe(arg1, $this)
   };
-  if ((!(!this.elem$1.querySelector("table").classList.contains("file-diff-split")))) {
+  var table = this.elem$1.querySelector("table");
+  if (((table !== null) && (!(!table.classList.contains("file-diff-split"))))) {
     var nodes = this.elem$1.querySelectorAll("table tr");
     var this$7 = new $c_Lorg_scalajs_dom_ext_package$PimpedNodeList().init___Lorg_scalajs_dom_raw_NodeList(nodes);
     var this$6 = $m_sc_Seq$();

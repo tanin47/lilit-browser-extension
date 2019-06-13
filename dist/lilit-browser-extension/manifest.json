@@ -28,12 +28,12 @@
          ]
       }
    ],
-   "description": "",
+   "description": "Be more productive reading and reviewing Java code on Github with code intelligence",
    "icons": {
       "512": "images/logo.png"
    },
    "manifest_version": 2,
-   "name": "lilit",
+   "name": "Lilit",
    "page_action": {
       "default_popup": "popup.html"
    },
@@ -44,8 +44,8 @@
       "cookies",
       "https://lilit.dev/*"
    ],
-   "short_name": "lilit",
-   "version": "0.0.1.0",
+   "short_name": "Lilit",
+   "version": "0.0.1.1",
    "web_accessible_resources": [
       "config.json"
    ]

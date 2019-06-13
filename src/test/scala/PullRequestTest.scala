@@ -22,7 +22,7 @@ object PullRequestTest extends BrowserTest {
       link.click()
 
       waitUntil {
-        webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/848084a2498fa8fe96a2daffc5e48d3cd9af9d90/src/main/java/test_java_repo/Library.java?p=Method_execute_job_55_c169390cd477_3#L4"
+        webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/848084a2498fa8fe96a2daffc5e48d3cd9af9d90/src/main/java/test_java_repo/Library.java?p=u_5_27_build_src/main/java/test_java_repo/Library.java_3_Method_execute#L4"
       }
 
       "#LC4".getAttribute("class").split(" ").toSet.contains("lilit-highlighted") ==> true
@@ -37,7 +37,7 @@ object PullRequestTest extends BrowserTest {
 
       val linkOnSubtract = "#diff-0 .diff-table tr:nth-child(8) td:nth-child(4) .lilit-link"
       linkOnSubtract.hover()
-      linkOnSubtract.getToolTip.getText ==> "Found 1 occurrence only in src/test/java/test_java_repo/MainTest.java"
+      linkOnSubtract.getToolTip.getText ==> "Click to find all usages"
 
       val link = "#diff-0 .diff-table tr:nth-child(10) td:nth-child(4) .lilit-link"
       link.hover()
@@ -45,7 +45,27 @@ object PullRequestTest extends BrowserTest {
       link.click()
 
       waitUntil {
-        webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/24e0307ad76ce2fc344f3fba3b37d48344a15f21/src/main/java/test_java_repo/Library.java?p=Class_Library_job_50_59c4590cd477_2#L3"
+        webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/24e0307ad76ce2fc344f3fba3b37d48344a15f21/src/main/java/test_java_repo/Library.java?p=u_5_28_build_src/main/java/test_java_repo/Library.java_2_Class_Library#L3"
+      }
+
+      "#LC3".getAttribute("class").split(" ").toSet.contains("lilit-highlighted") ==> true
+    }
+
+    "The diff is hidden because it is too long" - {
+      go("https://github.com/tanin47/test-java-repo/pull/7/files")
+
+      val loadDiffButton = "#diff-2 .load-diff-button"
+      waitUntil { loadDiffButton.items.nonEmpty }
+
+      loadDiffButton.click()
+
+      val link = "#diff-2 .diff-table tr:nth-child(8) td:nth-child(4) .lilit-link"
+      link.hover()
+      link.getToolTip.getText ==> "Defined in src/main/java/test_java_repo/Library.java inside tanin47/test-java-repo"
+      link.click()
+
+      waitUntil {
+        webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/8e2cd946a5fd0d62ece883c43681ebd8618ae7c3/src/main/java/test_java_repo/Library.java?p=u_5_33_build_src/main/java/test_java_repo/Library.java_2_Class_Library#L3"
       }
 
       "#LC3".getAttribute("class").split(" ").toSet.contains("lilit-highlighted") ==> true
@@ -60,18 +80,16 @@ object PullRequestTest extends BrowserTest {
 
       val linkOnTheLeft = "#diff-0 .diff-table tr:nth-child(8) td:nth-child(2) .lilit-link"
       linkOnTheLeft.hover()
-      linkOnTheLeft.getToolTip.getText ==> "Found 1 occurrence only in src/test/java/test_java_repo/MainTest.java"
+      linkOnTheLeft.getToolTip.getText ==> "Click to find all usages"
 
       val link = "#diff-0 table tr:nth-child(8) td:nth-child(4) .lilit-link"
       link.hover()
-      link.getToolTip.getText ==> "Found 1 occurrence only in src/test/java/test_java_repo/MainTest.java"
+      link.getToolTip.getText ==> "Click to find all usages"
       link.click()
 
       waitUntil {
-        webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/f6dee0110a9b1319accc3ab435e2ad9f3870776c/src/test/java/test_java_repo/MainTest.java?p=Class_Main_job_86_1c926580ec374_2#L10"
+        webDriver.getCurrentUrl == "https://lilit.dev/github/tanin47/test-java-repo/f6dee0110a9b1319accc3ab435e2ad9f3870776c/usage/u_5_29_build_src/main/java/test_java_repo/Main.java_2_Class_Main"
       }
-
-      "#LC10".getAttribute("class").split(" ").toSet.contains("lilit-highlighted") ==> true
     }
 
     "expands" - {
@@ -100,7 +118,7 @@ object PullRequestTest extends BrowserTest {
         link.click()
 
         waitUntil {
-          webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/848084a2498fa8fe96a2daffc5e48d3cd9af9d90/src/main/java/test_java_repo/Library.java?p=Class_Library_job_55_c169390cd477_2#L3"
+          webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/848084a2498fa8fe96a2daffc5e48d3cd9af9d90/src/main/java/test_java_repo/Library.java?p=u_5_27_build_src/main/java/test_java_repo/Library.java_2_Class_Library#L3"
         }
 
         "#LC3".getAttribute("class").split(" ").toSet.contains("lilit-highlighted") ==> true
@@ -126,7 +144,7 @@ object PullRequestTest extends BrowserTest {
       link.click()
 
       waitUntil {
-        webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/ace7f3130c5993d3c51c6406b4cb8ff77ab16051/src/main/java/test_java_repo/Library.java?p=Class_Library_job_57_66afa90cd477_2#L3"
+        webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/ace7f3130c5993d3c51c6406b4cb8ff77ab16051/src/main/java/test_java_repo/Library.java?p=u_5_32_build_src/main/java/test_java_repo/Library.java_2_Class_Library#L3"
       }
     }
 
