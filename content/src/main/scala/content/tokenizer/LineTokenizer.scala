@@ -116,10 +116,10 @@ class LineTokenizer(
     var start = 0
 
     val newNodes = tokens
-      .filter { t => elemStart <= t.location.start.col && t.location.end.col <= elemEnd }
+      .filter { t => elemStart <= t.main.location.start.col && t.main.location.end.col <= elemEnd }
       .flatMap { token =>
-        val tokenStart = token.location.start.col - elemStart
-        val tokenEnd = token.location.end.col - elemStart
+        val tokenStart = token.main.location.start.col - elemStart
+        val tokenEnd = token.main.location.end.col - elemStart
 
         val beforeNodeOpt = if (tokenStart > start) {
           Some(dom.document.createTextNode(node.nodeValue.substring(start, tokenStart)))
@@ -128,21 +128,21 @@ class LineTokenizer(
         }
 
         val mainText = node.nodeValue.substring(tokenStart, tokenEnd + 1)
-        val mainNode = makeUrlOpt(token)
+        val mainNode = makeUrlOpt(token.main)
           .map {
             case url: UrlLink =>
               val anchor = dom.document.createElement("a")
               anchor.setAttribute("href", url.url)
               anchor.classList.add("lilit-link")
               anchor.textContent = mainText
-              anchor.setAttribute("data-tippy-content", makeTooltipContent(token))
+              anchor.setAttribute("data-tippy-content", makeTooltipContent(token.main))
               Tippy.apply(anchor)
               anchor
             case NoLink =>
               val span = dom.document.createElement("span")
               span.classList.add("lilit-link")
               span.textContent = mainText
-              span.setAttribute("data-tippy-content", makeTooltipContent(token))
+              span.setAttribute("data-tippy-content", makeTooltipContent(token.main))
               Tippy.apply(span)
               span
           }
@@ -152,20 +152,24 @@ class LineTokenizer(
 
         setHighlightType(
           selectedNodeIdOpt.flatMap { selectedNodeId =>
-            token match {
-              case u: Usage =>
-                if (u.definitionId == selectedNodeId) {
-                  Some(HighlightType.Usage)
-                } else {
-                  None
-                }
-              case d: Definition =>
-                if (d.id == selectedNodeId) {
-                  Some(HighlightType.Definition)
-                } else {
-                  None
-                }
-            }
+            token
+              .all
+              .toStream
+              .flatMap {
+                case u: Usage =>
+                  if (u.definitionId == selectedNodeId) {
+                    Some(HighlightType.Usage)
+                  } else {
+                    None
+                  }
+                case d: Definition =>
+                  if (d.id == selectedNodeId) {
+                    Some(HighlightType.Definition)
+                  } else {
+                    None
+                  }
+              }
+              .headOption
           }
         )
 

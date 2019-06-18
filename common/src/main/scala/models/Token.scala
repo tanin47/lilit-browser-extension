@@ -34,6 +34,7 @@ case class Location(
 sealed abstract class Token {
   def location: Location
   def locationOpt: Option[Location]
+  def priority: Int
 }
 
 object Usage {
@@ -43,6 +44,7 @@ object Usage {
       definitionId = raw.definitionId,
       definitionJarOpt = raw.definitionJarOpt.filter(_ != null).map(Jar.from).toOption,
       definitionLocationOpt = raw.definitionLocationOpt.filter(_ != null).map(Location.from).toOption,
+      priority = raw.priority
     )
   }
 }
@@ -52,6 +54,7 @@ case class Usage(
   definitionId: String,
   definitionJarOpt: Option[Jar],
   definitionLocationOpt: Option[Location],
+  priority: Int
 ) extends Token {
   lazy val locationOpt = Some(location)
 }
@@ -70,6 +73,7 @@ case class Definition(
   locationOpt: Option[Location]
 ) extends Token {
   lazy val location = locationOpt.get
+  val priority = 10
 }
 
 object Jar {
