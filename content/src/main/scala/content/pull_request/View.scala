@@ -72,7 +72,7 @@ class View(
         )
       }
 
-    val diffElems = {
+    val diffElemGroups = {
       val fs = elem.querySelectorAll(".js-file")
 
       0.until(fs.length)
@@ -87,39 +87,43 @@ class View(
             None
           }
         }
+        .grouped(20)
     }
 
-    if (diffElems.isEmpty) {
+    if (diffElemGroups.isEmpty) {
       println("[Lilit] No diff elements. Complete. This is because Github caches the page.")
       Content.state.complete(page)
       return
     }
 
-    val fileRequests = diffElems.flatMap { diffElem =>
-      Seq(
-        new FileRequest(path = diffElem.path, revision = startRevision),
-        new FileRequest(path = diffElem.path, revision = endRevision)
+    diffElemGroups.foreach { diffElems =>
+      val fileRequests = diffElems
+        .flatMap { diffElem =>
+          Seq(
+            new FileRequest(path = diffElem.path, revision = startRevision),
+            new FileRequest(path = diffElem.path, revision = endRevision)
+          )
+        }
+
+      val pathLogLine = fileRequests.map(_.path).distinct.mkString(", ")
+      println(s"[Lilit] Fetch data for $pathLogLine")
+
+      chrome.runtime.Runtime.sendMessage(
+        message = new FileRequestRequest(repoName, fileRequests.toJSArray),
+        responseCallback = js.defined { data =>
+          if (Content.state.hasPage(page)) {
+            build(
+              page = page,
+              resp = data.asInstanceOf[FileRequestResponse],
+              diffElems = diffElems,
+              pathLogLine = pathLogLine
+            )
+          } else {
+            println(s"[Lilit] The page is changed from ${page.id} to ${Content.state.getPage.map(_.id)}. Halt.")
+          }
+        }
       )
     }
-
-    val pathLogLine = fileRequests.map(_.path).distinct.mkString(", ")
-    println(s"[Lilit] Fetch data for $pathLogLine")
-
-    chrome.runtime.Runtime.sendMessage(
-      message = new FileRequestRequest(repoName, fileRequests.toJSArray),
-      responseCallback = js.defined { data =>
-        if (Content.state.hasPage(page)) {
-          build(
-            page = page,
-            resp = data.asInstanceOf[FileRequestResponse],
-            diffElems = diffElems,
-            pathLogLine = pathLogLine
-          )
-        } else {
-          println(s"[Lilit] The page is changed from ${page.id} to ${Content.state.getPage.map(_.id)}. Halt.")
-        }
-      }
-    )
   }
 
   def build(
