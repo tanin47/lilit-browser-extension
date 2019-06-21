@@ -9,6 +9,7 @@ import models.bindings.{FileRequest, FileRequestRequest, FileRequestResponse}
 import org.scalajs.dom.ext._
 import org.scalajs.dom.raw.HTMLElement
 
+import scala.collection.mutable
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 import scala.scalajs.js.JavaScriptException
@@ -32,6 +33,8 @@ class View(
 ) {
 
   import View._
+
+  val queriedFilePaths = mutable.Set.empty[String]
 
   val observer = new MutationObserver(
     fn = { (_, _) =>
@@ -77,7 +80,8 @@ class View(
         .flatMap { node =>
           val diffView = FileView(node)
 
-          if (diffView.path.endsWith(".java")) {
+          if (diffView.path.endsWith(".java") && !queriedFilePaths.contains(diffView.path)) {
+            queriedFilePaths.add(diffView.path)
             Some(diffView)
           } else {
             None

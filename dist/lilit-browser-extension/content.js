@@ -7526,6 +7526,7 @@ function $c_Lcontent_pull$undrequest_View() {
   this.startRevision$1 = null;
   this.endRevision$1 = null;
   this.elem$1 = null;
+  this.queriedFilePaths$1 = null;
   this.observer$1 = null
 }
 $c_Lcontent_pull$undrequest_View.prototype = new $h_O();
@@ -7606,19 +7607,29 @@ $c_Lcontent_pull$undrequest_View.prototype.run__p1__V = (function() {
     var arg1$2 = this$14.next__O();
     var diffView = new $c_Lcontent_pull$undrequest_View$FileView().init___Lorg_scalajs_dom_raw_HTMLElement(arg1$2);
     if ($m_sjsr_RuntimeString$().endsWith__T__T__Z(diffView.path__T(), ".java")) {
+      var this$15 = this.queriedFilePaths$1;
+      var elem$1 = diffView.path__T();
+      var jsx$2 = (!$f_scm_FlatHashTable__containsElem__O__Z(this$15, elem$1))
+    } else {
+      var jsx$2 = false
+    };
+    if (jsx$2) {
+      var this$16 = this.queriedFilePaths$1;
+      var elem$2 = diffView.path__T();
+      $f_scm_FlatHashTable__addElem__O__Z(this$16, elem$2);
       var xo = new $c_s_Some().init___O(diffView);
-      var this$17 = xo.toList__sci_List()
+      var this$19 = xo.toList__sci_List()
     } else {
       var xo$1 = $m_s_None$();
-      var this$17 = xo$1.toList__sci_List()
+      var this$19 = xo$1.toList__sci_List()
     };
-    $f_scg_Growable__$$plus$plus$eq__sc_TraversableOnce__scg_Growable(b$2, this$17)
+    $f_scg_Growable__$$plus$plus$eq__sc_TraversableOnce__scg_Growable(b$2, this$19)
   };
   var diffElems = b$2.result__sci_Vector();
   if ($f_sc_SeqLike__isEmpty__Z(diffElems)) {
-    var this$19 = $m_s_Console$();
-    var this$20 = this$19.outVar$2.v$1;
-    this$20.java$lang$JSConsoleBasedPrintStream$$printString__T__V("[Lilit] No diff elements. Complete. This is because Github caches the page.\n");
+    var this$21 = $m_s_Console$();
+    var this$22 = this$21.outVar$2.v$1;
+    this$22.java$lang$JSConsoleBasedPrintStream$$printString__T__V("[Lilit] No diff elements. Complete. This is because Github caches the page.\n");
     $m_Lcontent_Content$().state$1.complete__Lmodels_Page__V(this.page$1);
     return (void 0)
   };
@@ -7626,29 +7637,29 @@ $c_Lcontent_pull$undrequest_View.prototype.run__p1__V = (function() {
   $m_sc_IndexedSeq$();
   $m_sci_Vector$();
   var b$3 = new $c_sci_VectorBuilder().init___();
-  var this$23 = diffElems.iterator__sci_VectorIterator();
-  while (this$23.$$undhasNext$2) {
-    var arg1$3 = this$23.next__O();
+  var this$25 = diffElems.iterator__sci_VectorIterator();
+  while (this$25.$$undhasNext$2) {
+    var arg1$3 = this$25.next__O();
     var diffElem = arg1$3;
-    var jsx$2 = $m_sc_Seq$();
+    var jsx$3 = $m_sc_Seq$();
     var array = [new ($a_Lmodels_bindings_FileRequest())(diffElem.path__T(), this.startRevision$1), new ($a_Lmodels_bindings_FileRequest())(diffElem.path__T(), this.endRevision$1)];
-    var xs = jsx$2.apply__sc_Seq__sc_GenTraversable(new $c_sjs_js_WrappedArray().init___sjs_js_Array(array)).seq__sc_TraversableOnce();
+    var xs = jsx$3.apply__sc_Seq__sc_GenTraversable(new $c_sjs_js_WrappedArray().init___sjs_js_Array(array)).seq__sc_TraversableOnce();
     $f_scg_Growable__$$plus$plus$eq__sc_TraversableOnce__scg_Growable(b$3, xs)
   };
   var fileRequests = b$3.result__sci_Vector();
   $m_sci_IndexedSeq$();
   var bf$4 = $m_sc_IndexedSeq$().ReusableCBF$6;
   var b$4 = $f_sc_TraversableLike__builder$1__psc_TraversableLike__scg_CanBuildFrom__scm_Builder(fileRequests, bf$4);
-  var this$27 = fileRequests.iterator__sci_VectorIterator();
-  while (this$27.$$undhasNext$2) {
-    var arg1$4 = this$27.next__O();
+  var this$29 = fileRequests.iterator__sci_VectorIterator();
+  while (this$29.$$undhasNext$2) {
+    var arg1$4 = this$29.next__O();
     b$4.$$plus$eq__O__scm_Builder(arg1$4.path)
   };
   var pathLogLine = b$4.result__O().distinct__O().mkString__T__T(", ");
   var x = ("[Lilit] Fetch data for " + pathLogLine);
-  var this$29 = $m_s_Console$();
-  var this$30 = this$29.outVar$2.v$1;
-  this$30.java$lang$JSConsoleBasedPrintStream$$printString__T__V((x + "\n"));
+  var this$31 = $m_s_Console$();
+  var this$32 = this$31.outVar$2.v$1;
+  this$32.java$lang$JSConsoleBasedPrintStream$$printString__T__V((x + "\n"));
   var x$1 = new ($a_Lmodels_bindings_FileRequestRequest())(this.repoName$1, $m_sjs_js_JSConverters$JSRichGenTraversableOnce$().toJSArray$extension__sc_GenTraversableOnce__sjs_js_Array(fileRequests));
   var a = (function(arg$outer, diffElems$1, pathLogLine$1) {
     return (function(arg1$2$1) {
@@ -7808,6 +7819,7 @@ $c_Lcontent_pull$undrequest_View.prototype.init___Lmodels_PullRequestPage__T__T_
   this.startRevision$1 = startRevision;
   this.endRevision$1 = endRevision;
   this.elem$1 = elem;
+  this.queriedFilePaths$1 = new $c_scm_HashSet().init___();
   this.observer$1 = new $g.window.MutationObserver((function(arg$outer) {
     return (function(arg1$2, arg2$2) {
       return arg$outer.content$pull$undrequest$View$$$anonfun$observer$1__sjs_js_Any__sjs_js_Any__sjs_js_Any(arg1$2, arg2$2)
