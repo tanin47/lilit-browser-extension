@@ -12,7 +12,7 @@ import scala.scalajs.js
 object DiffView {
   case class Data(
     revision: String,
-    lineTokens: Seq[LineTokens]
+    lineTokens: List[LineTokens]
   ) {
     val lineTokensByLine = lineTokens.groupBy(_.line).mapValues(_.head)
   }

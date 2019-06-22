@@ -57,7 +57,7 @@ object File {
       repoName = repoName,
       revision = revision,
       path = path,
-      missingRevisions = Seq.empty,
+      missingRevisions = List.empty,
       status = Status.Loading,
       failureReasonOpt = None
     )
@@ -68,7 +68,7 @@ object File {
       host <- Config.getHost()
     } yield {
       chrome.runtime.Runtime.sendMessage(
-        message = new FileRequestRequest(repoName, Seq(new FileRequest(path = path, revision = revision)).toJSArray),
+        message = new FileRequestRequest(repoName, List(new FileRequest(path = path, revision = revision)).toJSArray),
         responseCallback = js.defined { data =>
           if (Content.state.hasPage(currentPage)) {
             build(

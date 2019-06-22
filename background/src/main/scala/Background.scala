@@ -23,13 +23,13 @@ object Background {
       chrome.declarativeContent.DeclarativeContent.onPageChanged.removeRules(None)
         .flatMap { _ =>
           chrome.declarativeContent.DeclarativeContent.onPageChanged.addRules(
-            rules = Seq(Rule(
-              conditions = Seq(PageStateMatcher(
+            rules = List(Rule(
+              conditions = List(PageStateMatcher(
                 pageUrlOpt = Some(PageUrl(
                   hostEqualsOpt = Some("github.com")
                 ))
               )),
-              actions = Seq(ShowPageAction())
+              actions = List(ShowPageAction())
             ))
           )
         }
@@ -92,7 +92,7 @@ object Background {
           headers = Map(
             "Content-Type" -> "application/json",
             "Accept" -> "application/json",
-            "X-Lilit-Cookies" -> Seq(userIdCookieOpt, userSecretOpt).flatten.map { c => s"${c.name}=${c.value}" }.mkString(" ;")
+            "X-Lilit-Cookies" -> List(userIdCookieOpt, userSecretOpt).flatten.map { c => s"${c.name}=${c.value}" }.mkString(" ;")
           )
         )
     } yield {

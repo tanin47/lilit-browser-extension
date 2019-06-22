@@ -4,7 +4,7 @@ import models.bindings.FileRequestResponse
 import models.{Definition, Token, Usage}
 
 object LineTokens {
-  def build(file: FileRequestResponse.File): Seq[LineTokens] = {
+  def build(file: FileRequestResponse.File): List[LineTokens] = {
     (file.usages.map(Usage.from) ++ file.definitions.map(Definition.from))
       .filter(_.locationOpt.isDefined)
       .groupBy(_.location.start.line)
@@ -17,10 +17,10 @@ object LineTokens {
             .groupBy(_.location.start.col)
             .mapValues { vs =>
               val sorted = vs.sortBy(_.priority)
-              new GroupToken(sorted.head, sorted.tail)
+              new GroupToken(sorted.head, sorted.tail.toList)
             }
             .values
-            .toSeq
+            .toList
             .sortBy(_.main.location.start.col)
         )
       }
@@ -29,12 +29,12 @@ object LineTokens {
 
 class GroupToken(
   val main: Token,
-  val others: Seq[Token]
+  val others: List[Token]
 ) {
   lazy val all = Seq(main) ++ others
 }
 
 class LineTokens(
   val line: Int,
-  val tokens: Seq[GroupToken]
+  val tokens: List[GroupToken]
 )
