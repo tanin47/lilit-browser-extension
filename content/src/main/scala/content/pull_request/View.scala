@@ -88,6 +88,8 @@ class View(
           }
         }
         .grouped(20)
+        .toList
+        .map(_.toList)
     }
 
     if (diffElemGroups.isEmpty) {
@@ -99,7 +101,7 @@ class View(
     diffElemGroups.foreach { diffElems =>
       val fileRequests = diffElems
         .flatMap { diffElem =>
-          Seq(
+          List(
             new FileRequest(path = diffElem.path, revision = startRevision),
             new FileRequest(path = diffElem.path, revision = endRevision)
           )
@@ -129,7 +131,7 @@ class View(
   def build(
     page: PullRequestPage,
     resp: FileRequestResponse,
-    diffElems: Seq[FileView],
+    diffElems: List[FileView],
     pathLogLine: String
   ): Unit = {
     if (resp.success) {

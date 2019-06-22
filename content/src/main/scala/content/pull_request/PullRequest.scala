@@ -48,7 +48,7 @@ object PullRequest {
       repoName = repoName,
       startRevision = startRevision,
       endRevision = endRevision,
-      missingRevisions = Seq.empty,
+      missingRevisions = List.empty,
       status = Status.Loading,
       failureReasonOpt = None
     )

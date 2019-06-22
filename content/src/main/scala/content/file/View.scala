@@ -13,7 +13,7 @@ class View(
   val host: String,
   val branchOpt: Option[String],
   val selectedNodeIdOpt: Option[String],
-  val lineTokensList: Seq[LineTokens]
+  val lineTokensList: List[LineTokens]
 ) {
 
   val highlightedLines = mutable.SortedMap.empty[Int, HighlightType.Value]
