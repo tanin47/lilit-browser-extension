@@ -62,6 +62,11 @@ sealed trait Page {
   var status: Page.Status.Value
   var failureReasonOpt: Option[String]
 
+  def loading(): Unit = {
+    println(s"Set loading $id")
+    status = Page.Status.Loading
+  }
+
   def complete(): Unit = {
     println(s"Set completed $id")
     status = Page.Status.Completed

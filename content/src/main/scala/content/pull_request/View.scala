@@ -88,8 +88,8 @@ class View(
           }
         }
         .grouped(20)
-        .toList
         .map(_.toList)
+        .toList
     }
 
     if (diffElemGroups.isEmpty) {
@@ -97,6 +97,9 @@ class View(
       Content.state.complete(page)
       return
     }
+
+    Content.state.loading(page)
+    var ajaxCount = diffElemGroups.size
 
     diffElemGroups.foreach { diffElems =>
       val fileRequests = diffElems
@@ -113,12 +116,16 @@ class View(
       chrome.runtime.Runtime.sendMessage(
         message = new FileRequestRequest(repoName, fileRequests.toJSArray),
         responseCallback = js.defined { data =>
+
+          ajaxCount -= 1
+
           if (Content.state.hasPage(page)) {
             build(
               page = page,
               resp = data.asInstanceOf[FileRequestResponse],
               diffElems = diffElems,
-              pathLogLine = pathLogLine
+              pathLogLine = pathLogLine,
+              canSetComplete = ajaxCount == 0
             )
           } else {
             println(s"[Lilit] The page is changed from ${page.id} to ${Content.state.getPage.map(_.id)}. Halt.")
@@ -132,7 +139,8 @@ class View(
     page: PullRequestPage,
     resp: FileRequestResponse,
     diffElems: List[FileView],
-    pathLogLine: String
+    pathLogLine: String,
+    canSetComplete: Boolean
   ): Unit = {
     if (resp.success) {
       println(s"[Lilit] Fetched data successfully: $pathLogLine.")
@@ -168,7 +176,10 @@ class View(
           }
         }
 
-        Content.state.complete(page)
+        if (canSetComplete) {
+          Content.state.complete(page)
+        }
+
         println(s"[Lilit] Rendered successfully: $pathLogLine.")
       } catch {
         case e: JavaScriptException =>

@@ -25,7 +25,9 @@ object PullRequestTest extends BrowserTest {
         webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/848084a2498fa8fe96a2daffc5e48d3cd9af9d90/src/main/java/test_java_repo/Library.java?p=u_5_27_build_src/main/java/test_java_repo/Library.java_3_Method_execute#L4"
       }
 
-      "#LC4".getAttribute("class").split(" ").toSet.contains("lilit-highlighted") ==> true
+      waitUntil {
+        "#LC4".getAttribute("class").split(" ").toSet.contains("lilit-highlighted")
+      }
     }
 
     "jumps to a definition (unified view)" - {
@@ -48,7 +50,9 @@ object PullRequestTest extends BrowserTest {
         webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/24e0307ad76ce2fc344f3fba3b37d48344a15f21/src/main/java/test_java_repo/Library.java?p=u_5_28_build_src/main/java/test_java_repo/Library.java_2_Class_Library#L3"
       }
 
-      "#LC3".getAttribute("class").split(" ").toSet.contains("lilit-highlighted") ==> true
+      waitUntil {
+        "#LC3".getAttribute("class").split(" ").toSet.contains("lilit-highlighted")
+      }
     }
 
     "The diff is hidden because it is too long" - {
@@ -68,7 +72,9 @@ object PullRequestTest extends BrowserTest {
         webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/8e2cd946a5fd0d62ece883c43681ebd8618ae7c3/src/main/java/test_java_repo/Library.java?p=u_5_33_build_src/main/java/test_java_repo/Library.java_2_Class_Library#L3"
       }
 
-      "#LC3".getAttribute("class").split(" ").toSet.contains("lilit-highlighted") ==> true
+      waitUntil {
+        "#LC3".getAttribute("class").split(" ").toSet.contains("lilit-highlighted")
+      }
     }
 
     "sees usages (split view)" - {
@@ -121,7 +127,9 @@ object PullRequestTest extends BrowserTest {
           webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/848084a2498fa8fe96a2daffc5e48d3cd9af9d90/src/main/java/test_java_repo/Library.java?p=u_5_27_build_src/main/java/test_java_repo/Library.java_2_Class_Library#L3"
         }
 
-        "#LC3".getAttribute("class").split(" ").toSet.contains("lilit-highlighted") ==> true
+        waitUntil {
+          "#LC3".getAttribute("class").split(" ").toSet.contains("lilit-highlighted")
+        }
       }
 
       "immediately (possibly before load)" - {
