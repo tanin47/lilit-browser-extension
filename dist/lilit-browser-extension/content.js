@@ -5916,6 +5916,13 @@ function $f_Lmodels_Page__fail__s_Option__V($thiz, reasonOpt) {
   $thiz.status$und$eq__Lmodels_Page$Status$Value__V($m_Lmodels_Page$Status$Failed$());
   $thiz.failureReasonOpt$und$eq__s_Option__V(reasonOpt)
 }
+function $f_Lmodels_Page__loading__V($thiz) {
+  var x = ("Set loading " + $thiz.id__I());
+  var this$2 = $m_s_Console$();
+  var this$3 = this$2.outVar$2.v$1;
+  this$3.java$lang$JSConsoleBasedPrintStream$$printString__T__V((x + "\n"));
+  $thiz.status$und$eq__Lmodels_Page$Status$Value__V($m_Lmodels_Page$Status$Loading$())
+}
 function $f_Lmodels_Page__complete__V($thiz) {
   var x = ("Set completed " + $thiz.id__I());
   var this$2 = $m_s_Console$();
@@ -7635,53 +7642,31 @@ $c_Lcontent_pull$undrequest_View.prototype.run__p1__V = (function() {
     $f_scg_Growable__$$plus$plus$eq__sc_TraversableOnce__scg_Growable(b$2, this$19)
   };
   var this$20 = b$2.result__sci_Vector();
-  var this$22 = $f_sc_IterableLike__grouped__I__sc_Iterator(this$20, 20).toList__sci_List();
-  var f = (function(this$5$1) {
+  var this$21 = $f_sc_IterableLike__grouped__I__sc_Iterator(this$20, 20);
+  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$5$1) {
     return (function(x$4$2) {
       var x$4 = x$4$2;
       return x$4.toList__sci_List()
     })
-  })(this);
-  var this$21 = $m_sci_List$();
-  var bf$3 = this$21.ReusableCBFInstance$2;
-  if ((bf$3 === $m_sci_List$().ReusableCBFInstance$2)) {
-    if ((this$22 === $m_sci_Nil$())) {
-      var diffElemGroups = $m_sci_Nil$()
-    } else {
-      var arg1$3 = this$22.head__O();
-      var h = new $c_sci_$colon$colon().init___O__sci_List(f(arg1$3), $m_sci_Nil$());
-      var t = h;
-      var rest = this$22.tail__O();
-      while ((rest !== $m_sci_Nil$())) {
-        var arg1$4 = rest.head__O();
-        var nx = new $c_sci_$colon$colon().init___O__sci_List(f(arg1$4), $m_sci_Nil$());
-        t.tl$5 = nx;
-        t = nx;
-        rest = rest.tail__O()
-      };
-      var diffElemGroups = h
-    }
-  } else {
-    var b$3 = $f_sc_TraversableLike__builder$1__psc_TraversableLike__scg_CanBuildFrom__scm_Builder(this$22, bf$3);
-    var these = this$22;
-    while ((!these.isEmpty__Z())) {
-      var arg1$5 = these.head__O();
-      b$3.$$plus$eq__O__scm_Builder(f(arg1$5));
-      these = these.tail__O()
-    };
-    var diffElemGroups = b$3.result__O()
-  };
+  })(this));
+  var this$22 = new $c_sc_Iterator$$anon$10().init___sc_Iterator__F1(this$21, f);
+  var this$23 = $m_sci_List$();
+  var cbf = this$23.ReusableCBFInstance$2;
+  var diffElemGroups = $f_sc_TraversableOnce__to__scg_CanBuildFrom__O(this$22, cbf);
   if (diffElemGroups.isEmpty__Z()) {
-    var this$24 = $m_s_Console$();
-    var this$25 = this$24.outVar$2.v$1;
-    this$25.java$lang$JSConsoleBasedPrintStream$$printString__T__V("[Lilit] No diff elements. Complete. This is because Github caches the page.\n");
+    var this$25 = $m_s_Console$();
+    var this$26 = this$25.outVar$2.v$1;
+    this$26.java$lang$JSConsoleBasedPrintStream$$printString__T__V("[Lilit] No diff elements. Complete. This is because Github caches the page.\n");
     $m_Lcontent_Content$().state$1.complete__Lmodels_Page__V(this.page$1);
     return (void 0)
   };
-  var these$1 = diffElemGroups;
-  while ((!these$1.isEmpty__Z())) {
-    var arg1$6 = these$1.head__O();
-    var diffElems = arg1$6;
+  $m_Lcontent_Content$().state$1.loading__Lmodels_Page__V(this.page$1);
+  var elem$3 = $f_sc_LinearSeqOptimized__length__I(diffElemGroups);
+  var ajaxCount = new $c_sr_IntRef().init___I(elem$3);
+  var these = diffElemGroups;
+  while ((!these.isEmpty__Z())) {
+    var arg1$3 = these.head__O();
+    var diffElems = arg1$3;
     var f$1 = (function($this$1) {
       return (function(diffElem$2) {
         var diffElem = diffElem$2;
@@ -7690,112 +7675,113 @@ $c_Lcontent_pull$undrequest_View.prototype.run__p1__V = (function() {
         var i$1 = (((-1) + (array.length | 0)) | 0);
         var result = $m_sci_Nil$();
         while ((i$1 >= 0)) {
-          var this$29 = result;
+          var this$31 = result;
           var index = i$1;
           var x = array[index];
-          result = new $c_sci_$colon$colon().init___O__sci_List(x, this$29);
+          result = new $c_sci_$colon$colon().init___O__sci_List(x, this$31);
           i$1 = (((-1) + i$1) | 0)
         };
         return result
       })
     })(this);
-    var this$30 = $m_sci_List$();
-    var bf$4 = this$30.ReusableCBFInstance$2;
-    if ((bf$4 === $m_sci_List$().ReusableCBFInstance$2)) {
+    var this$32 = $m_sci_List$();
+    var bf$3 = this$32.ReusableCBFInstance$2;
+    if ((bf$3 === $m_sci_List$().ReusableCBFInstance$2)) {
       if ((diffElems === $m_sci_Nil$())) {
         var fileRequests = $m_sci_Nil$()
       } else {
-        var rest$1 = diffElems;
+        var rest = diffElems;
         var found = new $c_sr_BooleanRef().init___Z(false);
-        var h$1 = new $c_sr_ObjectRef().init___O(null);
-        var t$1 = new $c_sr_ObjectRef().init___O(null);
-        while ((rest$1 !== $m_sci_Nil$())) {
-          var arg1$7 = rest$1.head__O();
-          f$1(arg1$7).seq__sc_TraversableOnce().foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this$2, found$1, h$2, t$2) {
+        var h = new $c_sr_ObjectRef().init___O(null);
+        var t = new $c_sr_ObjectRef().init___O(null);
+        while ((rest !== $m_sci_Nil$())) {
+          var arg1$4 = rest.head__O();
+          f$1(arg1$4).seq__sc_TraversableOnce().foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this$2, found$1, h$1, t$1) {
             return (function(b$2$1) {
               if ((!found$1.elem$1)) {
-                h$2.elem$1 = new $c_sci_$colon$colon().init___O__sci_List(b$2$1, $m_sci_Nil$());
-                t$2.elem$1 = h$2.elem$1;
+                h$1.elem$1 = new $c_sci_$colon$colon().init___O__sci_List(b$2$1, $m_sci_Nil$());
+                t$1.elem$1 = h$1.elem$1;
                 found$1.elem$1 = true
               } else {
-                var nx$1 = new $c_sci_$colon$colon().init___O__sci_List(b$2$1, $m_sci_Nil$());
-                t$2.elem$1.tl$5 = nx$1;
-                t$2.elem$1 = nx$1
+                var nx = new $c_sci_$colon$colon().init___O__sci_List(b$2$1, $m_sci_Nil$());
+                t$1.elem$1.tl$5 = nx;
+                t$1.elem$1 = nx
               }
             })
-          })(diffElems, found, h$1, t$1)));
-          rest$1 = rest$1.tail__O()
+          })(diffElems, found, h, t)));
+          rest = rest.tail__O()
         };
-        var fileRequests = ((!found.elem$1) ? $m_sci_Nil$() : h$1.elem$1)
+        var fileRequests = ((!found.elem$1) ? $m_sci_Nil$() : h.elem$1)
       }
     } else {
       $m_sci_List$();
-      var b$4 = new $c_scm_ListBuffer().init___();
-      var these$2 = diffElems;
-      while ((!these$2.isEmpty__Z())) {
-        var arg1$8 = these$2.head__O();
-        var xs = f$1(arg1$8).seq__sc_TraversableOnce();
-        b$4.$$plus$plus$eq__sc_TraversableOnce__scm_ListBuffer(xs);
-        these$2 = these$2.tail__O()
+      var b$3 = new $c_scm_ListBuffer().init___();
+      var these$1 = diffElems;
+      while ((!these$1.isEmpty__Z())) {
+        var arg1$5 = these$1.head__O();
+        var xs = f$1(arg1$5).seq__sc_TraversableOnce();
+        b$3.$$plus$plus$eq__sc_TraversableOnce__scm_ListBuffer(xs);
+        these$1 = these$1.tail__O()
       };
-      var fileRequests = b$4.toList__sci_List()
+      var fileRequests = b$3.toList__sci_List()
     };
     var f$2 = (function(this$2$2) {
       return (function(x$5$2) {
         return x$5$2.path
       })
     })(this);
-    var this$35 = $m_sci_List$();
-    var bf$5 = this$35.ReusableCBFInstance$2;
-    if ((bf$5 === $m_sci_List$().ReusableCBFInstance$2)) {
+    var this$37 = $m_sci_List$();
+    var bf$4 = this$37.ReusableCBFInstance$2;
+    if ((bf$4 === $m_sci_List$().ReusableCBFInstance$2)) {
       if ((fileRequests === $m_sci_Nil$())) {
         var jsx$3 = $m_sci_Nil$()
       } else {
-        var arg1$9 = fileRequests.head__O();
-        var h$3 = new $c_sci_$colon$colon().init___O__sci_List(f$2(arg1$9), $m_sci_Nil$());
-        var t$3 = h$3;
-        var rest$2 = fileRequests.tail__O();
-        while ((rest$2 !== $m_sci_Nil$())) {
-          var arg1$10 = rest$2.head__O();
-          var nx$2 = new $c_sci_$colon$colon().init___O__sci_List(f$2(arg1$10), $m_sci_Nil$());
-          t$3.tl$5 = nx$2;
-          t$3 = nx$2;
-          rest$2 = rest$2.tail__O()
+        var arg1$6 = fileRequests.head__O();
+        var h$2 = new $c_sci_$colon$colon().init___O__sci_List(f$2(arg1$6), $m_sci_Nil$());
+        var t$2 = h$2;
+        var rest$1 = fileRequests.tail__O();
+        while ((rest$1 !== $m_sci_Nil$())) {
+          var arg1$7 = rest$1.head__O();
+          var nx$1 = new $c_sci_$colon$colon().init___O__sci_List(f$2(arg1$7), $m_sci_Nil$());
+          t$2.tl$5 = nx$1;
+          t$2 = nx$1;
+          rest$1 = rest$1.tail__O()
         };
-        var jsx$3 = h$3
+        var jsx$3 = h$2
       }
     } else {
-      var b$5 = $f_sc_TraversableLike__builder$1__psc_TraversableLike__scg_CanBuildFrom__scm_Builder(fileRequests, bf$5);
-      var these$3 = fileRequests;
-      while ((!these$3.isEmpty__Z())) {
-        var arg1$11 = these$3.head__O();
-        b$5.$$plus$eq__O__scm_Builder(f$2(arg1$11));
-        these$3 = these$3.tail__O()
+      var b$4 = $f_sc_TraversableLike__builder$1__psc_TraversableLike__scg_CanBuildFrom__scm_Builder(fileRequests, bf$4);
+      var these$2 = fileRequests;
+      while ((!these$2.isEmpty__Z())) {
+        var arg1$8 = these$2.head__O();
+        b$4.$$plus$eq__O__scm_Builder(f$2(arg1$8));
+        these$2 = these$2.tail__O()
       };
-      var jsx$3 = b$5.result__O()
+      var jsx$3 = b$4.result__O()
     };
     var pathLogLine = jsx$3.distinct__O().mkString__T__T(", ");
     var x$1 = ("[Lilit] Fetch data for " + pathLogLine);
-    var this$37 = $m_s_Console$();
-    var this$38 = this$37.outVar$2.v$1;
-    this$38.java$lang$JSConsoleBasedPrintStream$$printString__T__V((x$1 + "\n"));
+    var this$39 = $m_s_Console$();
+    var this$40 = this$39.outVar$2.v$1;
+    this$40.java$lang$JSConsoleBasedPrintStream$$printString__T__V((x$1 + "\n"));
     var x$1$1 = new ($a_Lmodels_bindings_FileRequestRequest())(this.repoName$1, $m_sjs_js_JSConverters$JSRichGenTraversableOnce$().toJSArray$extension__sc_GenTraversableOnce__sjs_js_Array(fileRequests));
-    var a = (function(arg$outer, diffElems$1, pathLogLine$1) {
+    var a = (function(arg$outer, ajaxCount$1, diffElems$1, pathLogLine$1) {
       return (function(arg1$2$1) {
-        return arg$outer.content$pull$undrequest$View$$$anonfun$run$9__sjs_js_Object__sci_List__T__O(arg1$2$1, diffElems$1, pathLogLine$1)
+        return arg$outer.content$pull$undrequest$View$$$anonfun$run$9__sjs_js_Object__sr_IntRef__sci_List__T__O(arg1$2$1, ajaxCount$1, diffElems$1, pathLogLine$1)
       })
-    })(this, diffElems, pathLogLine);
+    })(this, ajaxCount, diffElems, pathLogLine);
     $m_Lchrome_runtime_Runtime$();
     var x$3 = (void 0);
     $m_Lchrome_runtime_Runtime$();
     var x$4$1 = (void 0);
     $m_Lchrome_runtime_Runtime$().sendMessage__sjs_js_UndefOr__sjs_js_Any__sjs_js_UndefOr__sjs_js_UndefOr__V(x$3, x$1$1, x$4$1, a);
-    these$1 = these$1.tail__O()
+    these = these.tail__O()
   }
 });
-$c_Lcontent_pull$undrequest_View.prototype.content$pull$undrequest$View$$$anonfun$run$9__sjs_js_Object__sci_List__T__O = (function(data, diffElems$1, pathLogLine$1) {
+$c_Lcontent_pull$undrequest_View.prototype.content$pull$undrequest$View$$$anonfun$run$9__sjs_js_Object__sr_IntRef__sci_List__T__O = (function(data, ajaxCount$1, diffElems$1, pathLogLine$1) {
+  ajaxCount$1.elem$1 = (((-1) + ajaxCount$1.elem$1) | 0);
   if ($m_Lcontent_Content$().state$1.hasPage__Lmodels_Page__Z(this.page$1)) {
-    this.build__Lmodels_PullRequestPage__Lmodels_bindings_FileRequestResponse__sci_List__T__V(this.page$1, data, diffElems$1, pathLogLine$1);
+    this.build__Lmodels_PullRequestPage__Lmodels_bindings_FileRequestResponse__sci_List__T__Z__V(this.page$1, data, diffElems$1, pathLogLine$1, (ajaxCount$1.elem$1 === 0));
     return (void 0)
   } else {
     var jsx$2 = this.page$1.id$1;
@@ -7814,7 +7800,15 @@ $c_Lcontent_pull$undrequest_View.prototype.content$pull$undrequest$View$$$anonfu
     return (void 0)
   }
 });
-$c_Lcontent_pull$undrequest_View.prototype.build__Lmodels_PullRequestPage__Lmodels_bindings_FileRequestResponse__sci_List__T__V = (function(page, resp, diffElems, pathLogLine) {
+$c_Lcontent_pull$undrequest_View.prototype.content$pull$undrequest$View$$$anonfun$observer$1__sjs_js_Any__sjs_js_Any__sjs_js_Any = (function(x$1, x$2) {
+  var this$2 = $m_s_Console$();
+  var this$3 = this$2.outVar$2.v$1;
+  this$3.java$lang$JSConsoleBasedPrintStream$$printString__T__V("[Lilit] #files is mutated. Reprocessing.\n");
+  this.run__p1__V();
+  var value = (void 0);
+  return value
+});
+$c_Lcontent_pull$undrequest_View.prototype.build__Lmodels_PullRequestPage__Lmodels_bindings_FileRequestResponse__sci_List__T__Z__V = (function(page, resp, diffElems, pathLogLine, canSetComplete) {
   if ((!(!resp.success))) {
     var x = (("[Lilit] Fetched data successfully: " + pathLogLine) + ".");
     var this$2 = $m_s_Console$();
@@ -7930,7 +7924,9 @@ $c_Lcontent_pull$undrequest_View.prototype.build__Lmodels_PullRequestPage__Lmode
         };
         these = these.tail__O()
       };
-      $m_Lcontent_Content$().state$1.complete__Lmodels_Page__V(page);
+      if (canSetComplete) {
+        $m_Lcontent_Content$().state$1.complete__Lmodels_Page__V(page)
+      };
       var x$1 = (("[Lilit] Rendered successfully: " + pathLogLine) + ".");
       var this$18 = $m_s_Console$();
       var this$19 = this$18.outVar$2.v$1;
@@ -7957,14 +7953,6 @@ $c_Lcontent_pull$undrequest_View.prototype.build__Lmodels_PullRequestPage__Lmode
     var value = resp.unsupportedRepo;
     jsx$12.fail__Lmodels_Page__s_Option__V(page, (((value !== (void 0)) && $m_sr_BoxesRunTime$().equals__O__O__Z(true, value)) ? new $c_s_Some().init___O((((this.repoName$1 + " isn't supported. See what to do <a href=\"") + this.host$1) + "/unsupported-repo\"  target=\"_blank\">here</a>.")) : $m_s_None$()))
   }
-});
-$c_Lcontent_pull$undrequest_View.prototype.content$pull$undrequest$View$$$anonfun$observer$1__sjs_js_Any__sjs_js_Any__sjs_js_Any = (function(x$1, x$2) {
-  var this$2 = $m_s_Console$();
-  var this$3 = this$2.outVar$2.v$1;
-  this$3.java$lang$JSConsoleBasedPrintStream$$printString__T__V("[Lilit] #files is mutated. Reprocessing.\n");
-  this.run__p1__V();
-  var value = (void 0);
-  return value
 });
 $c_Lcontent_pull$undrequest_View.prototype.init___Lmodels_PullRequestPage__T__T__T__T__Lorg_scalajs_dom_raw_HTMLElement = (function(page, repoName, host, startRevision, endRevision, elem) {
   this.page$1 = page;
@@ -11514,8 +11502,8 @@ $c_Lstate_State.prototype.triggerPageUpdate__p1__V = (function() {
     var opt = $m_s_None$()
   } else {
     var arg1 = this$1.get__O();
-    var x$5 = arg1;
-    var opt = new $c_s_Some().init___O(x$5.toRaw__Lmodels_bindings_RawPage())
+    var x$8 = arg1;
+    var opt = new $c_s_Some().init___O(x$8.toRaw__Lmodels_bindings_RawPage())
   };
   if (opt.isEmpty__Z()) {
     var jsx$1 = (void 0)
@@ -11554,8 +11542,8 @@ $c_Lstate_State.prototype.fail__Lmodels_Page__s_Option__V = (function(page, reas
   var this$1 = this.pageOpt$1;
   if ((!this$1.isEmpty__Z())) {
     var arg1 = this$1.get__O();
-    var x$4 = arg1;
-    $f_Lmodels_Page__fail__s_Option__V(x$4, reasonOpt)
+    var x$7 = arg1;
+    $f_Lmodels_Page__fail__s_Option__V(x$7, reasonOpt)
   };
   this.triggerPageUpdate__p1__V()
 });
@@ -11571,7 +11559,7 @@ $c_Lstate_State.prototype.setMissingRevisions__Lmodels_Page__sc_Seq__V = (functi
   };
   this.triggerPageUpdate__p1__V()
 });
-$c_Lstate_State.prototype.complete__Lmodels_Page__V = (function(page) {
+$c_Lstate_State.prototype.loading__Lmodels_Page__V = (function(page) {
   if ((!this.hasPage__Lmodels_Page__Z(page))) {
     return (void 0)
   };
@@ -11579,7 +11567,45 @@ $c_Lstate_State.prototype.complete__Lmodels_Page__V = (function(page) {
   if ((!this$1.isEmpty__Z())) {
     var arg1 = this$1.get__O();
     var x$3 = arg1;
-    $f_Lmodels_Page__complete__V(x$3)
+    var x = x$3.status__Lmodels_Page$Status$Value();
+    var x$2 = $m_Lmodels_Page$Status$Failed$();
+    var jsx$1 = ((x !== null) && (x === x$2))
+  } else {
+    var jsx$1 = false
+  };
+  if (jsx$1) {
+    return (void 0)
+  };
+  var this$2 = this.pageOpt$1;
+  if ((!this$2.isEmpty__Z())) {
+    var arg1$1 = this$2.get__O();
+    var x$4 = arg1$1;
+    $f_Lmodels_Page__loading__V(x$4)
+  };
+  this.triggerPageUpdate__p1__V()
+});
+$c_Lstate_State.prototype.complete__Lmodels_Page__V = (function(page) {
+  if ((!this.hasPage__Lmodels_Page__Z(page))) {
+    return (void 0)
+  };
+  var this$1 = this.pageOpt$1;
+  if ((!this$1.isEmpty__Z())) {
+    var arg1 = this$1.get__O();
+    var x$5 = arg1;
+    var x = x$5.status__Lmodels_Page$Status$Value();
+    var x$2 = $m_Lmodels_Page$Status$Failed$();
+    var jsx$1 = ((x !== null) && (x === x$2))
+  } else {
+    var jsx$1 = false
+  };
+  if (jsx$1) {
+    return (void 0)
+  };
+  var this$2 = this.pageOpt$1;
+  if ((!this$2.isEmpty__Z())) {
+    var arg1$1 = this$2.get__O();
+    var x$6 = arg1$1;
+    $f_Lmodels_Page__complete__V(x$6)
   };
   this.triggerPageUpdate__p1__V()
 });
@@ -30123,9 +30149,6 @@ function $h_Lmodels_FilePage() {
   /*<skip>*/
 }
 $h_Lmodels_FilePage.prototype = $c_Lmodels_FilePage.prototype;
-$c_Lmodels_FilePage.prototype.productPrefix__T = (function() {
-  return "FilePage"
-});
 $c_Lmodels_FilePage.prototype.toRaw__Lmodels_bindings_RawPage = (function() {
   var $this = {};
   $this.url = null;
@@ -30160,6 +30183,12 @@ $c_Lmodels_FilePage.prototype.toRaw__Lmodels_bindings_RawPage = (function() {
   };
   $this.failureReasonOpt = jsx$2;
   return $this
+});
+$c_Lmodels_FilePage.prototype.productPrefix__T = (function() {
+  return "FilePage"
+});
+$c_Lmodels_FilePage.prototype.status__Lmodels_Page$Status$Value = (function() {
+  return this.status$1
 });
 $c_Lmodels_FilePage.prototype.productArity__I = (function() {
   return 8
@@ -30319,9 +30348,6 @@ function $h_Lmodels_PullRequestPage() {
   /*<skip>*/
 }
 $h_Lmodels_PullRequestPage.prototype = $c_Lmodels_PullRequestPage.prototype;
-$c_Lmodels_PullRequestPage.prototype.productPrefix__T = (function() {
-  return "PullRequestPage"
-});
 $c_Lmodels_PullRequestPage.prototype.toRaw__Lmodels_bindings_RawPage = (function() {
   var $this = {};
   $this.url = null;
@@ -30356,6 +30382,12 @@ $c_Lmodels_PullRequestPage.prototype.toRaw__Lmodels_bindings_RawPage = (function
   };
   $this.failureReasonOpt = jsx$2;
   return $this
+});
+$c_Lmodels_PullRequestPage.prototype.productPrefix__T = (function() {
+  return "PullRequestPage"
+});
+$c_Lmodels_PullRequestPage.prototype.status__Lmodels_Page$Status$Value = (function() {
+  return this.status$1
 });
 $c_Lmodels_PullRequestPage.prototype.productArity__I = (function() {
   return 8

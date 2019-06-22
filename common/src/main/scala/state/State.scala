@@ -24,8 +24,18 @@ class State {
     triggerPageUpdate()
   }
 
+  def loading(page: Page): Unit = {
+    if (!hasPage(page)) { return }
+    if (pageOpt.exists(_.status == Page.Status.Failed)) { return }
+
+    pageOpt.foreach(_.loading())
+    triggerPageUpdate()
+  }
+
   def complete(page: Page): Unit = {
     if (!hasPage(page)) { return }
+    if (pageOpt.exists(_.status == Page.Status.Failed)) { return }
+
     pageOpt.foreach(_.complete())
     triggerPageUpdate()
   }
