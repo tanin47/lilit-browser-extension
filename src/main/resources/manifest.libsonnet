@@ -1,7 +1,7 @@
 {
   "name": "Lilit",
   "short_name": "Lilit",
-  "version": "0.0.1.6",
+  "version": "0.0.1.7",
   "description": "Be more productive reading Java code on Github with code intelligence",
   "manifest_version": 2,
   "permissions": [

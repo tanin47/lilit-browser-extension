@@ -67,7 +67,7 @@ class View(
             val childList = true
             val attributes = false
             val characterData = false
-            val subtree = false
+            val subtree = true
           }
         )
       }
@@ -76,11 +76,16 @@ class View(
       val fs = elem.querySelectorAll(".js-file")
 
       0.until(fs.length)
+        .toList
         .map { index => fs.item(index).asInstanceOf[HTMLElement] }
         .flatMap { node =>
           val diffView = FileView(node)
 
-          if (diffView.path.endsWith(".java") && !queriedFilePaths.contains(diffView.path)) {
+          if (
+            node.querySelector("table") != null && // the diff is hidden with the 'load file' button.
+              diffView.path.endsWith(".java") &&
+              !queriedFilePaths.contains(diffView.path)
+          ) {
             queriedFilePaths.add(diffView.path)
             Some(diffView)
           } else {
@@ -93,7 +98,7 @@ class View(
     }
 
     if (diffElemGroups.isEmpty) {
-      println("[Lilit] No diff elements. Complete. This is because Github caches the page.")
+      println("[Lilit] No new diff elements.")
       Content.state.complete(page)
       return
     }

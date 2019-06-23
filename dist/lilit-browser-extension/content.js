@@ -7574,196 +7574,236 @@ $c_Lcontent_pull$undrequest_View.prototype.run__p1__V = (function() {
       $this.childList = true;
       $this.attributes = false;
       $this.characterData = false;
-      $this.subtree = false;
+      $this.subtree = true;
       jsx$1.observe(container$2, $this)
     })
   })(this)));
   var fs = this.elem$1.querySelectorAll(".js-file");
   var end = (fs.length | 0);
-  var isEmpty$4 = (end <= 0);
-  if (isEmpty$4) {
-    var scala$collection$immutable$Range$$numRangeElements$4 = 0
-  } else {
-    var hi = (end >> 31);
-    var scala$collection$immutable$Range$$numRangeElements$4 = (((hi === 0) ? (((-2147483648) ^ end) > (-1)) : (hi > 0)) ? (-1) : end)
-  };
-  var scala$collection$immutable$Range$$lastElement$4 = (((-1) + end) | 0);
-  $m_sci_IndexedSeq$();
-  $m_sc_IndexedSeq$();
-  $m_sci_IndexedSeq$();
-  $m_sci_Vector$();
-  var b$1 = new $c_sci_VectorBuilder().init___();
-  if ((scala$collection$immutable$Range$$numRangeElements$4 < 0)) {
-    $m_sci_Range$().scala$collection$immutable$Range$$fail__I__I__I__Z__sr_Nothing$(0, end, 1, false)
-  };
-  switch (scala$collection$immutable$Range$$numRangeElements$4) {
-    case (-1): {
-      break
-    }
-  };
-  if ((!isEmpty$4)) {
-    var i = 0;
-    while (true) {
-      var arg1$1 = i;
-      var elem = fs.item(arg1$1);
-      b$1.$$plus$eq__O__sci_VectorBuilder(elem);
-      if ((i === scala$collection$immutable$Range$$lastElement$4)) {
-        break
+  var this$8 = new $c_sci_Range().init___I__I__I(0, end, 1);
+  var this$9 = $m_sci_List$();
+  var cbf = this$9.ReusableCBFInstance$2;
+  var this$11 = $f_sc_TraversableLike__to__scg_CanBuildFrom__O(this$8, cbf);
+  var f = (function(this$3$1, fs$1) {
+    return (function(index$2) {
+      var index = (index$2 | 0);
+      return fs$1.item(index)
+    })
+  })(this, fs);
+  var this$10 = $m_sci_List$();
+  var bf$1 = this$10.ReusableCBFInstance$2;
+  if ((bf$1 === $m_sci_List$().ReusableCBFInstance$2)) {
+    if ((this$11 === $m_sci_Nil$())) {
+      var this$17 = $m_sci_Nil$()
+    } else {
+      var arg1$1 = this$11.head__O();
+      var h = new $c_sci_$colon$colon().init___O__sci_List(f(arg1$1), $m_sci_Nil$());
+      var t = h;
+      var rest = this$11.tail__O();
+      while ((rest !== $m_sci_Nil$())) {
+        var arg1$2 = rest.head__O();
+        var nx = new $c_sci_$colon$colon().init___O__sci_List(f(arg1$2), $m_sci_Nil$());
+        t.tl$5 = nx;
+        t = nx;
+        rest = rest.tail__O()
       };
-      i = ((1 + i) | 0)
+      var this$17 = h
     }
-  };
-  var this$12 = b$1.result__sci_Vector();
-  $m_sci_IndexedSeq$();
-  $m_sc_IndexedSeq$();
-  $m_sci_Vector$();
-  var b$2 = new $c_sci_VectorBuilder().init___();
-  var this$14 = this$12.iterator__sci_VectorIterator();
-  while (this$14.$$undhasNext$2) {
-    var arg1$2 = this$14.next__O();
-    var diffView = new $c_Lcontent_pull$undrequest_View$FileView().init___Lorg_scalajs_dom_raw_HTMLElement(arg1$2);
-    if ($m_sjsr_RuntimeString$().endsWith__T__T__Z(diffView.path__T(), ".java")) {
-      var this$15 = this.queriedFilePaths$1;
-      var elem$1 = diffView.path__T();
-      var jsx$2 = (!$f_scm_FlatHashTable__containsElem__O__Z(this$15, elem$1))
-    } else {
-      var jsx$2 = false
+  } else {
+    var b$1 = $f_sc_TraversableLike__builder$1__psc_TraversableLike__scg_CanBuildFrom__scm_Builder(this$11, bf$1);
+    var these = this$11;
+    while ((!these.isEmpty__Z())) {
+      var arg1$3 = these.head__O();
+      b$1.$$plus$eq__O__scm_Builder(f(arg1$3));
+      these = these.tail__O()
     };
-    if (jsx$2) {
-      var this$16 = this.queriedFilePaths$1;
-      var elem$2 = diffView.path__T();
-      $f_scm_FlatHashTable__addElem__O__Z(this$16, elem$2);
-      var xo = new $c_s_Some().init___O(diffView);
-      var this$19 = xo.toList__sci_List()
-    } else {
-      var xo$1 = $m_s_None$();
-      var this$19 = xo$1.toList__sci_List()
-    };
-    $f_scg_Growable__$$plus$plus$eq__sc_TraversableOnce__scg_Growable(b$2, this$19)
+    var this$17 = b$1.result__O()
   };
-  var this$20 = b$2.result__sci_Vector();
-  var this$21 = $f_sc_IterableLike__grouped__I__sc_Iterator(this$20, 20);
-  var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$5$1) {
+  var f$1 = (function(this$4$1) {
+    return (function(node$2) {
+      var diffView = new $c_Lcontent_pull$undrequest_View$FileView().init___Lorg_scalajs_dom_raw_HTMLElement(node$2);
+      if (((node$2.querySelector("table") !== null) && $m_sjsr_RuntimeString$().endsWith__T__T__Z(diffView.path__T(), ".java"))) {
+        var this$12 = this$4$1.queriedFilePaths$1;
+        var elem = diffView.path__T();
+        var jsx$2 = (!$f_scm_FlatHashTable__containsElem__O__Z(this$12, elem))
+      } else {
+        var jsx$2 = false
+      };
+      if (jsx$2) {
+        var this$13 = this$4$1.queriedFilePaths$1;
+        var elem$1 = diffView.path__T();
+        $f_scm_FlatHashTable__addElem__O__Z(this$13, elem$1);
+        var xo = new $c_s_Some().init___O(diffView);
+        return xo.toList__sci_List()
+      } else {
+        var xo$1 = $m_s_None$();
+        return xo$1.toList__sci_List()
+      }
+    })
+  })(this);
+  var this$16 = $m_sci_List$();
+  var bf$2 = this$16.ReusableCBFInstance$2;
+  if ((bf$2 === $m_sci_List$().ReusableCBFInstance$2)) {
+    if ((this$17 === $m_sci_Nil$())) {
+      var this$22 = $m_sci_Nil$()
+    } else {
+      var rest$1 = this$17;
+      var found = new $c_sr_BooleanRef().init___Z(false);
+      var h$1 = new $c_sr_ObjectRef().init___O(null);
+      var t$1 = new $c_sr_ObjectRef().init___O(null);
+      while ((rest$1 !== $m_sci_Nil$())) {
+        var arg1$4 = rest$1.head__O();
+        f$1(arg1$4).seq__sc_TraversableOnce().foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this$1, found$1, h$2, t$2) {
+          return (function(b$2) {
+            if ((!found$1.elem$1)) {
+              h$2.elem$1 = new $c_sci_$colon$colon().init___O__sci_List(b$2, $m_sci_Nil$());
+              t$2.elem$1 = h$2.elem$1;
+              found$1.elem$1 = true
+            } else {
+              var nx$1 = new $c_sci_$colon$colon().init___O__sci_List(b$2, $m_sci_Nil$());
+              t$2.elem$1.tl$5 = nx$1;
+              t$2.elem$1 = nx$1
+            }
+          })
+        })(this$17, found, h$1, t$1)));
+        rest$1 = rest$1.tail__O()
+      };
+      var this$22 = ((!found.elem$1) ? $m_sci_Nil$() : h$1.elem$1)
+    }
+  } else {
+    $m_sci_List$();
+    var b$3 = new $c_scm_ListBuffer().init___();
+    var these$1 = this$17;
+    while ((!these$1.isEmpty__Z())) {
+      var arg1$5 = these$1.head__O();
+      var xs = f$1(arg1$5).seq__sc_TraversableOnce();
+      b$3.$$plus$plus$eq__sc_TraversableOnce__scm_ListBuffer(xs);
+      these$1 = these$1.tail__O()
+    };
+    var this$22 = b$3.toList__sci_List()
+  };
+  var this$23 = $f_sc_IterableLike__grouped__I__sc_Iterator(this$22, 20);
+  var f$2 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$5$1) {
     return (function(x$4$2) {
       var x$4 = x$4$2;
-      return x$4.toList__sci_List()
+      return x$4
     })
   })(this));
-  var this$22 = new $c_sc_Iterator$$anon$10().init___sc_Iterator__F1(this$21, f);
-  var this$23 = $m_sci_List$();
-  var cbf = this$23.ReusableCBFInstance$2;
-  var diffElemGroups = $f_sc_TraversableOnce__to__scg_CanBuildFrom__O(this$22, cbf);
+  var this$24 = new $c_sc_Iterator$$anon$10().init___sc_Iterator__F1(this$23, f$2);
+  var this$25 = $m_sci_List$();
+  var cbf$1 = this$25.ReusableCBFInstance$2;
+  var diffElemGroups = $f_sc_TraversableOnce__to__scg_CanBuildFrom__O(this$24, cbf$1);
   if (diffElemGroups.isEmpty__Z()) {
-    var this$25 = $m_s_Console$();
-    var this$26 = this$25.outVar$2.v$1;
-    this$26.java$lang$JSConsoleBasedPrintStream$$printString__T__V("[Lilit] No diff elements. Complete. This is because Github caches the page.\n");
+    var this$27 = $m_s_Console$();
+    var this$28 = this$27.outVar$2.v$1;
+    this$28.java$lang$JSConsoleBasedPrintStream$$printString__T__V("[Lilit] No new diff elements.\n");
     $m_Lcontent_Content$().state$1.complete__Lmodels_Page__V(this.page$1);
     return (void 0)
   };
   $m_Lcontent_Content$().state$1.loading__Lmodels_Page__V(this.page$1);
-  var elem$3 = $f_sc_LinearSeqOptimized__length__I(diffElemGroups);
-  var ajaxCount = new $c_sr_IntRef().init___I(elem$3);
-  var these = diffElemGroups;
-  while ((!these.isEmpty__Z())) {
-    var arg1$3 = these.head__O();
-    var diffElems = arg1$3;
-    var f$1 = (function($this$1) {
+  var elem$2 = $f_sc_LinearSeqOptimized__length__I(diffElemGroups);
+  var ajaxCount = new $c_sr_IntRef().init___I(elem$2);
+  var these$2 = diffElemGroups;
+  while ((!these$2.isEmpty__Z())) {
+    var arg1$6 = these$2.head__O();
+    var diffElems = arg1$6;
+    var f$3 = (function($this$2) {
       return (function(diffElem$2) {
         var diffElem = diffElem$2;
         $m_sci_List$();
-        var array = [new ($a_Lmodels_bindings_FileRequest())(diffElem.path__T(), $this$1.startRevision$1), new ($a_Lmodels_bindings_FileRequest())(diffElem.path__T(), $this$1.endRevision$1)];
-        var i$1 = (((-1) + (array.length | 0)) | 0);
+        var array = [new ($a_Lmodels_bindings_FileRequest())(diffElem.path__T(), $this$2.startRevision$1), new ($a_Lmodels_bindings_FileRequest())(diffElem.path__T(), $this$2.endRevision$1)];
+        var i = (((-1) + (array.length | 0)) | 0);
         var result = $m_sci_Nil$();
-        while ((i$1 >= 0)) {
-          var this$31 = result;
-          var index = i$1;
-          var x = array[index];
-          result = new $c_sci_$colon$colon().init___O__sci_List(x, this$31);
-          i$1 = (((-1) + i$1) | 0)
+        while ((i >= 0)) {
+          var this$33 = result;
+          var index$1 = i;
+          var x = array[index$1];
+          result = new $c_sci_$colon$colon().init___O__sci_List(x, this$33);
+          i = (((-1) + i) | 0)
         };
         return result
       })
     })(this);
-    var this$32 = $m_sci_List$();
-    var bf$3 = this$32.ReusableCBFInstance$2;
+    var this$34 = $m_sci_List$();
+    var bf$3 = this$34.ReusableCBFInstance$2;
     if ((bf$3 === $m_sci_List$().ReusableCBFInstance$2)) {
       if ((diffElems === $m_sci_Nil$())) {
         var fileRequests = $m_sci_Nil$()
       } else {
-        var rest = diffElems;
-        var found = new $c_sr_BooleanRef().init___Z(false);
-        var h = new $c_sr_ObjectRef().init___O(null);
-        var t = new $c_sr_ObjectRef().init___O(null);
-        while ((rest !== $m_sci_Nil$())) {
-          var arg1$4 = rest.head__O();
-          f$1(arg1$4).seq__sc_TraversableOnce().foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this$2, found$1, h$1, t$1) {
+        var rest$2 = diffElems;
+        var found$2 = new $c_sr_BooleanRef().init___Z(false);
+        var h$3 = new $c_sr_ObjectRef().init___O(null);
+        var t$3 = new $c_sr_ObjectRef().init___O(null);
+        while ((rest$2 !== $m_sci_Nil$())) {
+          var arg1$7 = rest$2.head__O();
+          f$3(arg1$7).seq__sc_TraversableOnce().foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this$3, found$3, h$4, t$4) {
             return (function(b$2$1) {
-              if ((!found$1.elem$1)) {
-                h$1.elem$1 = new $c_sci_$colon$colon().init___O__sci_List(b$2$1, $m_sci_Nil$());
-                t$1.elem$1 = h$1.elem$1;
-                found$1.elem$1 = true
+              if ((!found$3.elem$1)) {
+                h$4.elem$1 = new $c_sci_$colon$colon().init___O__sci_List(b$2$1, $m_sci_Nil$());
+                t$4.elem$1 = h$4.elem$1;
+                found$3.elem$1 = true
               } else {
-                var nx = new $c_sci_$colon$colon().init___O__sci_List(b$2$1, $m_sci_Nil$());
-                t$1.elem$1.tl$5 = nx;
-                t$1.elem$1 = nx
+                var nx$2 = new $c_sci_$colon$colon().init___O__sci_List(b$2$1, $m_sci_Nil$());
+                t$4.elem$1.tl$5 = nx$2;
+                t$4.elem$1 = nx$2
               }
             })
-          })(diffElems, found, h, t)));
-          rest = rest.tail__O()
+          })(diffElems, found$2, h$3, t$3)));
+          rest$2 = rest$2.tail__O()
         };
-        var fileRequests = ((!found.elem$1) ? $m_sci_Nil$() : h.elem$1)
+        var fileRequests = ((!found$2.elem$1) ? $m_sci_Nil$() : h$3.elem$1)
       }
     } else {
       $m_sci_List$();
-      var b$3 = new $c_scm_ListBuffer().init___();
-      var these$1 = diffElems;
-      while ((!these$1.isEmpty__Z())) {
-        var arg1$5 = these$1.head__O();
-        var xs = f$1(arg1$5).seq__sc_TraversableOnce();
-        b$3.$$plus$plus$eq__sc_TraversableOnce__scm_ListBuffer(xs);
-        these$1 = these$1.tail__O()
+      var b$4 = new $c_scm_ListBuffer().init___();
+      var these$3 = diffElems;
+      while ((!these$3.isEmpty__Z())) {
+        var arg1$8 = these$3.head__O();
+        var xs$1 = f$3(arg1$8).seq__sc_TraversableOnce();
+        b$4.$$plus$plus$eq__sc_TraversableOnce__scm_ListBuffer(xs$1);
+        these$3 = these$3.tail__O()
       };
-      var fileRequests = b$3.toList__sci_List()
+      var fileRequests = b$4.toList__sci_List()
     };
-    var f$2 = (function(this$2$2) {
+    var f$4 = (function(this$2$2) {
       return (function(x$5$2) {
         return x$5$2.path
       })
     })(this);
-    var this$37 = $m_sci_List$();
-    var bf$4 = this$37.ReusableCBFInstance$2;
+    var this$39 = $m_sci_List$();
+    var bf$4 = this$39.ReusableCBFInstance$2;
     if ((bf$4 === $m_sci_List$().ReusableCBFInstance$2)) {
       if ((fileRequests === $m_sci_Nil$())) {
         var jsx$3 = $m_sci_Nil$()
       } else {
-        var arg1$6 = fileRequests.head__O();
-        var h$2 = new $c_sci_$colon$colon().init___O__sci_List(f$2(arg1$6), $m_sci_Nil$());
-        var t$2 = h$2;
-        var rest$1 = fileRequests.tail__O();
-        while ((rest$1 !== $m_sci_Nil$())) {
-          var arg1$7 = rest$1.head__O();
-          var nx$1 = new $c_sci_$colon$colon().init___O__sci_List(f$2(arg1$7), $m_sci_Nil$());
-          t$2.tl$5 = nx$1;
-          t$2 = nx$1;
-          rest$1 = rest$1.tail__O()
+        var arg1$9 = fileRequests.head__O();
+        var h$5 = new $c_sci_$colon$colon().init___O__sci_List(f$4(arg1$9), $m_sci_Nil$());
+        var t$5 = h$5;
+        var rest$3 = fileRequests.tail__O();
+        while ((rest$3 !== $m_sci_Nil$())) {
+          var arg1$10 = rest$3.head__O();
+          var nx$3 = new $c_sci_$colon$colon().init___O__sci_List(f$4(arg1$10), $m_sci_Nil$());
+          t$5.tl$5 = nx$3;
+          t$5 = nx$3;
+          rest$3 = rest$3.tail__O()
         };
-        var jsx$3 = h$2
+        var jsx$3 = h$5
       }
     } else {
-      var b$4 = $f_sc_TraversableLike__builder$1__psc_TraversableLike__scg_CanBuildFrom__scm_Builder(fileRequests, bf$4);
-      var these$2 = fileRequests;
-      while ((!these$2.isEmpty__Z())) {
-        var arg1$8 = these$2.head__O();
-        b$4.$$plus$eq__O__scm_Builder(f$2(arg1$8));
-        these$2 = these$2.tail__O()
+      var b$5 = $f_sc_TraversableLike__builder$1__psc_TraversableLike__scg_CanBuildFrom__scm_Builder(fileRequests, bf$4);
+      var these$4 = fileRequests;
+      while ((!these$4.isEmpty__Z())) {
+        var arg1$11 = these$4.head__O();
+        b$5.$$plus$eq__O__scm_Builder(f$4(arg1$11));
+        these$4 = these$4.tail__O()
       };
-      var jsx$3 = b$4.result__O()
+      var jsx$3 = b$5.result__O()
     };
     var pathLogLine = jsx$3.distinct__O().mkString__T__T(", ");
     var x$1 = ("[Lilit] Fetch data for " + pathLogLine);
-    var this$39 = $m_s_Console$();
-    var this$40 = this$39.outVar$2.v$1;
-    this$40.java$lang$JSConsoleBasedPrintStream$$printString__T__V((x$1 + "\n"));
+    var this$41 = $m_s_Console$();
+    var this$42 = this$41.outVar$2.v$1;
+    this$42.java$lang$JSConsoleBasedPrintStream$$printString__T__V((x$1 + "\n"));
     var x$1$1 = new ($a_Lmodels_bindings_FileRequestRequest())(this.repoName$1, $m_sjs_js_JSConverters$JSRichGenTraversableOnce$().toJSArray$extension__sc_GenTraversableOnce__sjs_js_Array(fileRequests));
     var a = (function(arg$outer, ajaxCount$1, diffElems$1, pathLogLine$1) {
       return (function(arg1$2$1) {
@@ -7775,7 +7815,7 @@ $c_Lcontent_pull$undrequest_View.prototype.run__p1__V = (function() {
     $m_Lchrome_runtime_Runtime$();
     var x$4$1 = (void 0);
     $m_Lchrome_runtime_Runtime$().sendMessage__sjs_js_UndefOr__sjs_js_Any__sjs_js_UndefOr__sjs_js_UndefOr__V(x$3, x$1$1, x$4$1, a);
-    these = these.tail__O()
+    these$2 = these$2.tail__O()
   }
 });
 $c_Lcontent_pull$undrequest_View.prototype.content$pull$undrequest$View$$$anonfun$run$9__sjs_js_Object__sr_IntRef__sci_List__T__O = (function(data, ajaxCount$1, diffElems$1, pathLogLine$1) {
@@ -47501,12 +47541,12 @@ $c_scm_ArrayOps$ofRef.prototype.$$div$colon__O__F2__O = (function(z, op) {
 $c_scm_ArrayOps$ofRef.prototype.copyToArray__O__I__I__V = (function(xs, start, len) {
   $f_scm_ArrayOps__copyToArray__O__I__I__V(this, xs, start, len)
 });
+$c_scm_ArrayOps$ofRef.prototype.isTraversableAgain__Z = (function() {
+  return true
+});
 $c_scm_ArrayOps$ofRef.prototype.hashCode__I = (function() {
   var $$this = this.repr$1;
   return $$this.hashCode__I()
-});
-$c_scm_ArrayOps$ofRef.prototype.isTraversableAgain__Z = (function() {
-  return true
 });
 $c_scm_ArrayOps$ofRef.prototype.newBuilder__scm_Builder = (function() {
   var $$this = this.repr$1;
@@ -48641,12 +48681,6 @@ function $f_sci_DefaultMap__$$minus__O__sci_Map($thiz, key) {
     })
   })($thiz, b)));
   return b.elems$1
-}
-function $is_sci_IndexedSeq(obj) {
-  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.sci_IndexedSeq)))
-}
-function $isArrayOf_sci_IndexedSeq(obj, depth) {
-  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.sci_IndexedSeq)))
 }
 /** @constructor */
 function $c_sci_AbstractMap() {
