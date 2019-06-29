@@ -7,5 +7,6 @@ trait Usage extends js.Object {
   def definitionId: String
   def definitionJarOpt: js.UndefOr[Jar]
   def definitionLocationOpt: js.UndefOr[Location]
+  def typeOpt: js.UndefOr[Type]
   def priority: Int
 }
