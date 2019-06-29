@@ -28,7 +28,7 @@
          ]
       }
    ],
-   "description": "Be more productive reading Java code on Github with code intelligence",
+   "description": "Java code intelligence on your browser",
    "icons": {
       "512": "images/logo.png"
    },
@@ -45,7 +45,7 @@
       "https://lilit.dev/*"
    ],
    "short_name": "Lilit",
-   "version": "0.0.1.7",
+   "version": "0.0.2.0",
    "web_accessible_resources": [
       "config.json"
    ]

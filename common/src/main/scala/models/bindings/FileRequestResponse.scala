@@ -9,6 +9,8 @@ object FileRequestResponse {
     def isSupported: Boolean
     def usages: js.Array[Usage]
     def definitions: js.Array[Definition]
+    // TODO: Remove js.UndefOr when the server supports this field
+    def annotations: js.UndefOr[js.Array[Annotation]]
   }
 }
 

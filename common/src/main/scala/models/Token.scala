@@ -37,6 +37,44 @@ sealed abstract class Token {
   def priority: Int
 }
 
+
+sealed abstract class Type
+
+object Type {
+  def from(raw: bindings.Type): Type = {
+    raw.kind match {
+      case "Class" =>
+        ClassType(
+          name = raw.name.get,
+          typeArguments = raw.typeArguments.get.toList.map(Type.from)
+        )
+      case "Primitive" =>
+        PrimitiveType(name = raw.name.get)
+      case "Array" =>
+        ArrayType(elemType = Type.from(raw.elemType.get))
+      case "Parameterized" =>
+        ParameterizedType(name = raw.name.get)
+    }
+  }
+}
+
+case class ClassType(
+  name: String,
+  typeArguments: List[Type]
+) extends Type
+
+case class PrimitiveType(
+  name: String
+) extends Type
+
+case class ArrayType(
+  elemType: Type
+) extends Type
+
+case class ParameterizedType(
+  name: String
+) extends Type
+
 object Usage {
   def from(raw: bindings.Usage): Usage = {
     Usage(
@@ -44,6 +82,7 @@ object Usage {
       definitionId = raw.definitionId,
       definitionJarOpt = raw.definitionJarOpt.filter(_ != null).map(Jar.from).toOption,
       definitionLocationOpt = raw.definitionLocationOpt.filter(_ != null).map(Location.from).toOption,
+      typeOpt = raw.typeOpt.filter(_ != null).map(Type.from).toOption,
       priority = raw.priority
     )
   }
@@ -54,6 +93,7 @@ case class Usage(
   definitionId: String,
   definitionJarOpt: Option[Jar],
   definitionLocationOpt: Option[Location],
+  typeOpt: Option[Type],
   priority: Int
 ) extends Token {
   lazy val locationOpt = Some(location)
@@ -74,6 +114,26 @@ case class Definition(
 ) extends Token {
   lazy val location = locationOpt.get
   val priority = 10
+}
+
+object Annotation {
+  def from(raw: bindings.Annotation): Annotation = {
+    Annotation(
+      location = Location.from(raw.location),
+      paramName = raw.paramName,
+      isVariableLength = raw.isVariableLength,
+      priority = raw.priority
+    )
+  }
+}
+
+case class Annotation(
+  location: Location,
+  paramName: String,
+  isVariableLength: Boolean,
+  priority: Int
+) extends Token {
+  lazy val locationOpt = Some(location)
 }
 
 object Jar {

@@ -9,8 +9,22 @@
   }
 }
 
+.lilit-not-allowed {
+  cursor: not-allowed;
+}
+
 .lilit-highlighted {
   background-color: #fff0bb;
+}
+
+.lilit-annotation {
+  font-size: 10px;
+  color: #888;
+
+  .lilit-equal {
+    margin-left: 2px;
+    margin-right: 3px;
+  }
 }
 
 .tippy-tooltip {
