@@ -8193,10 +8193,6 @@ $c_Lcontent_tokenizer_LineTokenizer.prototype.addUsage__sci_List__T__I__scm_List
   return ((1 + tokenEnd) | 0)
 });
 $c_Lcontent_tokenizer_LineTokenizer.prototype.modify__Lorg_scalajs_dom_raw_Node__s_Option = (function(node) {
-  if ((!(!node.parentNode.classList.contains("lilit-link")))) {
-    (0, tippy_js_esm_index_all_js__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(node.parentNode);
-    return $m_s_None$()
-  };
   var text = node.nodeValue;
   var nodeStart = this.col$1;
   var jsx$1 = this.col$1;
@@ -8231,6 +8227,25 @@ $c_Lcontent_tokenizer_LineTokenizer.prototype.process__Lorg_scalajs_dom_raw_Elem
   if ((lineElem === null)) {
     return $m_s_None$()
   };
+  if ((!(!lineElem.classList.contains("lilit-processed")))) {
+    var tippies = lineElem.querySelectorAll("[data-tippy-content]");
+    var end = (tippies.length | 0);
+    var isEmpty$4 = (end <= 0);
+    var scala$collection$immutable$Range$$lastElement$4 = (((-1) + end) | 0);
+    if ((!isEmpty$4)) {
+      var i = 0;
+      while (true) {
+        var v1 = i;
+        (0, tippy_js_esm_index_all_js__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(tippies.item(v1));
+        if ((i === scala$collection$immutable$Range$$lastElement$4)) {
+          break
+        };
+        i = ((1 + i) | 0)
+      }
+    };
+    return $m_s_None$()
+  };
+  lineElem.classList.add("lilit-processed");
   this.col$1 = 1;
   this.walk__Lorg_scalajs_dom_raw_Node__s_Option(lineElem);
   return this.highlightTypeOpt$1
