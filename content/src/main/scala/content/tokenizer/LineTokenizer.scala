@@ -258,12 +258,6 @@ class LineTokenizer(
   }
 
   def modify(node: Node): Option[List[Node]] = {
-    // It's already built. This is because Github caches the element.
-    if (node.parentNode.asInstanceOf[Element].classList.contains("lilit-link")) {
-      Tippy.apply(node.parentNode.asInstanceOf[Element])
-      return None
-    }
-
     val text = node.nodeValue
     val nodeStart = col
     val nodeEnd = col + node.nodeValue.length - 1
@@ -323,6 +317,15 @@ class LineTokenizer(
 
   def process(lineElem: Element): Option[HighlightType.Value] = {
     if (lineElem == null) { return None }
+    if (lineElem.classList.contains("lilit-processed")) {
+      val tippies = lineElem.querySelectorAll("[data-tippy-content]")
+
+      0.until(tippies.length).foreach { index =>
+        Tippy.apply(tippies.item(index).asInstanceOf[Element])
+      }
+      return None
+    }
+    lineElem.classList.add("lilit-processed")
 
     col = 1
     walk(lineElem)
