@@ -10,8 +10,7 @@ object NavigationTest extends BrowserTest {
 
       val link = ".lilit-link"
       waitUntil {
-        link.hover()
-        link.getToolTip.getText == "Defined in src/main/java/test_java_repo/Library.java inside tanin47/test-java-repo"
+        link.hoverAndGetToolTip.getText == "Defined in src/main/java/test_java_repo/Library.java inside tanin47/test-java-repo"
       }
       link.click()
 
@@ -20,20 +19,19 @@ object NavigationTest extends BrowserTest {
       }
 
       waitUntil {
-        link.hover()
-        link.getToolTip.getText == "Click to find all usages"
+        link.hoverAndGetToolTip.getText == "Click to find all usages"
       }
 
       webDriver.navigate().back()
+
       waitUntil {
-        link.hover()
-        link.getToolTip.getText == "Defined in src/main/java/test_java_repo/Library.java inside tanin47/test-java-repo"
+        link.hoverAndGetToolTip.getText == "Defined in src/main/java/test_java_repo/Library.java inside tanin47/test-java-repo"
       }
 
       webDriver.navigate().forward()
       waitUntil {
         link.hover()
-        link.getToolTip.getText == "Click to find all usages"
+        link.hoverAndGetToolTip.getText == "Click to find all usages"
       }
     }
 
@@ -50,8 +48,7 @@ object NavigationTest extends BrowserTest {
         ".tabnav-tab".items(3).click()
         val link = ".lilit-link"
         waitUntil {
-          link.hover()
-          link.getToolTip.getText == "Defined in src/main/java/test_java_repo/Library.java inside tanin47/test-java-repo"
+          link.hoverAndGetToolTip.getText == "Defined in src/main/java/test_java_repo/Library.java inside tanin47/test-java-repo"
         }
       }
 
@@ -67,8 +64,7 @@ object NavigationTest extends BrowserTest {
         webDriver.navigate().back()
         val link = ".lilit-link"
         waitUntil {
-          link.hover()
-          link.getToolTip.getText == "Defined in src/main/java/test_java_repo/Library.java inside tanin47/test-java-repo"
+          link.hoverAndGetToolTip.getText == "Defined in src/main/java/test_java_repo/Library.java inside tanin47/test-java-repo"
         }
       }
     }
@@ -90,8 +86,7 @@ object NavigationTest extends BrowserTest {
 
         val link = ".lilit-link"
         waitUntil {
-          link.hover()
-          link.getToolTip.getText == "Click to find all usages"
+          link.hoverAndGetToolTip.getText == "Click to find all usages"
         }
       }
 
@@ -111,8 +106,7 @@ object NavigationTest extends BrowserTest {
 
         val link = ".lilit-link"
         waitUntil {
-          link.hover()
-          link.getToolTip.getText == "Click to find all usages"
+          link.hoverAndGetToolTip.getText == "Click to find all usages"
         }
       }
     }

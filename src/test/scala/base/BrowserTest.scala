@@ -1,7 +1,7 @@
 package base
 
 import java.io.{File, FileOutputStream}
-import java.nio.file.{Files, Paths}
+import java.nio.file.{Files, Paths, StandardCopyOption}
 import java.util.zip.{ZipEntry, ZipFile, ZipOutputStream}
 
 import org.openqa.selenium.chrome.{ChromeDriver, ChromeOptions}
@@ -11,6 +11,7 @@ import org.openqa.selenium._
 import utest._
 
 import scala.collection.JavaConverters._
+import scala.concurrent.{ExecutionContext, Future}
 import scala.io.Source
 import scala.language.implicitConversions
 
@@ -84,7 +85,9 @@ abstract class BrowserTest extends TestSuite {
       }
     }
 
-    init()
+    val d = init()
+    println(s"${d.getCapabilities.getBrowserName} ${d.getCapabilities.getVersion}")
+    d
   }
 
   val mainWindowHandle = webDriver.getWindowHandle
@@ -151,6 +154,25 @@ abstract class BrowserTest extends TestSuite {
     throw new TimeoutException()
   }
 
+  def capture(destPath: String): Unit = {
+    val file = FullPageScreenshot(webDriver)
+    val dest = new File(destPath)
+    dest.getParentFile.mkdirs()
+    Files.move(file.toPath, dest.toPath, StandardCopyOption.REPLACE_EXISTING)
+  }
+
+
+  override def utestWrap(path: Seq[String], runBody: => Future[Any])(implicit ec: ExecutionContext) = {
+    super.utestWrap(path, runBody)
+      .recoverWith { case e: Exception =>
+        val screenshotPath = s"/tmp/screenshots/${getClass.getCanonicalName}.${path.map(_.replaceAll("\\W+", "_")).mkString(".")}.png"
+        capture(screenshotPath)
+        println(s"Taking a screenshot for the failed test: $screenshotPath")
+
+        Future.failed(e)
+      }
+  }
+
   abstract class SuperElement {
     def getElement: WebElement
     def select(selector: String): NewRichElement
@@ -212,8 +234,12 @@ abstract class BrowserTest extends TestSuite {
       }
     }
 
-    def getToolTip: WebElement = {
-      waitUntil { getAttribute("aria-describedby") != null }
+    def hoverAndGetToolTip: WebElement = {
+      waitUntil {
+        new Actions(webDriver).moveByOffset(100, 100).perform()
+        hover()
+        getAttribute("aria-describedby") != null && s"#${getAttribute("aria-describedby")}".items.nonEmpty
+      }
       s"#${getAttribute("aria-describedby")}".getElement
     }
     def getClasses: Seq[String] = tryForSuccess { getElement.getAttribute("class").split(" ").map(_.trim) }

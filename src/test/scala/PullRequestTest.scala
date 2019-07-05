@@ -12,13 +12,11 @@ object PullRequestTest extends BrowserTest {
       }
 
       val linkOnTheLeft = "#diff-0 .diff-table tr".items(5).select("td").items(1).select(".lilit-link")
-      linkOnTheLeft.hover()
-      linkOnTheLeft.getToolTip.getText ==> "Defined in this file on the line 153"
+      linkOnTheLeft.hoverAndGetToolTip.getText ==> "Defined in this file on the line 153"
 
       val link = "#diff-0 .diff-table tr".items(4).select("td").items(3).select(".lilit-link").items(1)
 
-      link.hover()
-      link.getToolTip.getText ==> "Defined in src/main/java/test_java_repo/Library.java inside tanin47/test-java-repo"
+      link.hoverAndGetToolTip.getText ==> "Defined in src/main/java/test_java_repo/Library.java inside tanin47/test-java-repo"
       link.click()
 
       waitUntil {
@@ -38,12 +36,10 @@ object PullRequestTest extends BrowserTest {
       }
 
       val linkOnSubtract = "#diff-0 .diff-table tr:nth-child(8) td:nth-child(4) .lilit-link"
-      linkOnSubtract.hover()
-      linkOnSubtract.getToolTip.getText ==> "Click to find all usages"
+      linkOnSubtract.hoverAndGetToolTip.getText ==> "Click to find all usages"
 
       val link = "#diff-0 .diff-table tr:nth-child(10) td:nth-child(4) .lilit-link"
-      link.hover()
-      link.getToolTip.getText ==> "Defined in src/main/java/test_java_repo/Library.java inside tanin47/test-java-repo"
+      link.hoverAndGetToolTip.getText ==> "Defined in src/main/java/test_java_repo/Library.java inside tanin47/test-java-repo"
       link.click()
 
       waitUntil {
@@ -64,8 +60,7 @@ object PullRequestTest extends BrowserTest {
       loadDiffButton.click()
 
       val link = "#diff-2 .diff-table tr:nth-child(8) td:nth-child(4) .lilit-link"
-      link.hover()
-      link.getToolTip.getText ==> "Defined in src/main/java/test_java_repo/Library.java inside tanin47/test-java-repo"
+      link.hoverAndGetToolTip.getText ==> "Defined in src/main/java/test_java_repo/Library.java inside tanin47/test-java-repo"
       link.click()
 
       waitUntil {
@@ -85,12 +80,10 @@ object PullRequestTest extends BrowserTest {
       }
 
       val linkOnTheLeft = "#diff-0 .diff-table tr:nth-child(8) td:nth-child(2) .lilit-link"
-      linkOnTheLeft.hover()
-      linkOnTheLeft.getToolTip.getText ==> "Click to find all usages"
+      linkOnTheLeft.hoverAndGetToolTip.getText ==> "Click to find all usages"
 
       val link = "#diff-0 table tr:nth-child(8) td:nth-child(4) .lilit-link"
-      link.hover()
-      link.getToolTip.getText ==> "Click to find all usages"
+      link.hoverAndGetToolTip.getText ==> "Click to find all usages"
       link.click()
 
       waitUntil {
@@ -114,13 +107,11 @@ object PullRequestTest extends BrowserTest {
         waitUntil { "#diff-0 .diff-table tr.blob-expanded".items.length == 20 }
 
         val linkOnTheLeft = "#diff-0 .diff-table tr:nth-child(2) td:nth-child(2) .lilit-link"
-        linkOnTheLeft.hover()
-        linkOnTheLeft.getToolTip.getText ==> "Defined in src/main/java/test_java_repo/Library.java inside tanin47/test-java-repo"
+        linkOnTheLeft.hoverAndGetToolTip.getText ==> "Defined in src/main/java/test_java_repo/Library.java inside tanin47/test-java-repo"
 
         val link = "#diff-0 .diff-table tr:nth-child(2) td:nth-child(4) .lilit-link"
 
-        link.hover()
-        link.getToolTip.getText ==> "Defined in src/main/java/test_java_repo/Library.java inside tanin47/test-java-repo"
+        link.hoverAndGetToolTip.getText ==> "Defined in src/main/java/test_java_repo/Library.java inside tanin47/test-java-repo"
         link.click()
 
         waitUntil {
@@ -147,8 +138,7 @@ object PullRequestTest extends BrowserTest {
       waitUntil { "#diff-37 table tr:nth-child(6) td:nth-child(4) .lilit-link".items.nonEmpty }
 
       val link = "#diff-37 table tr:nth-child(6) td:nth-child(4) .lilit-link"
-      link.hover()
-      link.getToolTip.getText ==> "Defined in src/main/java/test_java_repo/Library.java inside tanin47/test-java-repo"
+      link.hoverAndGetToolTip.getText ==> "Defined in src/main/java/test_java_repo/Library.java inside tanin47/test-java-repo"
       link.click()
 
       waitUntil {
