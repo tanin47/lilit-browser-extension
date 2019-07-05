@@ -12,7 +12,7 @@ Please see `dist/lilit-browser-extension/manifest.json` for the permissions we a
 
 * In our browser extension, we do not send the content of the page to our backend. We only send the URL to the backend. See here: https://github.com/tanin47/lilit-browser-extension/blob/master/background/src/main/scala/Background.scala#L84 and https://github.com/tanin47/lilit-browser-extension/blob/master/common/src/main/scala/models/bindings/FileRequestRequest.scala
 * We can only read cookies from https://lilit.dev. This is for authentication when private repos are involved. See the defined permission with its scope here: https://github.com/tanin47/lilit-browser-extension/blob/master/dist/lilit-browser-extension/manifest.json#L44
-* We cannot read your past browsing history. The permission `webNavigation`, unfortunately, is shown to end users as "Read your browsing history". We use `webNavigation` to detect URL change. See the relevant code here: https://github.com/tanin47/lilit-browser-extension/blob/master/background/src/main/scala/Background.scala#L41
+* We cannot read your past browsing history. The permission `webNavigation`, unfortunately, is shown to end users as "Read your browsing history". We use `webNavigation` to detect URL change. See the relevant code here: https://github.com/tanin47/lilit-browser-extension/blob/master/background/src/main/scala/Background.scala#L41. See the discussion here: https://bugs.chromium.org/p/chromium/issues/detail?id=429185
 
 We take security and privacy with the utmost care. Please never hesitate to reach out if you have a question through our email: tanin(at)lilit.dev.
 
