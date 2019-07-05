@@ -1,3 +1,5 @@
+import org.scalajs.jsenv.nodejs.NodeJSEnv
+
 import scala.sys.process.Process
 
 name := "lilit-browser-extension"
@@ -52,6 +54,8 @@ lazy val content = (project in file("content"))
   .settings(
     artifactPath in (Compile, fastOptJS) := generatedLocalPath / "content.js",
     artifactPath in (Compile, fullOptJS) := generatedProdPath / "content.js",
+    test in Test := {},
+    testOnly in Test := {},
     scalaJSUseMainModuleInitializer := true,
     scalaJSModuleKind := ModuleKind.ESModule,
     libraryDependencies ++= Seq(
@@ -68,6 +72,8 @@ lazy val modifyPath = (project in file("modify-path"))
   .settings(
     artifactPath in (Compile, fastOptJS) := generatedLocalPath / "modify-path.js",
     artifactPath in (Compile, fullOptJS) := generatedProdPath / "modify-path.js",
+    test in Test := {},
+    testOnly in Test := {},
     scalaJSUseMainModuleInitializer := true,
     scalaJSModuleKind := ModuleKind.ESModule,
     libraryDependencies ++= Seq(
@@ -152,7 +158,7 @@ val buildProd = taskKey[Unit]("build the prod version")
 val buildWebpackProd = taskKey[Unit]("run webpack (prod)")
 val buildSassProd = taskKey[Unit]("run node-sass (prod)")
 
-Test / compile := (Test / compile).dependsOn(buildProd).value
+Test / compile := (Test / compile).dependsOn(Compile / buildProd).value
 
 buildSassProd := {
   execute("./node_modules/.bin/node-sass ./src/main/scss --output ./dist/lilit-browser-extension")

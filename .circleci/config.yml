@@ -1,0 +1,58 @@
+# Scala CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/sample-config/ for more details
+#
+version: 2
+jobs:
+  test:
+    docker:
+      - image: circleci/openjdk:8-jdk-node-browsers
+      - image: circleci/postgres:9.6-alpine-ram
+        environment:
+          POSTGRES_USER: codelab_test_user_admin
+          POSTGRES_DB: postgres
+          POSTGRES_PASSWORD: "test"
+    working_directory: ~/repo
+    environment:
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependencies-v1-{{ checksum "project/plugins.sbt" }}-{{ checksum "build.sbt" }}
+            - dependencies-v1-{{ checksum "project/plugins.sbt" }}
+            - dependencies-v1
+      - restore_cache:
+          keys:
+            - node-modules-v1-{{ checksum "package.json" }}
+            - node-modules-v1
+      - restore_cache:
+          keys:
+            - target-v1-{{ .Branch }}
+            - target-v1
+
+      - run: npm install
+      - run: sbt test
+      - save_cache:
+          paths:
+            - node_modules
+          key: node-modules-v1-{{ checksum "package.json" }}
+      - save_cache:
+          paths:
+            - target
+          key: target-v1-{{ .Branch }}
+      - save_cache:
+          paths:
+            - ~/.m2
+            - ~/.ivy2/cache
+            - ~/.sbt
+          key: dependencies-v1-{{ checksum "project/plugins.sbt" }}-{{ checksum "build.sbt" }}
+      - store_artifacts:
+          path: /tmp/screenshots
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test

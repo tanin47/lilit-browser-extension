@@ -9,9 +9,7 @@ object ViewFileTest extends BrowserTest {
       val usage = "#LC150 .lilit-link"
       waitUntil { usage.items.nonEmpty }
 
-      usage.hover()
-
-      usage.getToolTip.getText ==> "Defined in this file on the line 153"
+      usage.hoverAndGetToolTip.getText ==> "Defined in this file on the line 153"
 
       usage.click()
 
@@ -29,8 +27,7 @@ object ViewFileTest extends BrowserTest {
       val definition = "#LC153 .lilit-link"
       waitUntil { definition.items.nonEmpty }
 
-      definition.hover()
-      definition.getToolTip.getText ==> "Click to find all usages"
+      definition.hoverAndGetToolTip.getText ==> "Click to find all usages"
       definition.click()
 
       waitUntil { webDriver.getCurrentUrl.startsWith("https://lilit.dev") }
