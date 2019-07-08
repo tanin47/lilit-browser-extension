@@ -45,7 +45,7 @@
       "https://lilit.dev/*"
    ],
    "short_name": "Lilit",
-   "version": "0.0.2.1",
+   "version": "0.0.2.2",
    "web_accessible_resources": [
       "config.json"
    ]

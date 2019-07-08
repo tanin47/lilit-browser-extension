@@ -1,7 +1,7 @@
 {
   "name": "Lilit",
   "short_name": "Lilit",
-  "version": "0.0.2.1",
+  "version": "0.0.2.2",
   "description": "Java code intelligence on your browser",
   "manifest_version": 2,
   "permissions": [

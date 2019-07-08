@@ -12,7 +12,7 @@ object PullRequestTest extends BrowserTest {
       }
 
       val linkOnTheLeft = "#diff-0 .diff-table tr".items(5).select("td").items(1).select(".lilit-link")
-      linkOnTheLeft.hoverAndGetToolTip.getText ==> "Defined in this file on the line 153"
+      linkOnTheLeft.hoverAndGetToolTip.getText ==> "Defined in this file on the line 153\nint"
 
       val link = "#diff-0 .diff-table tr".items(4).select("td").items(3).select(".lilit-link").items(1)
 
@@ -20,7 +20,7 @@ object PullRequestTest extends BrowserTest {
       link.click()
 
       waitUntil {
-        webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/848084a2498fa8fe96a2daffc5e48d3cd9af9d90/src/main/java/test_java_repo/Library.java?p=u_5_27_build_src/main/java/test_java_repo/Library.java_3_Method_execute#L4"
+        webDriver.getCurrentUrl.startsWith("https://github.com/tanin47/test-java-repo/blob/848084a2498fa8fe96a2daffc5e48d3cd9af9d90/src/main/java/test_java_repo/Library.java")
       }
 
       waitUntil {
@@ -43,7 +43,7 @@ object PullRequestTest extends BrowserTest {
       link.click()
 
       waitUntil {
-        webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/24e0307ad76ce2fc344f3fba3b37d48344a15f21/src/main/java/test_java_repo/Library.java?p=u_5_28_build_src/main/java/test_java_repo/Library.java_2_Class_Library#L3"
+        webDriver.getCurrentUrl.startsWith("https://github.com/tanin47/test-java-repo/blob/24e0307ad76ce2fc344f3fba3b37d48344a15f21/src/main/java/test_java_repo/Library.java")
       }
 
       waitUntil {
@@ -64,7 +64,7 @@ object PullRequestTest extends BrowserTest {
       link.click()
 
       waitUntil {
-        webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/8e2cd946a5fd0d62ece883c43681ebd8618ae7c3/src/main/java/test_java_repo/Library.java?p=u_5_33_build_src/main/java/test_java_repo/Library.java_2_Class_Library#L3"
+        webDriver.getCurrentUrl.startsWith("https://github.com/tanin47/test-java-repo/blob/8e2cd946a5fd0d62ece883c43681ebd8618ae7c3/src/main/java/test_java_repo/Library.java")
       }
 
       waitUntil {
@@ -87,7 +87,7 @@ object PullRequestTest extends BrowserTest {
       link.click()
 
       waitUntil {
-        webDriver.getCurrentUrl == "https://lilit.dev/github/tanin47/test-java-repo/f6dee0110a9b1319accc3ab435e2ad9f3870776c/usage/u_5_29_build_src/main/java/test_java_repo/Main.java_2_Class_Main"
+        webDriver.getCurrentUrl.startsWith("https://lilit.dev/github/tanin47/test-java-repo/f6dee0110a9b1319accc3ab435e2ad9f3870776c/usage")
       }
     }
 
@@ -115,7 +115,7 @@ object PullRequestTest extends BrowserTest {
         link.click()
 
         waitUntil {
-          webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/848084a2498fa8fe96a2daffc5e48d3cd9af9d90/src/main/java/test_java_repo/Library.java?p=u_5_27_build_src/main/java/test_java_repo/Library.java_2_Class_Library#L3"
+          webDriver.getCurrentUrl.startsWith("https://github.com/tanin47/test-java-repo/blob/848084a2498fa8fe96a2daffc5e48d3cd9af9d90/src/main/java/test_java_repo/Library.java")
         }
 
         waitUntil {
@@ -142,7 +142,11 @@ object PullRequestTest extends BrowserTest {
       link.click()
 
       waitUntil {
-        webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/ace7f3130c5993d3c51c6406b4cb8ff77ab16051/src/main/java/test_java_repo/Library.java?p=u_5_32_build_src/main/java/test_java_repo/Library.java_2_Class_Library#L3"
+        webDriver.getCurrentUrl.startsWith("https://github.com/tanin47/test-java-repo/blob/ace7f3130c5993d3c51c6406b4cb8ff77ab16051/src/main/java/test_java_repo/Library.java")
+      }
+
+      waitUntil {
+        "#LC3".getAttribute("class").split(" ").toSet.contains("lilit-highlighted")
       }
     }
 
