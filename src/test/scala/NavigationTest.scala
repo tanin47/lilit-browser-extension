@@ -15,7 +15,7 @@ object NavigationTest extends BrowserTest {
       link.click()
 
       waitUntil {
-        webDriver.getCurrentUrl == "https://github.com/tanin47/test-java-repo/blob/d022270ccb8f346cb8ef2136c4212ff71802eff5/src/main/java/test_java_repo/Library.java?p=u_5_26_build_src/main/java/test_java_repo/Library.java_2_Class_Library#L3"
+        webDriver.getCurrentUrl.startsWith("https://github.com/tanin47/test-java-repo/blob/d022270ccb8f346cb8ef2136c4212ff71802eff5/src/main/java/test_java_repo/Library.java")
       }
 
       waitUntil {

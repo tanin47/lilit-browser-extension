@@ -89,17 +89,23 @@ class LineTokenizer(
     }
   }
 
-  def render(tpe: Type): Option[String] = tpe match {
+  def render(tpe: Type): String = tpe match {
     case t: ClassType =>
       val typeArgs = if (t.typeArguments.nonEmpty) {
-        s"&lt;${t.typeArguments.map { t => render(t).getOrElse("?") }.mkString(", ")}&gt;"
+        s"&lt;${t.typeArguments.map { t => render(t) }.mkString(", ")}&gt;"
       } else {
         ""
       }
-      Some(t.name + typeArgs)
-    case t: PrimitiveType => Some(t.name)
-    case t: ArrayType => render(t.elemType).map { _ + "[]" }
-    case t: ParameterizedType => Some(t.name)
+
+      s"${t.name}$typeArgs"
+    case t: PrimitiveType => t.name
+    case t: ArrayType => s"${render(t.elemType)}[]"
+    case t: ParameterizedType =>
+      if (t.isWildcard) {
+        "?"
+      } else {
+        t.name
+      }
   }
 
   def makeTooltipContent(usage: Usage): String = {
@@ -113,7 +119,7 @@ class LineTokenizer(
       }
       .getOrElse(s"Java native symbol")
     val typeInfo = usage.typeOpt
-      .flatMap(render)
+      .map(render)
       .map { "<br/>" + _ }
       .getOrElse("")
 

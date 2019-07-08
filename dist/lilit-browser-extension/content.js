@@ -8113,6 +8113,65 @@ $c_Lcontent_tokenizer_LineTokenizer.prototype.getModuleName__T__s_Option__T = (f
     return this.repoName$1
   }
 });
+$c_Lcontent_tokenizer_LineTokenizer.prototype.render__Lmodels_Type__T = (function(tpe) {
+  if ($is_Lmodels_ClassType(tpe)) {
+    var x2 = tpe;
+    var this$1 = x2.typeArguments$2;
+    if ($f_sc_TraversableOnce__nonEmpty__Z(this$1)) {
+      var this$3 = x2.typeArguments$2;
+      var f = (function($this) {
+        return (function(t$2) {
+          var t = t$2;
+          return $this.render__Lmodels_Type__T(t)
+        })
+      })(this);
+      var this$2 = $m_sci_List$();
+      var bf = this$2.ReusableCBFInstance$2;
+      if ((bf === $m_sci_List$().ReusableCBFInstance$2)) {
+        if ((this$3 === $m_sci_Nil$())) {
+          var jsx$1 = $m_sci_Nil$()
+        } else {
+          var arg1 = this$3.head__O();
+          var h = new $c_sci_$colon$colon().init___O__sci_List(f(arg1), $m_sci_Nil$());
+          var t$1 = h;
+          var rest = this$3.tail__O();
+          while ((rest !== $m_sci_Nil$())) {
+            var arg1$1 = rest.head__O();
+            var nx = new $c_sci_$colon$colon().init___O__sci_List(f(arg1$1), $m_sci_Nil$());
+            t$1.tl$5 = nx;
+            t$1 = nx;
+            rest = rest.tail__O()
+          };
+          var jsx$1 = h
+        }
+      } else {
+        var b = $f_sc_TraversableLike__builder$1__psc_TraversableLike__scg_CanBuildFrom__scm_Builder(this$3, bf);
+        var these = this$3;
+        while ((!these.isEmpty__Z())) {
+          var arg1$2 = these.head__O();
+          b.$$plus$eq__O__scm_Builder(f(arg1$2));
+          these = these.tail__O()
+        };
+        var jsx$1 = b.result__O()
+      };
+      var typeArgs = (("&lt;" + jsx$1.mkString__T__T(", ")) + "&gt;")
+    } else {
+      var typeArgs = ""
+    };
+    return (x2.name$2 + typeArgs)
+  } else if ($is_Lmodels_PrimitiveType(tpe)) {
+    var x3 = tpe;
+    return x3.name$2
+  } else if ($is_Lmodels_ArrayType(tpe)) {
+    var x4 = tpe;
+    return (this.render__Lmodels_Type__T(x4.elemType$2) + "[]")
+  } else if ($is_Lmodels_ParameterizedType(tpe)) {
+    var x5 = tpe;
+    return (x5.isWildcard$2 ? "?" : x5.name$2)
+  } else {
+    throw new $c_s_MatchError().init___O(tpe)
+  }
+});
 $c_Lcontent_tokenizer_LineTokenizer.prototype.setHighlightType__s_Option__V = (function(htOpt) {
   var this$1 = this.highlightTypeOpt$1;
   if (this$1.isEmpty__Z()) {
@@ -8296,14 +8355,14 @@ $c_Lcontent_tokenizer_LineTokenizer.prototype.makeTooltipContent__Lmodels_Usage_
   } else {
     var arg1$1 = this$8.get__O();
     var tpe = arg1$1;
-    var this$9 = this.render__Lmodels_Type__s_Option(tpe)
+    var this$9 = new $c_s_Some().init___O(this.render__Lmodels_Type__T(tpe))
   };
   if (this$9.isEmpty__Z()) {
     var this$10 = $m_s_None$()
   } else {
     var arg1$2 = this$9.get__O();
-    var x$2 = arg1$2;
-    var this$10 = new $c_s_Some().init___O(("<br/>" + x$2))
+    var x$1 = arg1$2;
+    var this$10 = new $c_s_Some().init___O(("<br/>" + x$1))
   };
   var typeInfo = (this$10.isEmpty__Z() ? "" : this$10.get__O());
   return (("" + main) + typeInfo)
@@ -8382,73 +8441,6 @@ $c_Lcontent_tokenizer_LineTokenizer.prototype.init___T__T__T__T__s_Option__s_Opt
   this.col$1 = 1;
   this.highlightTypeOpt$1 = $m_s_None$();
   return this
-});
-$c_Lcontent_tokenizer_LineTokenizer.prototype.render__Lmodels_Type__s_Option = (function(tpe) {
-  if ($is_Lmodels_ClassType(tpe)) {
-    var x2 = tpe;
-    var this$1 = x2.typeArguments$2;
-    if ($f_sc_TraversableOnce__nonEmpty__Z(this$1)) {
-      var this$4 = x2.typeArguments$2;
-      var f = (function($this) {
-        return (function(t$2) {
-          var t = t$2;
-          var this$2 = $this.render__Lmodels_Type__s_Option(t);
-          return (this$2.isEmpty__Z() ? "?" : this$2.get__O())
-        })
-      })(this);
-      var this$3 = $m_sci_List$();
-      var bf = this$3.ReusableCBFInstance$2;
-      if ((bf === $m_sci_List$().ReusableCBFInstance$2)) {
-        if ((this$4 === $m_sci_Nil$())) {
-          var jsx$1 = $m_sci_Nil$()
-        } else {
-          var arg1 = this$4.head__O();
-          var h = new $c_sci_$colon$colon().init___O__sci_List(f(arg1), $m_sci_Nil$());
-          var t$1 = h;
-          var rest = this$4.tail__O();
-          while ((rest !== $m_sci_Nil$())) {
-            var arg1$1 = rest.head__O();
-            var nx = new $c_sci_$colon$colon().init___O__sci_List(f(arg1$1), $m_sci_Nil$());
-            t$1.tl$5 = nx;
-            t$1 = nx;
-            rest = rest.tail__O()
-          };
-          var jsx$1 = h
-        }
-      } else {
-        var b = $f_sc_TraversableLike__builder$1__psc_TraversableLike__scg_CanBuildFrom__scm_Builder(this$4, bf);
-        var these = this$4;
-        while ((!these.isEmpty__Z())) {
-          var arg1$2 = these.head__O();
-          b.$$plus$eq__O__scm_Builder(f(arg1$2));
-          these = these.tail__O()
-        };
-        var jsx$1 = b.result__O()
-      };
-      var typeArgs = (("&lt;" + jsx$1.mkString__T__T(", ")) + "&gt;")
-    } else {
-      var typeArgs = ""
-    };
-    return new $c_s_Some().init___O((x2.name$2 + typeArgs))
-  } else if ($is_Lmodels_PrimitiveType(tpe)) {
-    var x3 = tpe;
-    return new $c_s_Some().init___O(x3.name$2)
-  } else if ($is_Lmodels_ArrayType(tpe)) {
-    var x4 = tpe;
-    var this$5 = this.render__Lmodels_Type__s_Option(x4.elemType$2);
-    if (this$5.isEmpty__Z()) {
-      return $m_s_None$()
-    } else {
-      var arg1$3 = this$5.get__O();
-      var x$1 = arg1$3;
-      return new $c_s_Some().init___O((x$1 + "[]"))
-    }
-  } else if ($is_Lmodels_ParameterizedType(tpe)) {
-    var x5 = tpe;
-    return new $c_s_Some().init___O(x5.name$2)
-  } else {
-    throw new $c_s_MatchError().init___O(tpe)
-  }
 });
 $c_Lcontent_tokenizer_LineTokenizer.prototype.addAnnotation__Lmodels_Annotation__T__I__scm_ListBuffer__I = (function(anno, text, start, newNodes) {
   var point = ((anno.location$2.start$1.col$1 - this.col$1) | 0);
@@ -10203,35 +10195,48 @@ $c_Lmodels_Type$.prototype.from__Lmodels_bindings_Type__Lmodels_Type = (function
     if ((value === (void 0))) {
       throw new $c_ju_NoSuchElementException().init___T("undefined.get")
     };
-    var value$1 = raw.typeArguments;
+    var value$1 = raw.defIdOpt;
     if ((value$1 === (void 0))) {
+      var jsx$2 = true
+    } else {
+      var x$1 = value$1;
+      var jsx$2 = (x$1 !== null)
+    };
+    if (jsx$2) {
+      var value$2 = value$1
+    } else {
+      var value$2 = (void 0)
+    };
+    var jsx$3 = ((value$2 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$2));
+    var value$3 = raw.typeArguments;
+    if ((value$3 === (void 0))) {
       throw new $c_ju_NoSuchElementException().init___T("undefined.get")
     };
-    var i = (((-1) + (value$1.length | 0)) | 0);
+    var i = (((-1) + (value$3.length | 0)) | 0);
     var result = $m_sci_Nil$();
     while ((i >= 0)) {
-      var this$10 = result;
+      var this$20 = result;
       var index = i;
-      var x = value$1[index];
-      result = new $c_sci_$colon$colon().init___O__sci_List(x, this$10);
+      var x = value$3[index];
+      result = new $c_sci_$colon$colon().init___O__sci_List(x, this$20);
       i = (((-1) + i) | 0)
     };
-    var this$12 = result;
-    var f = (function($this) {
+    var this$22 = result;
+    var f = (function(this$2$1) {
       return (function(raw$2$2) {
         return $m_Lmodels_Type$().from__Lmodels_bindings_Type__Lmodels_Type(raw$2$2)
       })
     })(this);
-    var this$11 = $m_sci_List$();
-    var bf = this$11.ReusableCBFInstance$2;
+    var this$21 = $m_sci_List$();
+    var bf = this$21.ReusableCBFInstance$2;
     if ((bf === $m_sci_List$().ReusableCBFInstance$2)) {
-      if ((this$12 === $m_sci_Nil$())) {
+      if ((this$22 === $m_sci_Nil$())) {
         var jsx$1 = $m_sci_Nil$()
       } else {
-        var arg1 = this$12.head__O();
+        var arg1 = this$22.head__O();
         var h = new $c_sci_$colon$colon().init___O__sci_List(f(arg1), $m_sci_Nil$());
         var t = h;
-        var rest = this$12.tail__O();
+        var rest = this$22.tail__O();
         while ((rest !== $m_sci_Nil$())) {
           var arg1$1 = rest.head__O();
           var nx = new $c_sci_$colon$colon().init___O__sci_List(f(arg1$1), $m_sci_Nil$());
@@ -10242,8 +10247,8 @@ $c_Lmodels_Type$.prototype.from__Lmodels_bindings_Type__Lmodels_Type = (function
         var jsx$1 = h
       }
     } else {
-      var b = $f_sc_TraversableLike__builder$1__psc_TraversableLike__scg_CanBuildFrom__scm_Builder(this$12, bf);
-      var these = this$12;
+      var b = $f_sc_TraversableLike__builder$1__psc_TraversableLike__scg_CanBuildFrom__scm_Builder(this$22, bf);
+      var these = this$22;
       while ((!these.isEmpty__Z())) {
         var arg1$2 = these.head__O();
         b.$$plus$eq__O__scm_Builder(f(arg1$2));
@@ -10251,26 +10256,42 @@ $c_Lmodels_Type$.prototype.from__Lmodels_bindings_Type__Lmodels_Type = (function
       };
       var jsx$1 = b.result__O()
     };
-    return new $c_Lmodels_ClassType().init___T__sci_List(value, jsx$1)
+    return new $c_Lmodels_ClassType().init___T__s_Option__sci_List(value, jsx$3, jsx$1)
   } else if ((x1 === "Primitive")) {
-    var value$2 = raw.name;
-    if ((value$2 === (void 0))) {
-      throw new $c_ju_NoSuchElementException().init___T("undefined.get")
-    };
-    return new $c_Lmodels_PrimitiveType().init___T(value$2)
-  } else if ((x1 === "Array")) {
-    var jsx$2 = $m_Lmodels_Type$();
-    var value$3 = raw.elemType;
-    if ((value$3 === (void 0))) {
-      throw new $c_ju_NoSuchElementException().init___T("undefined.get")
-    };
-    return new $c_Lmodels_ArrayType().init___Lmodels_Type(jsx$2.from__Lmodels_bindings_Type__Lmodels_Type(value$3))
-  } else if ((x1 === "Parameterized")) {
     var value$4 = raw.name;
     if ((value$4 === (void 0))) {
       throw new $c_ju_NoSuchElementException().init___T("undefined.get")
     };
-    return new $c_Lmodels_ParameterizedType().init___T(value$4)
+    return new $c_Lmodels_PrimitiveType().init___T(value$4)
+  } else if ((x1 === "Array")) {
+    var jsx$4 = $m_Lmodels_Type$();
+    var value$5 = raw.elemType;
+    if ((value$5 === (void 0))) {
+      throw new $c_ju_NoSuchElementException().init___T("undefined.get")
+    };
+    return new $c_Lmodels_ArrayType().init___Lmodels_Type(jsx$4.from__Lmodels_bindings_Type__Lmodels_Type(value$5))
+  } else if ((x1 === "Parameterized")) {
+    var value$6 = raw.name;
+    if ((value$6 === (void 0))) {
+      throw new $c_ju_NoSuchElementException().init___T("undefined.get")
+    };
+    var value$7 = raw.isWildcard;
+    if ((value$7 === (void 0))) {
+      throw new $c_ju_NoSuchElementException().init___T("undefined.get")
+    };
+    var value$8 = raw.defIdOpt;
+    if ((value$8 === (void 0))) {
+      var jsx$5 = true
+    } else {
+      var x$2 = value$8;
+      var jsx$5 = (x$2 !== null)
+    };
+    if (jsx$5) {
+      var value$9 = value$8
+    } else {
+      var value$9 = (void 0)
+    };
+    return new $c_Lmodels_ParameterizedType().init___T__Z__s_Option(value$6, (!(!value$7)), ((value$9 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$9)))
   } else {
     throw new $c_s_MatchError().init___O(x1)
   }
@@ -30865,6 +30886,7 @@ $c_Lmodels_ArrayType.prototype.$classData = $d_Lmodels_ArrayType;
 function $c_Lmodels_ClassType() {
   $c_Lmodels_Type.call(this);
   this.name$2 = null;
+  this.defIdOpt$2 = null;
   this.typeArguments$2 = null
 }
 $c_Lmodels_ClassType.prototype = new $h_Lmodels_Type();
@@ -30878,7 +30900,7 @@ $c_Lmodels_ClassType.prototype.productPrefix__T = (function() {
   return "ClassType"
 });
 $c_Lmodels_ClassType.prototype.productArity__I = (function() {
-  return 2
+  return 3
 });
 $c_Lmodels_ClassType.prototype.equals__O__Z = (function(x$1) {
   if ((this === x$1)) {
@@ -30886,9 +30908,16 @@ $c_Lmodels_ClassType.prototype.equals__O__Z = (function(x$1) {
   } else if ($is_Lmodels_ClassType(x$1)) {
     var ClassType$1 = x$1;
     if ((this.name$2 === ClassType$1.name$2)) {
-      var x = this.typeArguments$2;
-      var x$2 = ClassType$1.typeArguments$2;
-      return ((x === null) ? (x$2 === null) : x.equals__O__Z(x$2))
+      var x = this.defIdOpt$2;
+      var x$2 = ClassType$1.defIdOpt$2;
+      var jsx$1 = ((x === null) ? (x$2 === null) : x.equals__O__Z(x$2))
+    } else {
+      var jsx$1 = false
+    };
+    if (jsx$1) {
+      var x$3 = this.typeArguments$2;
+      var x$4 = ClassType$1.typeArguments$2;
+      return ((x$3 === null) ? (x$4 === null) : x$3.equals__O__Z(x$4))
     } else {
       return false
     }
@@ -30903,6 +30932,10 @@ $c_Lmodels_ClassType.prototype.productElement__I__O = (function(x$1) {
       break
     }
     case 1: {
+      return this.defIdOpt$2;
+      break
+    }
+    case 2: {
       return this.typeArguments$2;
       break
     }
@@ -30911,17 +30944,18 @@ $c_Lmodels_ClassType.prototype.productElement__I__O = (function(x$1) {
     }
   }
 });
+$c_Lmodels_ClassType.prototype.init___T__s_Option__sci_List = (function(name, defIdOpt, typeArguments) {
+  this.name$2 = name;
+  this.defIdOpt$2 = defIdOpt;
+  this.typeArguments$2 = typeArguments;
+  return this
+});
 $c_Lmodels_ClassType.prototype.toString__T = (function() {
   return $m_sr_ScalaRunTime$().$$undtoString__s_Product__T(this)
 });
 $c_Lmodels_ClassType.prototype.hashCode__I = (function() {
   var this$2 = $m_s_util_hashing_MurmurHash3$();
   return this$2.productHash__s_Product__I__I(this, (-889275714))
-});
-$c_Lmodels_ClassType.prototype.init___T__sci_List = (function(name, typeArguments) {
-  this.name$2 = name;
-  this.typeArguments$2 = typeArguments;
-  return this
 });
 $c_Lmodels_ClassType.prototype.productIterator__sc_Iterator = (function() {
   return new $c_sr_ScalaRunTime$$anon$1().init___s_Product(this)
@@ -31249,7 +31283,9 @@ $c_Lmodels_FilePage.prototype.$classData = $d_Lmodels_FilePage;
 /** @constructor */
 function $c_Lmodels_ParameterizedType() {
   $c_Lmodels_Type.call(this);
-  this.name$2 = null
+  this.name$2 = null;
+  this.isWildcard$2 = false;
+  this.defIdOpt$2 = null
 }
 $c_Lmodels_ParameterizedType.prototype = new $h_Lmodels_Type();
 $c_Lmodels_ParameterizedType.prototype.constructor = $c_Lmodels_ParameterizedType;
@@ -31258,18 +31294,30 @@ function $h_Lmodels_ParameterizedType() {
   /*<skip>*/
 }
 $h_Lmodels_ParameterizedType.prototype = $c_Lmodels_ParameterizedType.prototype;
+$c_Lmodels_ParameterizedType.prototype.init___T__Z__s_Option = (function(name, isWildcard, defIdOpt) {
+  this.name$2 = name;
+  this.isWildcard$2 = isWildcard;
+  this.defIdOpt$2 = defIdOpt;
+  return this
+});
 $c_Lmodels_ParameterizedType.prototype.productPrefix__T = (function() {
   return "ParameterizedType"
 });
 $c_Lmodels_ParameterizedType.prototype.productArity__I = (function() {
-  return 1
+  return 3
 });
 $c_Lmodels_ParameterizedType.prototype.equals__O__Z = (function(x$1) {
   if ((this === x$1)) {
     return true
   } else if ($is_Lmodels_ParameterizedType(x$1)) {
     var ParameterizedType$1 = x$1;
-    return (this.name$2 === ParameterizedType$1.name$2)
+    if (((this.name$2 === ParameterizedType$1.name$2) && (this.isWildcard$2 === ParameterizedType$1.isWildcard$2))) {
+      var x = this.defIdOpt$2;
+      var x$2 = ParameterizedType$1.defIdOpt$2;
+      return ((x === null) ? (x$2 === null) : x.equals__O__Z(x$2))
+    } else {
+      return false
+    }
   } else {
     return false
   }
@@ -31280,6 +31328,14 @@ $c_Lmodels_ParameterizedType.prototype.productElement__I__O = (function(x$1) {
       return this.name$2;
       break
     }
+    case 1: {
+      return this.isWildcard$2;
+      break
+    }
+    case 2: {
+      return this.defIdOpt$2;
+      break
+    }
     default: {
       throw new $c_jl_IndexOutOfBoundsException().init___T(("" + x$1))
     }
@@ -31288,13 +31344,12 @@ $c_Lmodels_ParameterizedType.prototype.productElement__I__O = (function(x$1) {
 $c_Lmodels_ParameterizedType.prototype.toString__T = (function() {
   return $m_sr_ScalaRunTime$().$$undtoString__s_Product__T(this)
 });
-$c_Lmodels_ParameterizedType.prototype.init___T = (function(name) {
-  this.name$2 = name;
-  return this
-});
 $c_Lmodels_ParameterizedType.prototype.hashCode__I = (function() {
-  var this$2 = $m_s_util_hashing_MurmurHash3$();
-  return this$2.productHash__s_Product__I__I(this, (-889275714))
+  var acc = (-889275714);
+  acc = $m_sr_Statics$().mix__I__I__I(acc, $m_sr_Statics$().anyHash__O__I(this.name$2));
+  acc = $m_sr_Statics$().mix__I__I__I(acc, (this.isWildcard$2 ? 1231 : 1237));
+  acc = $m_sr_Statics$().mix__I__I__I(acc, $m_sr_Statics$().anyHash__O__I(this.defIdOpt$2));
+  return $m_sr_Statics$().finalizeHash__I__I__I(acc, 3)
 });
 $c_Lmodels_ParameterizedType.prototype.productIterator__sc_Iterator = (function() {
   return new $c_sr_ScalaRunTime$$anon$1().init___s_Product(this)

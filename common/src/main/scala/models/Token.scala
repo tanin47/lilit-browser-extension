@@ -46,6 +46,7 @@ object Type {
       case "Class" =>
         ClassType(
           name = raw.name.get,
+          defIdOpt = raw.defIdOpt.filter(_ != null).toOption,
           typeArguments = raw.typeArguments.get.toList.map(Type.from)
         )
       case "Primitive" =>
@@ -53,13 +54,18 @@ object Type {
       case "Array" =>
         ArrayType(elemType = Type.from(raw.elemType.get))
       case "Parameterized" =>
-        ParameterizedType(name = raw.name.get)
+        ParameterizedType(
+          name = raw.name.get,
+          isWildcard = raw.isWildcard.get,
+          defIdOpt = raw.defIdOpt.filter(_ != null).toOption,
+        )
     }
   }
 }
 
 case class ClassType(
   name: String,
+  defIdOpt: Option[String],
   typeArguments: List[Type]
 ) extends Type
 
@@ -72,7 +78,9 @@ case class ArrayType(
 ) extends Type
 
 case class ParameterizedType(
-  name: String
+  name: String,
+  isWildcard: Boolean,
+  defIdOpt: Option[String],
 ) extends Type
 
 object Usage {
