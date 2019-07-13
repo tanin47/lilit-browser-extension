@@ -42,19 +42,19 @@ object ViewFileTest extends BrowserTest {
     }
 
     "Show tooltips (with type info) and annotations correctly" - {
-      go("https://github.com/tanin47/test-java-repo/blob/1009be88378ff94a4ed791ce9d8092b942cde7f3/src/main/java/test_java_repo/Library.java")
+      go("https://github.com/tanin47/test-java-repo/blob/6d9faf33b4402b4533565edd2f947f45645d5cc9/src/main/java/test_java_repo/Library.java")
 
-      val variable = "#LC28 .lilit-link"
+      val variable = "#LC45 .lilit-link"
       waitUntil { variable.items.nonEmpty }
-      variable.hoverAndGetToolTip.getText ==> "Defined in this file on the line 24\nCollector<Person, ?, Long>"
+      variable.hoverAndGetToolTip.getText ==> "Defined in this file on the line 32\nCollector<Something, ?, Iterator<AnotherThing>>"
 
-      val annotation = "#LC28 .lilit-annotation"
+      val annotation = "#LC45 .lilit-annotation"
       waitUntil { annotation.items.nonEmpty }
-      annotation.getText ==> "downstream="
+      annotation.getText ==> "classifier="
 
-      val method = "#LC25 .lilit-link"
+      val method = "#LC50 .lilit-link"
       waitUntil { method.items.nonEmpty }
-      method.hoverAndGetToolTip.getText ==> "Defined in this file on the line 15\nCollector<Person, ?, HashMap<String, Long>>"
+      method.hoverAndGetToolTip.getText ==> "Defined in this file on the line 38\nCollector<Something, ?, Iterator<AnotherThing>>"
     }
 
     "Request to index a commit" - {

@@ -102,9 +102,26 @@ class LineTokenizer(
     case t: ArrayType => s"${render(t.elemType)}[]"
     case t: ParameterizedType =>
       if (t.isWildcard) {
-        "?"
+        t
+          .superBoundTypeOpt.map(render)
+          .getOrElse {
+            if (t.eventualBoundTypes.nonEmpty) {
+              t.eventualBoundTypes.map(render).mkString(" & ")
+            } else {
+              "?"
+            }
+          }
       } else {
-        t.name
+        val extendedTypeInfo = t
+          .superBoundTypeOpt.map { b => s" super ${render(b)}" }
+          .getOrElse {
+            if (t.eventualBoundTypes.nonEmpty) {
+              s" extends ${t.eventualBoundTypes.map(render).mkString(" & ")}"
+            } else {
+              ""
+            }
+          }
+        t.name + extendedTypeInfo
       }
   }
 
