@@ -8167,7 +8167,118 @@ $c_Lcontent_tokenizer_LineTokenizer.prototype.render__Lmodels_Type__T = (functio
     return (this.render__Lmodels_Type__T(x4.elemType$2) + "[]")
   } else if ($is_Lmodels_ParameterizedType(tpe)) {
     var x5 = tpe;
-    return (x5.isWildcard$2 ? "?" : x5.name$2)
+    if (x5.isWildcard$2) {
+      var this$4 = x5.superBoundTypeOpt$2;
+      if (this$4.isEmpty__Z()) {
+        var this$5 = $m_s_None$()
+      } else {
+        var arg1$3 = this$4.get__O();
+        var tpe$2 = arg1$3;
+        var this$5 = new $c_s_Some().init___O(this.render__Lmodels_Type__T(tpe$2))
+      };
+      if (this$5.isEmpty__Z()) {
+        var this$6 = x5.eventualBoundTypes$2;
+        if ($f_sc_TraversableOnce__nonEmpty__Z(this$6)) {
+          var this$8 = x5.eventualBoundTypes$2;
+          var f$1 = (function($this$1) {
+            return (function(tpe$2$1) {
+              var tpe$1 = tpe$2$1;
+              return $this$1.render__Lmodels_Type__T(tpe$1)
+            })
+          })(this);
+          var this$7 = $m_sci_List$();
+          var bf$1 = this$7.ReusableCBFInstance$2;
+          if ((bf$1 === $m_sci_List$().ReusableCBFInstance$2)) {
+            if ((this$8 === $m_sci_Nil$())) {
+              var jsx$2 = $m_sci_Nil$()
+            } else {
+              var arg1$4 = this$8.head__O();
+              var h$1 = new $c_sci_$colon$colon().init___O__sci_List(f$1(arg1$4), $m_sci_Nil$());
+              var t$3 = h$1;
+              var rest$1 = this$8.tail__O();
+              while ((rest$1 !== $m_sci_Nil$())) {
+                var arg1$5 = rest$1.head__O();
+                var nx$1 = new $c_sci_$colon$colon().init___O__sci_List(f$1(arg1$5), $m_sci_Nil$());
+                t$3.tl$5 = nx$1;
+                t$3 = nx$1;
+                rest$1 = rest$1.tail__O()
+              };
+              var jsx$2 = h$1
+            }
+          } else {
+            var b$1 = $f_sc_TraversableLike__builder$1__psc_TraversableLike__scg_CanBuildFrom__scm_Builder(this$8, bf$1);
+            var these$1 = this$8;
+            while ((!these$1.isEmpty__Z())) {
+              var arg1$6 = these$1.head__O();
+              b$1.$$plus$eq__O__scm_Builder(f$1(arg1$6));
+              these$1 = these$1.tail__O()
+            };
+            var jsx$2 = b$1.result__O()
+          };
+          return jsx$2.mkString__T__T(" & ")
+        } else {
+          return "?"
+        }
+      } else {
+        return this$5.get__O()
+      }
+    } else {
+      var this$9 = x5.superBoundTypeOpt$2;
+      if (this$9.isEmpty__Z()) {
+        var this$10 = $m_s_None$()
+      } else {
+        var arg1$7 = this$9.get__O();
+        var b$2 = arg1$7;
+        var this$10 = new $c_s_Some().init___O((" super " + this.render__Lmodels_Type__T(b$2)))
+      };
+      if (this$10.isEmpty__Z()) {
+        var this$11 = x5.eventualBoundTypes$2;
+        if ($f_sc_TraversableOnce__nonEmpty__Z(this$11)) {
+          var this$13 = x5.eventualBoundTypes$2;
+          var f$2 = (function($this$2) {
+            return (function(tpe$2$2) {
+              var tpe$3 = tpe$2$2;
+              return $this$2.render__Lmodels_Type__T(tpe$3)
+            })
+          })(this);
+          var this$12 = $m_sci_List$();
+          var bf$2 = this$12.ReusableCBFInstance$2;
+          if ((bf$2 === $m_sci_List$().ReusableCBFInstance$2)) {
+            if ((this$13 === $m_sci_Nil$())) {
+              var jsx$3 = $m_sci_Nil$()
+            } else {
+              var arg1$8 = this$13.head__O();
+              var h$2 = new $c_sci_$colon$colon().init___O__sci_List(f$2(arg1$8), $m_sci_Nil$());
+              var t$4 = h$2;
+              var rest$2 = this$13.tail__O();
+              while ((rest$2 !== $m_sci_Nil$())) {
+                var arg1$9 = rest$2.head__O();
+                var nx$2 = new $c_sci_$colon$colon().init___O__sci_List(f$2(arg1$9), $m_sci_Nil$());
+                t$4.tl$5 = nx$2;
+                t$4 = nx$2;
+                rest$2 = rest$2.tail__O()
+              };
+              var jsx$3 = h$2
+            }
+          } else {
+            var b$3 = $f_sc_TraversableLike__builder$1__psc_TraversableLike__scg_CanBuildFrom__scm_Builder(this$13, bf$2);
+            var these$2 = this$13;
+            while ((!these$2.isEmpty__Z())) {
+              var arg1$10 = these$2.head__O();
+              b$3.$$plus$eq__O__scm_Builder(f$2(arg1$10));
+              these$2 = these$2.tail__O()
+            };
+            var jsx$3 = b$3.result__O()
+          };
+          var extendedTypeInfo = (" extends " + jsx$3.mkString__T__T(" & "))
+        } else {
+          var extendedTypeInfo = ""
+        }
+      } else {
+        var extendedTypeInfo = this$10.get__O()
+      };
+      return (("" + x5.name$2) + extendedTypeInfo)
+    }
   } else {
     throw new $c_s_MatchError().init___O(tpe)
   }
@@ -8333,40 +8444,6 @@ $c_Lcontent_tokenizer_LineTokenizer.prototype.makeUrl__Lmodels_Usage__Lcontent_t
   };
   return (this$13.isEmpty__Z() ? $m_Lcontent_tokenizer_LineTokenizer$NoLink$() : this$13.get__O())
 });
-$c_Lcontent_tokenizer_LineTokenizer.prototype.makeTooltipContent__Lmodels_Usage__T = (function(usage) {
-  var this$1 = usage.definitionLocationOpt$2;
-  if (this$1.isEmpty__Z()) {
-    var this$7 = $m_s_None$()
-  } else {
-    var arg1 = this$1.get__O();
-    var location = arg1;
-    if ((location.path$1 === this.path$1)) {
-      var thiz = usage.definitionId$2;
-      var jsx$1 = (((thiz.length | 0) >= 0) && (thiz.substring(0, ("u_".length | 0)) === "u_"))
-    } else {
-      var jsx$1 = false
-    };
-    var this$7 = new $c_s_Some().init___O((jsx$1 ? ("Defined in this file on the line " + location.start$1.line$1) : ((("Defined in " + location.path$1) + " inside ") + this.getModuleName__T__s_Option__T(usage.definitionId$2, usage.definitionJarOpt$2))))
-  };
-  var main = (this$7.isEmpty__Z() ? "Java native symbol" : this$7.get__O());
-  var this$8 = usage.typeOpt$2;
-  if (this$8.isEmpty__Z()) {
-    var this$9 = $m_s_None$()
-  } else {
-    var arg1$1 = this$8.get__O();
-    var tpe = arg1$1;
-    var this$9 = new $c_s_Some().init___O(this.render__Lmodels_Type__T(tpe))
-  };
-  if (this$9.isEmpty__Z()) {
-    var this$10 = $m_s_None$()
-  } else {
-    var arg1$2 = this$9.get__O();
-    var x$1 = arg1$2;
-    var this$10 = new $c_s_Some().init___O(("<br/>" + x$1))
-  };
-  var typeInfo = (this$10.isEmpty__Z() ? "" : this$10.get__O());
-  return (("" + main) + typeInfo)
-});
 $c_Lcontent_tokenizer_LineTokenizer.prototype.walk__Lorg_scalajs_dom_raw_Node__s_Option = (function(node) {
   if (((node.nodeType | 0) === ($g.Node.TEXT_NODE | 0))) {
     var newChildrenOpt = this.modify__Lorg_scalajs_dom_raw_Node__s_Option(node);
@@ -8427,6 +8504,40 @@ $c_Lcontent_tokenizer_LineTokenizer.prototype.walk__Lorg_scalajs_dom_raw_Node__s
     };
     return $m_s_None$()
   }
+});
+$c_Lcontent_tokenizer_LineTokenizer.prototype.makeTooltipContent__Lmodels_Usage__T = (function(usage) {
+  var this$1 = usage.definitionLocationOpt$2;
+  if (this$1.isEmpty__Z()) {
+    var this$7 = $m_s_None$()
+  } else {
+    var arg1 = this$1.get__O();
+    var location = arg1;
+    if ((location.path$1 === this.path$1)) {
+      var thiz = usage.definitionId$2;
+      var jsx$1 = (((thiz.length | 0) >= 0) && (thiz.substring(0, ("u_".length | 0)) === "u_"))
+    } else {
+      var jsx$1 = false
+    };
+    var this$7 = new $c_s_Some().init___O((jsx$1 ? ("Defined in this file on the line " + location.start$1.line$1) : ((("Defined in " + location.path$1) + " inside ") + this.getModuleName__T__s_Option__T(usage.definitionId$2, usage.definitionJarOpt$2))))
+  };
+  var main = (this$7.isEmpty__Z() ? "Java native symbol" : this$7.get__O());
+  var this$8 = usage.typeOpt$2;
+  if (this$8.isEmpty__Z()) {
+    var this$9 = $m_s_None$()
+  } else {
+    var arg1$1 = this$8.get__O();
+    var tpe = arg1$1;
+    var this$9 = new $c_s_Some().init___O(this.render__Lmodels_Type__T(tpe))
+  };
+  if (this$9.isEmpty__Z()) {
+    var this$10 = $m_s_None$()
+  } else {
+    var arg1$2 = this$9.get__O();
+    var x$1 = arg1$2;
+    var this$10 = new $c_s_Some().init___O(("<br/>" + x$1))
+  };
+  var typeInfo = (this$10.isEmpty__Z() ? "" : this$10.get__O());
+  return (("" + main) + typeInfo)
 });
 $c_Lcontent_tokenizer_LineTokenizer.prototype.init___T__T__T__T__s_Option__s_Option__Lcontent_tokenizer_LineTokens = (function(repoName, revision, path, host, branchOpt, selectedNodeIdOpt, lineTokens) {
   this.repoName$1 = repoName;
@@ -10279,19 +10390,63 @@ $c_Lmodels_Type$.prototype.from__Lmodels_bindings_Type__Lmodels_Type = (function
     if ((value$7 === (void 0))) {
       throw new $c_ju_NoSuchElementException().init___T("undefined.get")
     };
-    var value$8 = raw.defIdOpt;
-    if ((value$8 === (void 0))) {
+    var value$8 = raw.superBoundTypeOpt;
+    var value$9 = (((value$8 === (void 0)) || (value$8 !== null)) ? value$8 : (void 0));
+    var this$49 = ((value$9 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$9));
+    if (this$49.isEmpty__Z()) {
+      var jsx$7 = $m_s_None$()
+    } else {
+      var arg1$3 = this$49.get__O();
+      var jsx$7 = new $c_s_Some().init___O($m_Lmodels_Type$().from__Lmodels_bindings_Type__Lmodels_Type(arg1$3))
+    };
+    var value$10 = raw.eventualBoundTypes;
+    var value$11 = (((value$10 === (void 0)) || (value$10 !== null)) ? value$10 : (void 0));
+    var this$60 = ((value$11 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$11));
+    if (this$60.isEmpty__Z()) {
+      var this$65 = $m_s_None$()
+    } else {
+      var arg1$4 = this$60.get__O();
+      var array = [];
+      var x1$1 = (arg1$4.length | 0);
+      switch (x1$1) {
+        case (-1): {
+          break
+        }
+      };
+      var i$1 = 0;
+      var len = (arg1$4.length | 0);
+      while ((i$1 < len)) {
+        var index$1 = i$1;
+        var arg1$5 = arg1$4[index$1];
+        var elem = $m_Lmodels_Type$().from__Lmodels_bindings_Type__Lmodels_Type(arg1$5);
+        array.push(elem);
+        i$1 = ((1 + i$1) | 0)
+      };
+      var i$2 = (((-1) + (array.length | 0)) | 0);
+      var result$1 = $m_sci_Nil$();
+      while ((i$2 >= 0)) {
+        var this$64 = result$1;
+        var index$2 = i$2;
+        var x$2 = array[index$2];
+        result$1 = new $c_sci_$colon$colon().init___O__sci_List(x$2, this$64);
+        i$2 = (((-1) + i$2) | 0)
+      };
+      var this$65 = new $c_s_Some().init___O(result$1)
+    };
+    var jsx$6 = (this$65.isEmpty__Z() ? ($m_sci_List$(), $m_sci_Nil$()) : this$65.get__O());
+    var value$12 = raw.defIdOpt;
+    if ((value$12 === (void 0))) {
       var jsx$5 = true
     } else {
-      var x$2 = value$8;
-      var jsx$5 = (x$2 !== null)
+      var x$5 = value$12;
+      var jsx$5 = (x$5 !== null)
     };
     if (jsx$5) {
-      var value$9 = value$8
+      var value$13 = value$12
     } else {
-      var value$9 = (void 0)
+      var value$13 = (void 0)
     };
-    return new $c_Lmodels_ParameterizedType().init___T__Z__s_Option(value$6, (!(!value$7)), ((value$9 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$9)))
+    return new $c_Lmodels_ParameterizedType().init___T__Z__s_Option__sci_List__s_Option(value$6, (!(!value$7)), jsx$7, jsx$6, ((value$13 === (void 0)) ? $m_s_None$() : new $c_s_Some().init___O(value$13)))
   } else {
     throw new $c_s_MatchError().init___O(x1)
   }
@@ -31285,6 +31440,8 @@ function $c_Lmodels_ParameterizedType() {
   $c_Lmodels_Type.call(this);
   this.name$2 = null;
   this.isWildcard$2 = false;
+  this.superBoundTypeOpt$2 = null;
+  this.eventualBoundTypes$2 = null;
   this.defIdOpt$2 = null
 }
 $c_Lmodels_ParameterizedType.prototype = new $h_Lmodels_Type();
@@ -31294,17 +31451,11 @@ function $h_Lmodels_ParameterizedType() {
   /*<skip>*/
 }
 $h_Lmodels_ParameterizedType.prototype = $c_Lmodels_ParameterizedType.prototype;
-$c_Lmodels_ParameterizedType.prototype.init___T__Z__s_Option = (function(name, isWildcard, defIdOpt) {
-  this.name$2 = name;
-  this.isWildcard$2 = isWildcard;
-  this.defIdOpt$2 = defIdOpt;
-  return this
-});
 $c_Lmodels_ParameterizedType.prototype.productPrefix__T = (function() {
   return "ParameterizedType"
 });
 $c_Lmodels_ParameterizedType.prototype.productArity__I = (function() {
-  return 3
+  return 5
 });
 $c_Lmodels_ParameterizedType.prototype.equals__O__Z = (function(x$1) {
   if ((this === x$1)) {
@@ -31312,9 +31463,23 @@ $c_Lmodels_ParameterizedType.prototype.equals__O__Z = (function(x$1) {
   } else if ($is_Lmodels_ParameterizedType(x$1)) {
     var ParameterizedType$1 = x$1;
     if (((this.name$2 === ParameterizedType$1.name$2) && (this.isWildcard$2 === ParameterizedType$1.isWildcard$2))) {
-      var x = this.defIdOpt$2;
-      var x$2 = ParameterizedType$1.defIdOpt$2;
-      return ((x === null) ? (x$2 === null) : x.equals__O__Z(x$2))
+      var x = this.superBoundTypeOpt$2;
+      var x$2 = ParameterizedType$1.superBoundTypeOpt$2;
+      var jsx$2 = ((x === null) ? (x$2 === null) : x.equals__O__Z(x$2))
+    } else {
+      var jsx$2 = false
+    };
+    if (jsx$2) {
+      var x$3 = this.eventualBoundTypes$2;
+      var x$4 = ParameterizedType$1.eventualBoundTypes$2;
+      var jsx$1 = ((x$3 === null) ? (x$4 === null) : x$3.equals__O__Z(x$4))
+    } else {
+      var jsx$1 = false
+    };
+    if (jsx$1) {
+      var x$5 = this.defIdOpt$2;
+      var x$6 = ParameterizedType$1.defIdOpt$2;
+      return ((x$5 === null) ? (x$6 === null) : x$5.equals__O__Z(x$6))
     } else {
       return false
     }
@@ -31333,6 +31498,14 @@ $c_Lmodels_ParameterizedType.prototype.productElement__I__O = (function(x$1) {
       break
     }
     case 2: {
+      return this.superBoundTypeOpt$2;
+      break
+    }
+    case 3: {
+      return this.eventualBoundTypes$2;
+      break
+    }
+    case 4: {
       return this.defIdOpt$2;
       break
     }
@@ -31348,11 +31521,21 @@ $c_Lmodels_ParameterizedType.prototype.hashCode__I = (function() {
   var acc = (-889275714);
   acc = $m_sr_Statics$().mix__I__I__I(acc, $m_sr_Statics$().anyHash__O__I(this.name$2));
   acc = $m_sr_Statics$().mix__I__I__I(acc, (this.isWildcard$2 ? 1231 : 1237));
+  acc = $m_sr_Statics$().mix__I__I__I(acc, $m_sr_Statics$().anyHash__O__I(this.superBoundTypeOpt$2));
+  acc = $m_sr_Statics$().mix__I__I__I(acc, $m_sr_Statics$().anyHash__O__I(this.eventualBoundTypes$2));
   acc = $m_sr_Statics$().mix__I__I__I(acc, $m_sr_Statics$().anyHash__O__I(this.defIdOpt$2));
-  return $m_sr_Statics$().finalizeHash__I__I__I(acc, 3)
+  return $m_sr_Statics$().finalizeHash__I__I__I(acc, 5)
 });
 $c_Lmodels_ParameterizedType.prototype.productIterator__sc_Iterator = (function() {
   return new $c_sr_ScalaRunTime$$anon$1().init___s_Product(this)
+});
+$c_Lmodels_ParameterizedType.prototype.init___T__Z__s_Option__sci_List__s_Option = (function(name, isWildcard, superBoundTypeOpt, eventualBoundTypes, defIdOpt) {
+  this.name$2 = name;
+  this.isWildcard$2 = isWildcard;
+  this.superBoundTypeOpt$2 = superBoundTypeOpt;
+  this.eventualBoundTypes$2 = eventualBoundTypes;
+  this.defIdOpt$2 = defIdOpt;
+  return this
 });
 function $is_Lmodels_ParameterizedType(obj) {
   return (!(!((obj && obj.$classData) && obj.$classData.ancestors.Lmodels_ParameterizedType)))

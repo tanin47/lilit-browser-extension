@@ -57,6 +57,8 @@ object Type {
         ParameterizedType(
           name = raw.name.get,
           isWildcard = raw.isWildcard.get,
+          superBoundTypeOpt = raw.superBoundTypeOpt.filter(_ != null).toOption.map(Type.from),
+          eventualBoundTypes = raw.eventualBoundTypes.filter(_ != null).toOption.map(_.map(Type.from).toList).getOrElse(List.empty),
           defIdOpt = raw.defIdOpt.filter(_ != null).toOption,
         )
     }
@@ -80,6 +82,8 @@ case class ArrayType(
 case class ParameterizedType(
   name: String,
   isWildcard: Boolean,
+  superBoundTypeOpt: Option[Type],
+  eventualBoundTypes: List[Type],
   defIdOpt: Option[String],
 ) extends Type
 
