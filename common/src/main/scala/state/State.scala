@@ -48,7 +48,8 @@ class State {
 
   private[this] def triggerPageUpdate(): Unit = {
     chrome.runtime.Runtime.sendMessage(
-      message = new PageUpdated(pageOpt = pageOpt.map(_.toRaw).orUndefined)
+      message = new PageUpdated(pageOpt = pageOpt.map(_.toRaw).orUndefined),
+      responseCallback = js.defined { _ => }
     )
   }
 }

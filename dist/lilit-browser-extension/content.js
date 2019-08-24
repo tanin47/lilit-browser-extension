@@ -11933,13 +11933,16 @@ $c_Lstate_State.prototype.triggerPageUpdate__p1__V = (function() {
     var jsx$1 = arg1$1
   };
   var x$1 = new ($a_Lmodels_bindings_PageUpdated())(jsx$1);
-  $m_Lchrome_runtime_Runtime$();
-  var x$2 = (void 0);
+  var a = (function(arg$outer) {
+    return (function(arg1$2) {
+      return (void 0)
+    })
+  })(this);
   $m_Lchrome_runtime_Runtime$();
   var x$3 = (void 0);
   $m_Lchrome_runtime_Runtime$();
   var x$4 = (void 0);
-  $m_Lchrome_runtime_Runtime$().sendMessage__sjs_js_UndefOr__sjs_js_Any__sjs_js_UndefOr__sjs_js_UndefOr__V(x$2, x$1, x$3, x$4)
+  $m_Lchrome_runtime_Runtime$().sendMessage__sjs_js_UndefOr__sjs_js_Any__sjs_js_UndefOr__sjs_js_UndefOr__V(x$3, x$1, x$4, a)
 });
 $c_Lstate_State.prototype.setPage__s_Option__V = (function(newPageOpt) {
   this.pageOpt$1 = newPageOpt;
