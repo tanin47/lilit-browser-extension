@@ -8,7 +8,7 @@
   "license": "MIT",
   "devDependencies": {
     "acorn": "^6.1.1",
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "copy-webpack-plugin": "^5.0.2",
     "html-webpack-plugin": "^3.2.0",
     "node-sass": "^4.12.0",
